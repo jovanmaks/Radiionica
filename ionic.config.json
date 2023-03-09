@@ -1,0 +1,7 @@
+{
+  "name": "Radionica",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
