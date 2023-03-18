@@ -1,11 +1,66 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
 import TabsPage from '../views/TabsPage.vue'
+import ProfilePage from '../views/ProfilePage.vue'
+import MemoriesPage from '../views/MemoriesPage.vue'
+import SearchPage from '../views/SearchPage.vue'
+import ActivityPage from '../views/ActivityPage.vue'
+import MenyPage from '../views/MenyPage.vue'
+import HomePage from '../views/HomePage.vue'
+import QRPage from '../views/QRScannerPage.vue'
+import MessagesPage from '../views/MessagesPage.vue'
 
-const routes: Array<RouteRecordRaw> = [
+// const routes = [
+//   {
+//     path: '/',
+//     redirect: '/memories'
+//   },
+//   {
+//     path: '/memories',
+//     component: MemoriesPage
+//   },
+//   {
+//     path: '/memories/:id',
+//     component: () => import('../views/MemoryDetailsPage.vue')
+//   },
+//   {
+//     path: '/memories/add',
+//     component: () => import('../pages/AddMemoryPage.vue')
+//   }
+// ]
+// const routes: Array<RouteRecordRaw> = [
+const routes = [
   {
     path: '/',
     redirect: '/tabs/tab1'
+  },
+  {
+    path:'/activity',
+    component: ActivityPage 
+  },
+  {
+    path:'/search',
+    component: SearchPage
+  },
+  {
+    path:'/meny',
+    component: MenyPage
+  },
+  {
+    path:'/profile',
+    component: ProfilePage
+  },
+  {
+    path:'/home',
+    component: HomePage
+  },
+  {
+    path:'/qr',
+    component: QRPage
+  },
+  {
+    path:'/messages',
+    component: MessagesPage
   },
   {
     path: '/tabs/',
@@ -20,12 +75,20 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/Tab1Page.vue')
       },
       {
-        path: 'tab2',
-        component: () => import('@/views/Tab2Page.vue')
+        path: 'messages',
+        component: () => import('@/views/MessagesPage.vue')
       },
       {
-        path: 'tab3',
-        component: () => import('@/views/Tab3Page.vue')
+        path: 'profile',
+        component: () => import('@/views/ProfilePage.vue')
+      },
+      {
+        path: 'search',
+        component: () => import('@/views/SearchPage.vue')
+      },
+      {
+        path: 'meny',
+        component: () => import('@/views/MenyPage.vue')
       }
     ]
   }
