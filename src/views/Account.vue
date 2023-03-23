@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
     <ion-page>
       <ion-header>
         <ion-toolbar>
@@ -7,12 +7,12 @@
       </ion-header>
   
       <ion-content>
-        <avatar v-model:path="profile.avatar_url" @upload="updateProfile"></avatar>
+        <!-- <avatar v-model:path="profile.avatar_url" @upload="updateProfile"></avatar> -->
         <form @submit.prevent="updateProfile">
           <ion-item>
             <ion-label>
               <p>Email</p>
-              <p>{{ session?.user?.email }}</p>
+              <!-- <p>{{ session?.user?.email }}</p> -->
             </ion-label>
           </ion-item>
   
@@ -45,6 +45,7 @@
     </ion-page>
   </template>
   
+  <!-- <script > -->
   <script lang="ts">
   import { store } from '@/store';
   import { supabase } from '@/supabase';
@@ -63,11 +64,11 @@
   } from '@ionic/vue';
   import { User } from '@supabase/supabase-js';
   import { defineComponent, onMounted, ref } from 'vue';
-  import Avatar from '../components/Avatar.vue';
+  // import Avatar from '../components/Avatar.vue';
   export default defineComponent({
     name: 'AccountPage',
     components: {
-      Avatar,
+      // Avatar,
       IonContent,
       IonHeader,
       IonPage,
@@ -79,11 +80,28 @@
       IonLabel,
     },
     setup() {
-      const session = ref(supabase.auth.session());
+     // const session = ref(supabase.auth.getSession());
+     async function getCurrentSession() {
+      try {
+      // Call the getSession() function to get the user's authentication session
+      const { data: { session } } = await supabase.auth.getSession()
+      // Return the session object
+      return session
+      } catch (error) {
+        // Handle any errors that occur
+      console.error(error)
+       }
+      }
+
+    // Call the getCurrentSession() function and log the result to the console
+    const session = ref (getCurrentSession().then(session => {
+      console.log('Current session:', session)
+    }))
+
       const profile = ref({
         username: '',
         website: '',
-        avatar_url: '',
+        // avatar_url: '',
       });
       const user = store.user as User;
       async function getProfile() {
@@ -91,9 +109,10 @@
         const toast = await toastController.create({ duration: 5000 });
         await loader.present();
         try {
-          let { data, error, status } = await supabase
+          const { data, error, status } = await supabase
             .from('profiles')
-            .select(`username, website, avatar_url`)
+            .select(`username, website`)
+            // .select(`username, website, avatar_url`)
             .eq('id', user.id)
             .single();
   
@@ -104,7 +123,7 @@
             profile.value = {
               username: data.username,
               website: data.website,
-              avatar_url: data.avatar_url,
+              // avatar_url: data.avatar_url,
             };
           }
         } catch (error: any) {
@@ -126,8 +145,8 @@
             updated_at: new Date(),
           };
           //
-          let { error } = await supabase.from('profiles').upsert(updates, {
-            returning: 'minimal', // Don't return the value after inserting
+          const { error } = await supabase.from('profiles').upsert(updates, {
+            // returning: 'minimal', // Don't return the value after inserting
           });
           //
           if (error) throw error;
@@ -144,7 +163,7 @@
         const toast = await toastController.create({ duration: 5000 });
         await loader.present();
         try {
-          let { error } = await supabase.auth.signOut();
+          const { error } = await supabase.auth.signOut();
           if (error) throw error;
         } catch (error: any) {
           toast.message = error.message;
@@ -160,4 +179,4 @@
       return { signOut, profile, session, updateProfile };
     },
   });
-  </script> -->
+  </script>
