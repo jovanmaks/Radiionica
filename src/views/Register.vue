@@ -15,7 +15,7 @@
         <ion-list :inset="true">
             
           <!-- <form @submit.prevent="handleLogin"> -->
-          <form >
+          <form @submit.prevent="register" >
             <ion-item>
               <ion-label position="stacked">Email</ion-label>
               <ion-input
@@ -51,7 +51,7 @@
             </div>
 
             <div class="ion-text-center">
-                <ion-button fill="clear" :router-link="{ path: '/login' }">Click here to login</ion-button>
+                <ion-button fill="clear" :router-link="{ path: '/login' }">Click here to l ogin</ion-button>
             </div>
           </form>
          
@@ -65,6 +65,7 @@
 <script lang="ts">
 import { supabase } from '../supabase';
 import { defineComponent, ref } from 'vue';
+import { useRouter } from "vue-router";
 
   import {
     IonContent,
@@ -96,12 +97,38 @@ export default defineComponent({
     },
 
     setup(){
+        // Create data
+        const router = useRouter();
         const email            = ref('');
         const password         = ref('');
         const confirmPassword  = ref('');
         const errorMsg         = ref('');
+        
+        // Register function
+        const register = async () =>{
+            if (password.value === confirmPassword.value){
+               try{
+                    const {error} = await supabase.auth.signUp({
+                        email: email.value,
+                        password: password.value,
+                    });
+                console.log('odradio si auth');
+                if (error) throw error;
+                router.push({name: 'Login'});
+                }catch(error){
+                console.log('u ketchu si');
+                // errorMsg.value = error.message;
+                    
+               } 
+               return;
+            }
+            errorMsg.value = "Error: Password do not match";
+            setTimeout( () => {
+                errorMsg.value = '';
+            }, 5000);
+        };
 
-    return { email,password,confirmPassword,errorMsg };
+        return { email,password,confirmPassword,errorMsg, register };
     },
 
 
