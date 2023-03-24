@@ -32,6 +32,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Account',
     component: AccountPage
   }, 
+  { 
+    path: '/home',
+    name: 'Home',
+    component: HomePage 
+  }, 
 ]
 
 const router = createRouter({

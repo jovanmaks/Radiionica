@@ -14,7 +14,6 @@
 
         <ion-list :inset="true">
             
-          <!-- <form @submit.prevent="handleLogin"> -->
           <form @submit.prevent="register" >
             <ion-item>
               <ion-label position="stacked">Email</ion-label>

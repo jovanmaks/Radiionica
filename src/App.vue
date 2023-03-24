@@ -1,5 +1,6 @@
 <template>
-  <ion-app>
+  <!-- <ion-app v-if="appReady"> -->
+  <ion-app >
     <ion-router-outlet />
   </ion-app>
 </template>
@@ -11,19 +12,78 @@ import { IonApp, IonRouterOutlet,useIonRouter } from '@ionic/vue';
 import MenyPage from './views/MenyPage.vue';
 import { defineComponent, ref } from 'vue'
 
+// import store from './store/index'
 
 import { store } from './store'
 import { supabase } from './supabase'
 import { Session } from 'inspector';
 
 
-export default defineComponent({
-  name: 'App',
-  components: {
-    IonApp,
-    IonRouterOutlet
+// export default defineComponent({
+//   name: 'App',
+//   components: {
+//     IonApp,
+//     IonRouterOutlet
+//   },
+
+
+  export default defineComponent({
+    name: 'App',
+    components: {
+      IonApp,
+      IonRouterOutlet,
+    },
+    setup() {
+      
+
+    const user = async () =>{
+      const { data: { user } } = await supabase.auth.getUser()
+    }
+      
+      const router = useIonRouter()
+
+      supabase.auth.onAuthStateChange((_, session) => {
+  if (session?.user) {
+    store.user = session.user;
+    router.replace('/home');
+  } else {
+    store.user = {};
   }
 });
+
+      // store.user = user ?? {}
+      // supabase.auth.onAuthStateChange((_, session) => {
+      //   store.user = session?.user ?? {}
+      //   if (session?.user) {
+      //     router.replace('/account')
+      //   }
+      // })
+    },
+  })
+
+
+
+  // setup(){
+    // const appReady = ref(false);
+    
+    // const user = async () =>{
+    //   const { data: { user } } = await supabase.auth.getUser()
+    // }
+
+    // if(!user){
+    //   appReady.value = true;
+    // }
+    
+    // supabase.auth.onAuthStateChange((_,session) =>{
+    //   store.methods.setUser(session);
+    //   appReady.value = true;
+    // })
+
+
+//     return {appReady};
+
+//   }
+// });
 // export default defineComponent({
 //     name: 'App',
 //     components: {
