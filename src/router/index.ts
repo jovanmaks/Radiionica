@@ -11,6 +11,7 @@ import QRPage from '../views/QRScannerPage.vue'
 import MessagesPage from '../views/MessagesPage.vue'
 
 import LoginPage from '../views/Login.vue';
+import RegisterPage from '../views/Register.vue';
 import AccountPage from '../views/Account.vue';
 
 
@@ -18,6 +19,11 @@ import AccountPage from '../views/Account.vue';
 const routes: Array<RouteRecordRaw> = [
   { 
     path: "/",
+    name: 'Register',
+    component: RegisterPage
+  } ,
+  { 
+    path: "/login",
     name: 'Login',
     component: LoginPage
   } ,
