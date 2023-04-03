@@ -12,6 +12,13 @@
           <p>Sign in via magic link with your email below</p>
         </div>
         <ion-list :inset="true">
+        
+          <!--  Error handling-->
+          <div v-if="errorMsg" class="ion-padding">
+            <p>{{ errorMsg }}</p>
+          </div>
+
+          
           <form @submit.prevent="login">
 
             <ion-item>
@@ -38,6 +45,12 @@
             <div class="ion-text-center">
               <ion-button type="submit" fill="clear">Login</ion-button>
             </div>
+            
+            <div class="ion-text-center">
+                <ion-button fill="clear" :router-link="{ path: '/register' }">Click here to Register</ion-button>
+            </div>
+
+            
           </form>
         </ion-list>
         <!-- <p>{{email}}</p> -->
@@ -46,7 +59,7 @@
     </ion-page>
   </template>
   
-  <script lang="ts">
+  <script   >
   import { supabase } from '../supabase';
   import {
     IonContent,
@@ -93,28 +106,17 @@
           if(error) throw error; 
           router.push({name: "Account"});
         }catch(error){
-          // errorMsg.value =  
-
+          errorMsg.value = error.message;
+          setTimeout(()=>{
+          errorMsg.value = null;
+          }, 5000);
+          return;
         }
+        errorMsg.value = "Error: bad pasword";
+        setTimeout( () => {
+        errorMsg.value = '';
+        }, 5000);
       }
-
-
-      // const handleLogin = async () => {
-      //   const loader = await loadingController.create({});
-      //   const toast = await toastController.create({ duration: 5000 });
-      //   try {
-      //     await loader.present();
-      //     const { error } = await supabase.auth.signInWithPassword({ email: email.value,password: password.value, });
-      //     if (error) throw error;
-      //     toast.message = 'Check your email for the login link!';
-      //     await toast.present();
-      //   } catch (error: any) {
-      //     toast.message = error.error_description || error.message;
-      //     await toast.present();
-      //   } finally {
-      //     await loader.dismiss();
-      //   }
-      // };
 
       return {email, password, errorMsg, login};
     },

@@ -113,5 +113,18 @@
       IonButtons,
       
     },
+
+    // setup(){
+
+    //   const router = useRouter();
+
+    //   const logout = async () => {
+    //     await supabase.auth.signOut();
+    //     router.push("Register");
+    //   }
+
+    // },
+
+
   };
   </script>

@@ -64,6 +64,7 @@
   } from '@ionic/vue';
   import { User } from '@supabase/supabase-js';
   import { defineComponent, onMounted, ref } from 'vue';
+  import { useRouter } from "vue-router";
   // import Avatar from '../components/Avatar.vue';
   export default defineComponent({
     name: 'AccountPage',
@@ -158,12 +159,16 @@
         }
       };
   
+      const router = useRouter();
+
       async function signOut() {
         const loader = await loadingController.create({});
         const toast = await toastController.create({ duration: 5000 });
         await loader.present();
         try {
           const { error } = await supabase.auth.signOut();
+          router.push( {name: 'Home'});
+
           if (error) throw error;
         } catch (error: any) {
           toast.message = error.message;

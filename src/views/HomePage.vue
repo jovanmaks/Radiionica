@@ -1,3 +1,75 @@
+<template>
+  <ion-page>
+    <ion-header>
+        <ion-toolbar>
+          <ion-title>Home</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
+       
+      <ion-content>
+      
+
+        <ion-list :inset="true">
+        
+          <div class="ion-text-center">
+            <ion-button fill="clear" :router-link="{ path: '/login' }">Login</ion-button>
+          </div>
+
+          <div class="ion-text-center">
+            <ion-button fill="clear" :router-link="{ path: '/register' }">Register</ion-button>
+          </div>
+        
+        </ion-list>
+        
+      </ion-content>
+
+
+  </ion-page>
+
+</template>
+
+
+<script>
+
+import { supabase } from '../supabase';
+import { defineComponent, ref } from 'vue';
+import { useRouter } from "vue-router";
+
+  import {
+    IonContent,
+    IonHeader,
+    IonPage,
+    IonTitle,
+    IonToolbar,
+    IonList,
+    // IonItem,
+    // IonLabel,
+    // IonInput,
+    IonButton,
+    toastController,
+    loadingController,
+  } from '@ionic/vue';
+export default defineComponent({
+    name: 'HomePage',
+    components: {
+      IonContent,
+      IonHeader,
+      IonPage,
+      IonTitle,
+      IonToolbar,
+      IonList,
+      // IonItem,
+      // IonLabel,
+      // IonInput,
+      IonButton,
+    },
+
+
+});
+</script>
+
+
 <!-- 
 <template>
 
@@ -12,7 +84,7 @@
     import { ellipse, square, triangle,star } from 'ionicons/icons';
 
   </script> -->
-  <template>
+  <!-- <template>
     <ion-page>
       <ion-header :translucent="true">
         <ion-toolbar>
@@ -76,4 +148,4 @@
     text-decoration: none;
   }
   </style>
-  
+   -->

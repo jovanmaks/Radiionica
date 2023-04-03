@@ -8,12 +8,14 @@
       </ion-header>
 
       <ion-content>
-        <div class="ion-padding">
-        <!--  Error handling-->
-        </div>
 
         <ion-list :inset="true">
             
+          <!--  Error handling-->
+          <div v-if="errorMsg" class="ion-padding">
+            <p>{{ errorMsg }}</p>
+          </div>
+
           <form @submit.prevent="register" >
             <ion-item>
               <ion-label position="stacked">Email</ion-label>
@@ -50,8 +52,10 @@
             </div>
 
             <div class="ion-text-center">
-                <ion-button fill="clear" :router-link="{ path: '/login' }">Click here to l ogin</ion-button>
+                <ion-button fill="clear" :router-link="{ path: '/login' }">Click here to login</ion-button>
             </div>
+            
+            
           </form>
          
           
@@ -61,7 +65,8 @@
 </template>
 
 
-<script lang="ts">
+<!-- <script lang="ts"> -->
+<script>
 import { supabase } from '../supabase';
 import { defineComponent, ref } from 'vue';
 import { useRouter } from "vue-router";
@@ -95,42 +100,42 @@ export default defineComponent({
       IonButton,
     },
 
-    setup(){
-        // Create data
-        const router = useRouter();
-        const email            = ref('');
-        const password         = ref('');
-        const confirmPassword  = ref('');
-        const errorMsg         = ref('');
-        
-        // Register function
-        const register = async () =>{
-            if (password.value === confirmPassword.value){
-               try{
-                    const {error} = await supabase.auth.signUp({
-                        email: email.value,
-                        password: password.value,
-                    });
-                console.log('odradio si auth');
-                if (error) throw error;
-                router.push({name: 'Login'});
-                }catch(error){
-                console.log('u ketchu si');
-                // errorMsg.value = error.message;
-                    
-               } 
-               return;
-            }
-            errorMsg.value = "Error: Password do not match";
-            setTimeout( () => {
-                errorMsg.value = '';
-            }, 5000);
-        };
+      setup(){
+          // Create data
+          const router = useRouter();
+          const email            = ref('');
+          const password         = ref('');
+          const confirmPassword  = ref('');
+          const errorMsg         = ref('');
+          
+          // Register function
+          const register = async () =>{
+              if (password.value === confirmPassword.value){
+                try{
+                      const response = await supabase.auth.signUp({
+                          email: email.value,
+                          password: password.value,
+                      });
+                  console.log('odradio si auth');
+                  if (response.error) throw response.error;
+                  router.push({name: 'Login'});   
+                  }catch(error){
+                  console.log('u ketchu si');
+                  errorMsg.value = error.message;
+                  setTimeout(()=>{
+                    errorMsg.value = null;
+                  }, 5000);
+                } 
+                return;
+              }
+              errorMsg.value = "Error: Password do not match";
+              setTimeout( () => {
+                  errorMsg.value = '';
+              }, 5000);
+          };
 
-        return { email,password,confirmPassword,errorMsg, register };
-    },
-
-
+          return { email,password,confirmPassword,errorMsg, register };
+      },
 });
 
 </script>
