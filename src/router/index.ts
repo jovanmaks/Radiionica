@@ -14,6 +14,10 @@ import LoginPage from '../views/Login.vue';
 import RegisterPage from '../views/Register.vue';
 import AccountPage from '../views/Account.vue';
 
+import AdminPage from '../views/AdminPage.vue';
+import ModelerPage from '../views/ModelerPage.vue';
+import TehnicarPage from '../views/TehnicarPage.vue';
+
 
 const routes: Array<RouteRecordRaw> = [
   { 
@@ -35,6 +39,24 @@ const routes: Array<RouteRecordRaw> = [
     path: '/register',
     name: 'Register',
     component: RegisterPage 
+  }, 
+  { 
+    path: '/admin',
+    name: 'Admin',
+    component: AdminPage,
+    meta: { requiresAuth: true, roles: ['admin'] } // only admins can access
+  }, 
+  { 
+    path: '/modeler',
+    name: 'Modeler',
+    component: ModelerPage,
+    meta: { requiresAuth: true, roles: ['modeler', 'admin'] } // only admins can access
+  }, 
+  { 
+    path: '/tehnicar',
+    name: 'Tehnicar',
+    component: TehnicarPage,
+    meta: { requiresAuth: true, roles: ['tehnicar', 'admin'] } // only admins can access
   }, 
 ]
 

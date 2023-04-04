@@ -47,6 +47,17 @@
               ></ion-input>
             </ion-item>
 
+            <ion-item>
+              <ion-label>Role</ion-label>
+              <ion-select v-model="role" ok-text="Select" cancel-text="Cancel">
+                <ion-select-option value="admin">Admin</ion-select-option>
+                <ion-select-option value="tehnicar">User</ion-select-option>
+                <ion-select-option value="modeler">User</ion-select-option>
+              </ion-select>
+            </ion-item>
+
+
+
             <div class="ion-text-center">
               <ion-button type="submit" fill="clear">Register</ion-button>
             </div>

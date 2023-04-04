@@ -34,6 +34,17 @@ const app = createApp(App)
   .use(IonicVue)
   .use(router);
   
+  app.directive('auth', {
+    beforeMount(el, binding) {
+      const { value: { roles } } = binding;
+  
+      if (roles && !((router.currentRoute.value.meta as { requiresAuth?: boolean; roles?: string[] }).roles?.includes('admin'))) {
+        el.parentNode?.removeChild(el);
+      }
+    }
+  });
+
+
   app.component('base-layout', BaseLayout); 
 
 router.isReady().then(() => {
