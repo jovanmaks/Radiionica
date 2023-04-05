@@ -1,18 +1,10 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
-import TabsPage from '../views/TabsPage.vue'
-import ProfilePage from '../views/ProfilePage.vue'
-import MemoriesPage from '../views/MemoriesPage.vue'
-import SearchPage from '../views/SearchPage.vue'
-import ActivityPage from '../views/ActivityPage.vue'
-import MenyPage from '../views/MenyPage.vue'
-import HomePage from '../views/HomePage.vue'
-import QRPage from '../views/QRScannerPage.vue'
-import MessagesPage from '../views/MessagesPage.vue'
 
+import HomePage from '../views/HomePage.vue'
 import LoginPage from '../views/Login.vue';
-import RegisterPage from '../views/Register.vue';
 import AccountPage from '../views/Account.vue';
+import RegisterPage from '../views/Register.vue';
 
 import AdminPage from '../views/AdminPage.vue';
 import ModelerPage from '../views/ModelerPage.vue';
