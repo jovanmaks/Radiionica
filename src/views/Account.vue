@@ -12,10 +12,16 @@
           <ion-item>
             <ion-label>
               <p>Email</p>
-              <!-- <p>{{ session?.user?.email }}</p> -->
+              <!-- <p>{{ session?.  user?.email }}</p> -->
             </ion-label>
           </ion-item>
   
+          <ion-item>
+            <ion-label>
+              <p>{{ profile }}</p>
+            </ion-label>
+          </ion-item>
+
           <ion-item>
             <ion-label position="stacked">Name</ion-label>
             <ion-input
@@ -102,6 +108,7 @@
       const profile = ref({
         username: '',
         website: '',
+        user_roles: '',
         // avatar_url: '',
       });
       const user = store.user as User;
@@ -110,23 +117,36 @@
         const toast = await toastController.create({ duration: 5000 });
         await loader.present();
         try {
+          
+
+
           const { data, error, status } = await supabase
             .from('profiles')
-            .select(`username, website`)
+            .select(`username, website, user_roles`)
             // .select(`username, website, avatar_url`)
             .eq('id', user.id)
             .single();
+
+            console.log('ovdje gledaj za role')
+            console.log(data)
   
           if (error && status !== 406) throw error;
   
           if (data) {
-            console.log(data)
             profile.value = {
               username: data.username,
               website: data.website,
+              user_roles: data.user_roles,
               // avatar_url: data.avatar_url,
             };
           }
+          
+
+          // const {
+          //   data: { user },
+          // } = await supabase.auth.getUser()
+          // let metadata = user.user_metadata
+          
         } catch (error: any) {
           toast.message = error.message;
           await toast.present();
@@ -134,6 +154,7 @@
           await loader.dismiss();
         }
       }
+      
   
       const updateProfile = async () => {
         const loader = await loadingController.create({});

@@ -96,6 +96,8 @@
       const email = ref('');
       const password = ref('');
       const errorMsg = ref('');
+      const user_roles = ref('');
+      // const metadata   = ref(null);
 
       const login = async () => {
         try{
@@ -104,7 +106,30 @@
             password: password.value,
           });
           if(error) throw error; 
-          router.push({name: "Account"});
+          
+          const {
+            data: { user },
+          } = await supabase.auth.getUser()
+          const metadata = user.user_metadata.value
+          
+
+          console.log('meta')
+          console.log(user.user_metadata.role)
+
+          // console.log('rola na logovanju');
+          // console.log(user_roles.value);
+
+          if(user.user_metadata.role === 'tehnicar')
+          {
+          router.push({name: "Tehnicar"});
+          }
+          if(user.user_metadata.role === 'modeler')
+          {
+            router.push({name: "Modeler"});
+          }
+
+
+          //  router.push({name: "Account"});
         }catch(error){
           errorMsg.value = error.message;
           setTimeout(()=>{
