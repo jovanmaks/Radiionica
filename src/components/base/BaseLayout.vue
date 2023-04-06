@@ -55,8 +55,7 @@
           </ion-button>
 
           <center>
-              <ion-button  fill="solid" tab="qr"  href="/qr">
-              </ion-button>
+              <ion-button  fill="solid" tab="qr"  href="/qr">QR</ion-button>
 
               <ion-button  fill="solid" tab="messages"  href="/messages">
               </ion-button>

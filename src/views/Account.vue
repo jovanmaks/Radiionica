@@ -142,10 +142,6 @@
           }
           
 
-          // const {
-          //   data: { user },
-          // } = await supabase.auth.getUser()
-          // let metadata = user.user_metadata
           
         } catch (error: any) {
           toast.message = error.message;

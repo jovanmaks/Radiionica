@@ -9,6 +9,7 @@ import RegisterPage from '../views/Register.vue';
 import AdminPage from '../views/AdminPage.vue';
 import ModelerPage from '../views/ModelerPage.vue';
 import TehnicarPage from '../views/TehnicarPage.vue';
+import QRPage from '../views/QRPage.vue';
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -31,6 +32,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/register',
     name: 'Register',
     component: RegisterPage 
+  }, 
+  { 
+    path: '/qr',
+    name: 'QR',
+    component: QRPage 
   }, 
   { 
     path: '/admin',
