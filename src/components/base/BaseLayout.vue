@@ -37,6 +37,17 @@
         </ion-toolbar>
       </ion-header>
       
+      <ion-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6" :key="photo" v-for="photo in photos">
+              <ion-img :src="photo.webviewPath"></ion-img>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <!-- <ion-fab> markup  -->
+      </ion-content>
 
 
       <ion-content>
@@ -95,7 +106,7 @@
     import ExploreContainer from '@/components/ExploreContainer.vue';
 
     import { camera, trash, close } from 'ionicons/icons';
-    import { usePhotoGallery } from '@/composables/usePhotoGallery';
+    import { usePhotoGallery,UserPhoto } from '@/composables/usePhotoGallery';
 
   export default {
     props: ["pageTitle", "pageDefaultBackLink"],
@@ -113,7 +124,8 @@
 
     setup(){
 
-       const { takePhoto } = usePhotoGallery();
+       const { photos, takePhoto } = usePhotoGallery();
+
 
       const router = useRouter();
 
@@ -133,7 +145,7 @@
           await loader.dismiss();
         }
       }
-      return {signOut, takePhoto };
+      return {signOut, takePhoto, photos };
     },
 
 

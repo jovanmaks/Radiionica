@@ -1,0 +1,11 @@
+{
+    "appId": "io.ionic.starter",
+    "appName": "Radionica",
+    "webDir": "dist",
+    "bundledWebRuntime": false,
+    "cordova": {},
+    "android": {
+      "path": "/usr/local/bin/android-studio"
+    }
+  }
+  
