@@ -56,10 +56,8 @@
 
           <center>
               <ion-button  fill="solid" tab="qr"  href="/qr">QR</ion-button>
-
-              <ion-button  fill="solid" tab="messages"  href="/messages">
-              </ion-button>
-
+              <!-- <ion-button  fill="solid" tab="photogalery"  href="/photogalery">Photo</ion-button> -->
+              <ion-button  fill="solid" @click="takePhoto"> Photo</ion-button>
           </center>
 
         </ion-toolbar>
@@ -72,14 +70,9 @@
   
   <script lang="ts" >
   import {
-    // IonIcon,
-    // IonTabs,
-    // IonRouterOutlet,
     IonPage,
     toastController,
     loadingController,
-    // IonTabBar,
-    // IonLabel,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -99,18 +92,15 @@
     import { defineComponent } from 'vue';
     import { useRouter } from "vue-router";
     import { supabase } from '@/supabase';
+    import ExploreContainer from '@/components/ExploreContainer.vue';
+
+    import { camera, trash, close } from 'ionicons/icons';
+    import { usePhotoGallery } from '@/composables/usePhotoGallery';
 
   export default {
     props: ["pageTitle", "pageDefaultBackLink"],
     components: {
-      // IonIcon,
-      // IonTabs,
-      // IonRouterOutlet,
       IonPage,
-      // toastController,
-      // loadingController,
-      // IonTabBar,
-      // IonLabel,
       IonHeader,
       IonToolbar,
       IonTitle,
@@ -122,6 +112,8 @@
     },
 
     setup(){
+
+       const { takePhoto } = usePhotoGallery();
 
       const router = useRouter();
 
@@ -141,7 +133,7 @@
           await loader.dismiss();
         }
       }
-      return {signOut };
+      return {signOut, takePhoto };
     },
 
 

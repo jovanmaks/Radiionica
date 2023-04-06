@@ -10,6 +10,7 @@ import AdminPage from '../views/AdminPage.vue';
 import ModelerPage from '../views/ModelerPage.vue';
 import TehnicarPage from '../views/TehnicarPage.vue';
 import QRPage from '../views/QRPage.vue';
+import PhotoGaleryPage from '../views/PhotoGaleryPage.vue';
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -37,6 +38,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/qr',
     name: 'QR',
     component: QRPage 
+  }, 
+  { 
+    path: '/photogalery',
+    name: 'PhotoGalery',
+    component: PhotoGaleryPage 
   }, 
   { 
     path: '/admin',
