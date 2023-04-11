@@ -47,6 +47,13 @@
         </ion-grid>
 
         <!-- <ion-fab> markup  -->
+        
+          <!-- <qrcode :value="qrValue" :options="{ size: 200 }"></qrcode> -->
+          <qrcode-reader @decode="onDecode" @init="onInit"></qrcode-reader>
+          <!-- <qrcode-stream @init="onInit"></qrcode-stream> -->
+
+
+
       </ion-content>
 
 
@@ -66,7 +73,12 @@
           </ion-button>
 
           <center>
-              <ion-button  fill="solid" tab="qr"  href="/qr">QR</ion-button>
+            <ion-button fill="solid" tab="qr" @click="toggleScanner">QR</ion-button>
+            <div v-if="showScanner">
+              <qrcode-reader @decode="onDecode" @init="onInit"></qrcode-reader>
+            </div>
+
+              <!-- <ion-button  fill="solid" tab="qr"  href="/qr">QR</ion-button> -->
               <!-- <ion-button  fill="solid" tab="photogalery"  href="/photogalery">Photo</ion-button> -->
               <ion-button  fill="solid" @click="takePhoto"> Photo</ion-button>
           </center>
@@ -100,17 +112,36 @@
     star, 
     } from 'ionicons/icons';
 
-    import { defineComponent } from 'vue';
+    import { defineComponent, ref } from 'vue';
     import { useRouter } from "vue-router";
     import { supabase } from '@/supabase';
     import ExploreContainer from '@/components/ExploreContainer.vue';
 
     import { camera, trash, close } from 'ionicons/icons';
     import { usePhotoGallery,UserPhoto } from '@/composables/usePhotoGallery';
+    
+    import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader'
+    import QRCode from "qrcode.vue";
+    import QrcodeReader from "vue-qrcode-reader";
+    // import VueQrcodeReader from "vue-qrcode-reader";
+    
+
+    import { Browser } from '@capacitor/browser';
+    import { isPlatform } from '@ionic/vue';
+
+    import { onMounted } from 'vue';
+
 
   export default {
     props: ["pageTitle", "pageDefaultBackLink"],
     components: {
+      // QrcodeStream,
+      // QrcodeDropZone,
+      // QrcodeCapture,
+
+      QrcodeReader,
+      // QRCode,
+
       IonPage,
       IonHeader,
       IonToolbar,
@@ -121,11 +152,113 @@
       IonButtons,
       
     },
+    
+   
+
 
     setup(){
 
-       const { photos, takePhoto } = usePhotoGallery();
+      onMounted(() => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const qrCodeContent = urlParams.get('qrCodeContent');
 
+  if (qrCodeContent) {
+    checkQRCodeInDatabase(qrCodeContent);
+  }
+});
+
+
+      const openScannerInBrowser = async () => {
+  const scannerUrl = 'your-scanner-url'; // Replace with your QR scanner URL
+  await Browser.open({ url: scannerUrl });
+};
+
+      const showScanner = ref(false);
+
+      const toggleScanner = () => {
+  if (isPlatform('capacitor')) {
+    openScannerInBrowser();
+  } else {
+    showScanner.value = !showScanner.value;
+  }
+};
+
+
+const onDecode = (content: string) => {
+  console.log('Decoded content:', content);
+  checkQRCodeInDatabase(content);
+
+  // If running on a mobile device, close the scanner window and navigate back to the app
+  if (isPlatform('capacitor')) {
+    const returnUrl = 'your-app-url'; // Replace with your app's URL
+    const encodedContent = encodeURIComponent(content);
+    window.location.href = `${returnUrl}?qrCodeContent=${encodedContent}`;
+  }
+};
+
+    const onInit = (promise: Promise<any>) => {
+      promise
+        .then(() => {
+          console.log('Scanner initialized.');
+        })
+        .catch((error) => {
+          console.error('Error initializing scanner:', error);
+        });
+    };
+
+    const checkQRCodeInDatabase = async (qrCodeContent: string) => {
+      try {
+        const { data, error } = await supabase
+          .from('your-table-name')
+          .select('*')
+          .eq('qr_code_content', qrCodeContent);
+
+        if (error) {
+          console.error('Error fetching data:', error);
+          return;
+        }
+
+        if (data.length === 0) {
+          console.log('QR code not found in the database.');
+        } else {
+          console.log('QR code found:', data[0]);
+        }
+      } catch (err) {
+        console.error('Error querying the database:', err);
+      }
+    };
+
+
+
+//   async checkQRCodeInDatabase(qrCodeContent) {
+//   try {
+//     const { data, error } = await supabase
+//       .from('your-table-name')
+//       .select('*')
+//       .eq('qr_code_content', qrCodeContent);
+
+//     if (error) {
+//       console.error('Error fetching data:', error);
+//       return;
+//     }
+
+//     if (data.length === 0) {
+//       console.log('QR code not found in the database.');
+//     } else {
+//       console.log('QR code found:', data[0]);
+//     }
+//   } catch (err) {
+//     console.error('Error querying the database:', err);
+//   }
+// }
+
+
+
+    
+
+
+
+       const { photos, takePhoto } = usePhotoGallery();
 
       const router = useRouter();
 
@@ -145,7 +278,7 @@
           await loader.dismiss();
         }
       }
-      return {signOut, takePhoto, photos };
+      return {signOut, takePhoto, photos,  onDecode, onInit, showScanner, toggleScanner, };
     },
 
 

@@ -48,12 +48,9 @@
             </ion-item>
 
 
-            <ion-item>
-              <ion-select  aria-label="role"   placeholder="Selected role" v-model="role">
-                <ion-select-option value="admin">Admin</ion-select-option>
-                <ion-select-option value="tehnicar">Tehnicar</ion-select-option>
-                <ion-select-option value="modeler">Modeler</ion-select-option>
-              </ion-select>
+            <ion-item v-for="item in items" :key="item.id">
+              <ion-checkbox slot="start" v-model="item.checked"></ion-checkbox>
+              <ion-label>{{ item.label }}</ion-label>
             </ion-item>
 
 
@@ -67,15 +64,14 @@
             
             
           </form>
-         
-          
         </ion-list>
+        
+
       </ion-content>
     </ion-page>
 </template>
 
 
-<!-- aaaaa -->
 <!-- <script lang="ts"> -->
 <script>
 import { supabase } from '../supabase';
@@ -90,11 +86,10 @@ import { useRouter } from "vue-router";
     IonToolbar,
     IonList,
     IonItem,
-    IonSelect,
-    IonSelectOption,
     IonLabel,
     IonInput,
     IonButton,
+    IonCheckbox,
     toastController,
     loadingController,
   } from '@ionic/vue';
@@ -108,11 +103,10 @@ export default defineComponent({
       IonToolbar,
       IonList,
       IonItem,
-      IonSelect,
-      IonSelectOption,
       IonLabel,
       IonInput,
       IonButton,
+      IonCheckbox,
     },
 
       setup(){
@@ -122,23 +116,59 @@ export default defineComponent({
           const password         = ref('');
           const confirmPassword  = ref('');
           const errorMsg         = ref('');
-          const role             = ref(null);
           
+          
+          const items = ref([
+      { id: 1, label: 'Ponuda',                checked: false },
+      { id: 2, label: 'Crtanje',               checked: false },
+      { id: 3, label: 'Programiranje',         checked: false },
+      { id: 4, label: 'Priprema za sjecenje',  checked: false },
+      { id: 5, label: 'Sjecenje',              checked: false },
+      { id: 6, label: 'Priprema za farbanje',  checked: false },
+      { id: 7, label: 'Farbanje',              checked: false },
+      { id: 8, label: 'Sklapanje',             checked: false },
+      { id: 9, label: 'Predaja',               checked: false },
+      { id: 10, label:'Transport',             checked: false },
+      { id: 11, label:'Fotografisanje',        checked: false },
+      { id: 12, label:'Nabavka',               checked: false },
+      { id: 13, label:'Magacin',               checked: false },
+      { id: 14, label:'Alati',                 checked: false },
+    ]);
 
 
+
+      const getSelectedLabels = () => {
+        return items.value.reduce((acc, item) => {
+        acc[item.label] = item.checked;
+        return acc;
+        }, {});
+      };
+
+
+
+      const isLabelSelected = (labelName) => {
+          const item = items.value.find((item) => item.label === labelName);
+          return item ? item.checked : false;
+        };
 
           // Register function
           const register = async () =>{
               if (password.value === confirmPassword.value){
                 try{
+
                       const userSingUp = await supabase.auth.signUp({
                           email: email.value,
                           password: password.value,
                           options: {
-                            data: {role:  role.value,},
+                            data:
+                            {
+                              selectedLabels: getSelectedLabels(),
+                            },
                           },
                       });
                   if (userSingUp.error) throw userSingUp.error;
+                  
+
                   router.push({name: 'Login'});   
                   }catch(error){
                   console.log('u ketchu si');
@@ -155,7 +185,7 @@ export default defineComponent({
               }, 5000);
           };
 
-          return { email,password,confirmPassword,errorMsg, role, register };
+          return { email, password, confirmPassword, errorMsg, items, register  };
       },
 });
 

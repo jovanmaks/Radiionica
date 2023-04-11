@@ -12,8 +12,9 @@
   "dependencies": {
     "@capacitor/android": "4.7.0",
     "@capacitor/app": "4.1.1",
+    "@capacitor/browser": "^4.1.1",
     "@capacitor/camera": "^4.1.4",
-    "@capacitor/core": "4.7.0",
+    "@capacitor/core": "^4.7.0",
     "@capacitor/filesystem": "^4.1.4",
     "@capacitor/haptics": "4.1.0",
     "@capacitor/ios": "4.7.0",
@@ -26,7 +27,9 @@
     "@supabase/supabase-js": "^2.12.0",
     "core-js": "^3.6.5",
     "ionicons": "^6.0.3",
+    "qrcode.vue": "^3.3.4",
     "vue": "^3.2.21",
+    "vue-qrcode-reader": "^3.1.5",
     "vue-router": "^4.0.12"
   },
   "devDependencies": {

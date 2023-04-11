@@ -11,6 +11,7 @@ import ModelerPage from '../views/ModelerPage.vue';
 import TehnicarPage from '../views/TehnicarPage.vue';
 import QRPage from '../views/QRPage.vue';
 import PhotoGaleryPage from '../views/PhotoGaleryPage.vue';
+import WelcomePage from '../views/WelcomePage.vue';
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -61,6 +62,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Tehnicar',
     component: TehnicarPage,
     meta: { requiresAuth: true, roles: ['tehnicar', 'admin'] } // only admins can access
+  }, 
+  { 
+    path: '/welcome',
+    name: 'Welcome',
+    component: WelcomePage,
+    meta: { requiresAuth: true, roles: ['welcome', 'admin'] } // only admins can access
   }, 
 ]
 

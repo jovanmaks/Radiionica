@@ -92,6 +92,9 @@
       IonButton,
     },
     setup() {
+
+
+
       const router = useRouter();
       const email = ref('');
       const password = ref('');
@@ -113,6 +116,8 @@
           console.log('meta')
           console.log(user.user_metadata.role)
 
+
+          console.log('labele',user.user_metadata.selectedLabels);
 
           if(user.user_metadata.role === 'tehnicar')
           {
