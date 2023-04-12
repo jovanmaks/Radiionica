@@ -117,16 +117,12 @@
           console.log(user.user_metadata.role)
 
 
-          console.log('labele',user.user_metadata.selectedLabels);
+          console.log('labele',user.user_metadata.selectedLabels.Alati);
+          console.log('labele2',user.user_metadata.selectedLabels.Ponuda);
+          console.log('labele3',user.user_metadata.selectedLabels.Crtanje);
+          console.log('labele4',user.user_metadata.selectedLabels.Magacin);
 
-          if(user.user_metadata.role === 'tehnicar')
-          {
-          router.push({name: "Tehnicar"});
-          }
-          if(user.user_metadata.role === 'modeler')
-          {
-            router.push({name: "Modeler"});
-          }
+          router.push({name: "Welcome"});
           //  router.push({name: "Account"});
         }catch(error){
           errorMsg.value = error.message;

@@ -3,6 +3,8 @@
 
   <base-layout page-title="Welcome" page-default-back-link="/admin" >
   </base-layout>
+  
+  
 
 </template>
   

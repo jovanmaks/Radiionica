@@ -1,6 +1,8 @@
 <template>
   <!-- <ion-app v-if="appReady"> -->
-  <ion-app >
+  
+ <ion-app >
+    <!-- <NavigationPage /> -->
     <ion-router-outlet />
   </ion-app>
 </template>
@@ -13,11 +15,12 @@ import { defineComponent, ref } from 'vue'
 import { store } from './store'
 import { supabase } from './supabase'
 import { Session } from 'inspector';
-
+// import NavigationPage from './components/NavigationPage.vue'
 
   export default defineComponent({
     name: 'App',
     components: {
+      // NavigationPage,
       IonApp,
       IonRouterOutlet,
     },

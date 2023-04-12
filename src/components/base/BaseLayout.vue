@@ -38,6 +38,79 @@
       </ion-header>
       
       <ion-content>
+<!-- 
+        Ponuda: false,
+        Crtanje: false,
+        Programiranje: false,
+        PripremaZaSjecenje: false,
+        Sjecenje: false,
+        PripremaZaFarbanje: false,
+        Farbanje: false,
+        Sklapanje: false,
+        Predaja: false,
+        Transport: false,
+        Fotografisanje: false,
+        Nabavka: false,
+        Magacin: false,
+        Alati: false, -->
+
+        <div v-if="selectedLabels.Ponuda">
+          <h2>Ponuda</h2>
+        </div>
+      
+        <div v-if="selectedLabels.Crtanje">
+          <h2>Crtanje</h2>
+        </div>
+
+        <div v-if="selectedLabels.Programiranje">
+          <h2>Programiranje</h2>
+        </div>
+
+        <div v-if="selectedLabels.PripremaZaSjecenje">
+          <h2>Priprema za sjecenje</h2>
+        </div>
+        
+        <div v-if="selectedLabels.Sjecenje">
+          <h2>Sjecenje</h2>
+        </div>
+
+        <div v-if="selectedLabels.PripremaZaFarbanje">
+          <h2>Priprema Za Farbanje</h2>
+        </div>
+
+        <div v-if="selectedLabels.Farbanje">
+          <h2>Farbanje</h2>
+        </div>
+
+        <div v-if="selectedLabels.Sklapanje">
+          <h2>Sklapanje</h2>
+        </div>
+        
+        <div v-if="selectedLabels.Predaja">
+          <h2>Predaja</h2>
+        </div>
+
+        <div v-if="selectedLabels.Transport">
+          <h2>Transport</h2>
+        </div>
+        
+        <div v-if="selectedLabels.Fotografisanje">
+          <h2>Fotografisanje</h2>
+        </div>
+        
+        <div v-if="selectedLabels.Nabavka">
+          <h2>Nabavka</h2>
+        </div>
+        
+        <div v-if="selectedLabels.Magacin">
+          <h2>Magacin</h2>
+        </div>
+        
+        <div v-if="selectedLabels.Alati">
+          <h2>Alati</h2>
+        </div>
+
+
         <ion-grid>
           <ion-row>
             <ion-col size="6" :key="photo" v-for="photo in photos">
@@ -91,7 +164,8 @@
   </template>
   
   
-  <script lang="ts" >
+  <!-- <script lang="ts" > -->
+   <script   >
   import {
     IonPage,
     toastController,
@@ -131,6 +205,9 @@
 
     import { onMounted } from 'vue';
 
+    import { User } from '@supabase/supabase-js';
+
+
 
   export default {
     props: ["pageTitle", "pageDefaultBackLink"],
@@ -155,23 +232,56 @@
     
    
 
-
     setup(){
 
+      const selectedLabels = ref({
+        Ponuda: false,
+        Crtanje: false,
+        Programiranje: false,
+        PripremaZaSjecenje: false,
+        Sjecenje: false,
+        PripremaZaFarbanje: false,
+        Farbanje: false,
+        Sklapanje: false,
+        Predaja: false,
+        Transport: false,
+        Fotografisanje: false,
+        Nabavka: false,
+        Magacin: false,
+        Alati: false,
+      });
+      
+
+      async function fetchUserMetadata() {
+          const {
+            data: { user },
+          } = await supabase.auth.getUser()
+  // if (error) {
+  //   console.error("Error fetching user metadata:", error);
+  //   return;
+  // }
+
+      Object.keys(selectedLabels.value).forEach((key) => {
+        selectedLabels.value[key] = user.user_metadata.selectedLabels[key];
+        });
+      // selectedLabels.value.Ponuda = user.user_metadata.selectedLabels.Ponuda;
+}
+
       onMounted(() => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const qrCodeContent = urlParams.get('qrCodeContent');
+        fetchUserMetadata();
+        const urlParams = new URLSearchParams(window.location.search);
+        const qrCodeContent = urlParams.get('qrCodeContent');
 
-  if (qrCodeContent) {
-    checkQRCodeInDatabase(qrCodeContent);
-  }
-});
+    if (qrCodeContent) {
+      checkQRCodeInDatabase(qrCodeContent);
+      }
+    });
 
 
-      const openScannerInBrowser = async () => {
-  const scannerUrl = 'your-scanner-url'; // Replace with your QR scanner URL
-  await Browser.open({ url: scannerUrl });
-};
+    const openScannerInBrowser = async () => {
+    const scannerUrl = 'your-scanner-url'; // Replace with your QR scanner URL
+    await Browser.open({ url: scannerUrl });
+    };
 
       const showScanner = ref(false);
 
@@ -184,7 +294,8 @@
 };
 
 
-const onDecode = (content: string) => {
+// const onDecode = (content: string) => {
+const onDecode = (content) => {
   console.log('Decoded content:', content);
   checkQRCodeInDatabase(content);
 
@@ -196,7 +307,8 @@ const onDecode = (content: string) => {
   }
 };
 
-    const onInit = (promise: Promise<any>) => {
+    // const onInit = (promise: Promise<any>) => {
+    const onInit = (promise) => {
       promise
         .then(() => {
           console.log('Scanner initialized.');
@@ -206,7 +318,8 @@ const onDecode = (content: string) => {
         });
     };
 
-    const checkQRCodeInDatabase = async (qrCodeContent: string) => {
+    // const checkQRCodeInDatabase = async (qrCodeContent: string) => {
+    const checkQRCodeInDatabase = async (qrCodeContent) => {
       try {
         const { data, error } = await supabase
           .from('your-table-name')
@@ -271,14 +384,15 @@ const onDecode = (content: string) => {
           router.push( {name: 'Home'});
 
           if (error) throw error;
-        } catch (error: any) {
+        // } catch (error: any) {
+        } catch (error) {
           toast.message = error.message;
           await toast.present();
         } finally {
           await loader.dismiss();
         }
       }
-      return {signOut, takePhoto, photos,  onDecode, onInit, showScanner, toggleScanner, };
+      return {signOut, takePhoto, photos,  onDecode, onInit, showScanner, toggleScanner, selectedLabels  };
     },
 
 

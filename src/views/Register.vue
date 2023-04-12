@@ -118,22 +118,22 @@ export default defineComponent({
           const errorMsg         = ref('');
           
           
-          const items = ref([
-      { id: 1, label: 'Ponuda',                checked: false },
-      { id: 2, label: 'Crtanje',               checked: false },
-      { id: 3, label: 'Programiranje',         checked: false },
-      { id: 4, label: 'Priprema za sjecenje',  checked: false },
-      { id: 5, label: 'Sjecenje',              checked: false },
-      { id: 6, label: 'Priprema za farbanje',  checked: false },
-      { id: 7, label: 'Farbanje',              checked: false },
-      { id: 8, label: 'Sklapanje',             checked: false },
-      { id: 9, label: 'Predaja',               checked: false },
-      { id: 10, label:'Transport',             checked: false },
-      { id: 11, label:'Fotografisanje',        checked: false },
-      { id: 12, label:'Nabavka',               checked: false },
-      { id: 13, label:'Magacin',               checked: false },
-      { id: 14, label:'Alati',                 checked: false },
-    ]);
+        const items = ref([
+        { id: 1, label: 'Ponuda',                checked: false },
+        { id: 2, label: 'Crtanje',               checked: false },
+        { id: 3, label: 'Programiranje',         checked: false },
+        { id: 4, label: 'PripremaZaSjecenje',    checked: false },
+        { id: 5, label: 'Sjecenje',              checked: false },
+        { id: 6, label: 'PripremaZaFarbanje',    checked: false },
+        { id: 7, label: 'Farbanje',              checked: false },
+        { id: 8, label: 'Sklapanje',             checked: false },
+        { id: 9, label: 'Predaja',               checked: false },
+        { id: 10, label:'Transport',             checked: false },
+        { id: 11, label:'Fotografisanje',        checked: false },
+        { id: 12, label:'Nabavka',               checked: false },
+        { id: 13, label:'Magacin',               checked: false },
+        { id: 14, label:'Alati',                 checked: false },
+        ]);
 
 
 
