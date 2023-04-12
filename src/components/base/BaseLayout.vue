@@ -94,10 +94,8 @@
         </div> -->
         
         
-        <div v-if="selectedLabels.Magacin" class="ion-text-center">
-        <!-- <div v-if="selectedLabels.Magacin && router.name !== 'Magacin'" class="ion-text-center"> -->
+        <div v-if="selectedLabels.Magacin && routeName === 'Welcome' " class="ion-text-center">
           <ion-button type="submit" fill="clear" :router-link="{ path:'/magacin'}">Magacin</ion-button>
-          <!-- <ion-button type="submit" fill="clear" >Magacin</ion-button> -->
         </div>
         
         <slot name="content"></slot>
@@ -182,7 +180,7 @@
     star, 
     } from 'ionicons/icons';
 
-    import { defineComponent, ref, watch, computed } from 'vue';
+    import { defineComponent, ref} from 'vue';
     import { useRouter } from "vue-router";
     import { supabase } from '@/supabase';
     import ExploreContainer from '@/components/ExploreContainer.vue';
@@ -229,6 +227,10 @@
    
 
     setup(){
+      
+
+      const router = useRouter();
+      const routeName = router.currentRoute.value.name;
 
       const selectedLabels = ref({
         Ponuda: false,
@@ -369,8 +371,6 @@ const onDecode = (content) => {
 
        const { photos, takePhoto } = usePhotoGallery();
 
-      const router = useRouter();
-      // const routeName = ref(router.name);
       // const routeName = computed(() => router.name);
       
       // watch(router, () => {
@@ -379,6 +379,7 @@ const onDecode = (content) => {
 
       // const routeName = computed(() => router.name);
       // console.log('imeeeee',routeName);
+      console.log('imeeeeee' , routeName);
 
       async function signOut() {
         const loader = await loadingController.create({});
@@ -397,7 +398,7 @@ const onDecode = (content) => {
           await loader.dismiss();
         }
       }
-      return {signOut, takePhoto, photos,  onDecode, onInit, showScanner, toggleScanner, selectedLabels  };
+      return {signOut, takePhoto, photos,  onDecode, onInit, showScanner, toggleScanner, selectedLabels, routeName  };
     },
 
 
