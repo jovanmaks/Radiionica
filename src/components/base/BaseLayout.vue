@@ -39,20 +39,6 @@
       
       <ion-content>
 <!-- 
-        Ponuda: false,
-        Crtanje: false,
-        Programiranje: false,
-        PripremaZaSjecenje: false,
-        Sjecenje: false,
-        PripremaZaFarbanje: false,
-        Farbanje: false,
-        Sklapanje: false,
-        Predaja: false,
-        Transport: false,
-        Fotografisanje: false,
-        Nabavka: false,
-        Magacin: false,
-        Alati: false, -->
 
         <div v-if="selectedLabels.Ponuda">
           <h2>Ponuda</h2>
@@ -101,14 +87,24 @@
         <div v-if="selectedLabels.Nabavka">
           <h2>Nabavka</h2>
         </div>
-        
-        <div v-if="selectedLabels.Magacin">
+         -->
+
+        <!-- <div v-if="selectedLabels.Magacin">
           <h2>Magacin</h2>
+        </div> -->
+        
+        
+        <div v-if="selectedLabels.Magacin" class="ion-text-center">
+        <!-- <div v-if="selectedLabels.Magacin && router.name !== 'Magacin'" class="ion-text-center"> -->
+          <ion-button type="submit" fill="clear" :router-link="{ path:'/magacin'}">Magacin</ion-button>
+          <!-- <ion-button type="submit" fill="clear" >Magacin</ion-button> -->
         </div>
         
-        <div v-if="selectedLabels.Alati">
+        <slot name="content"></slot>
+        
+        <!-- <div v-if="selectedLabels.Alati">
           <h2>Alati</h2>
-        </div>
+        </div>  -->
 
 
         <ion-grid>
@@ -186,7 +182,7 @@
     star, 
     } from 'ionicons/icons';
 
-    import { defineComponent, ref } from 'vue';
+    import { defineComponent, ref, watch, computed } from 'vue';
     import { useRouter } from "vue-router";
     import { supabase } from '@/supabase';
     import ExploreContainer from '@/components/ExploreContainer.vue';
@@ -374,6 +370,15 @@ const onDecode = (content) => {
        const { photos, takePhoto } = usePhotoGallery();
 
       const router = useRouter();
+      // const routeName = ref(router.name);
+      // const routeName = computed(() => router.name);
+      
+      // watch(router, () => {
+      // routeName.value = router.name;
+      // });
+
+      // const routeName = computed(() => router.name);
+      // console.log('imeeeee',routeName);
 
       async function signOut() {
         const loader = await loadingController.create({});

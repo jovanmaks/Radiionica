@@ -12,6 +12,7 @@ import TehnicarPage from '../views/TehnicarPage.vue';
 import QRPage from '../views/QRPage.vue';
 import PhotoGaleryPage from '../views/PhotoGaleryPage.vue';
 import WelcomePage from '../views/WelcomePage.vue';
+import MagacinPage from '../views/MagacinPage.vue';
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -68,6 +69,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Welcome',
     component: WelcomePage,
     meta: { requiresAuth: true, roles: ['welcome', 'admin'] } // only admins can access
+  }, 
+  { 
+    path: '/magacin',
+    name: 'Magacin',
+    component: MagacinPage,
+    meta: { requiresAuth: true, roles: ['magacin', 'admin'] } // only admins can access
   }, 
 ]
 

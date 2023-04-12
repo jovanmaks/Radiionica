@@ -1,9 +1,14 @@
 
-<template>
 
-  
-  <base-layout page-title="Welcome" page-default-back-link="/admin" >
+<template>
+<base-layout page-title="Activity" page-default-back-link="/tabs">
+    <!-- Wrap the content you want to show on top of the baseLayout here -->
+    <template v-slot:content>
+        <h1>Content</h1>
+      <!-- Add the specific content for MagacinPage here -->
+    </template>
   </base-layout>
+  
   
 
 </template>
