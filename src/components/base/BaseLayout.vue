@@ -4,6 +4,7 @@
 
       <ion-header>
         <ion-toolbar>
+        
           <!-- <ion-router-outlet></ion-router-outlet> -->
           <ion-buttons slot="start">
             <ion-back-button
@@ -38,72 +39,81 @@
       </ion-header>
       
       <ion-content>
-<!-- 
 
-        <div v-if="selectedLabels.Ponuda">
-          <h2>Ponuda</h2>
+        <div style="display: flex; justify-content: space-between;">
+          <div v-if="selectedLabels.Ponuda && routeName === 'Welcome' " class="ion-text-left">
+            <ion-button color="dark" size="large" type="submit" fill="solid">Ponuda</ion-button>
+          </div>
+
+          <div v-if="selectedLabels.Crtanje && routeName === 'Welcome' " class="ion-text-right">
+            <ion-button color="dark" size="large" type="submit" fill="solid" >Crtanje</ion-button>
+          </div>
+
+          <div v-if="selectedLabels.Programiranje && routeName === 'Welcome' " class="ion-text-center">
+            <ion-button color="dark" size="large" type="submit" fill="solid">Programiranje</ion-button>
+          </div>
         </div>
+          
+        <div style="display: flex; justify-content: space-between;">
+          <div v-if="selectedLabels.PripremaZaSjecenje && routeName === 'Welcome' " class="ion-text-left">
+            <ion-button color="dark" size="large" type="submit" fill="solid">Prip(sjecenje)</ion-button>
+          </div>
+
+          <div v-if="selectedLabels.Sjecenje && routeName === 'Welcome' " class="ion-text-right">
+            <ion-button color="dark" size="large" type="submit" fill="solid">Sjecenje</ion-button>
+          </div>
+        </div>
+          
+        <div style="display: flex; justify-content: space-between;">
+          <div v-if="selectedLabels.PripremaZaFarbanje && routeName === 'Welcome' " class="ion-text-center">
+            <ion-button color="dark" size="large" type="submit" fill="solid">Prip(farbanje)</ion-button>
+          </div>
+
+          <div v-if="selectedLabels.Farbanje && routeName === 'Welcome' " class="ion-text-center">
+            <ion-button color="dark" size="large" type="submit" fill="solid">Farbanje</ion-button>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between;">
+          <div v-if="selectedLabels.Sklapanje && routeName === 'Welcome' " class="ion-text-center">
+            <ion-button color="dark" size="large" type="submit" fill="solid">Sklapanje</ion-button>
+          </div>
+
+          <div v-if="selectedLabels.Predaja && routeName === 'Welcome' " class="ion-text-center">
+            <ion-button color="dark" size="large" type="submit" fill="solid">Predaja</ion-button>
+          </div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between;">
+          <div v-if="selectedLabels.Transport && routeName === 'Welcome' " class="ion-text-center">
+            <ion-button color="dark" size="large" type="submit" fill="solid">Transport</ion-button>
+          </div>
+
+          <div v-if="selectedLabels.Fotografisanje && routeName === 'Welcome' " class="ion-text-center">
+            <ion-button color="dark" size="large" type="submit" fill="solid">Fotografisanje</ion-button>
+          </div>
+        </div>
+
+        
+        <div style="display: flex; justify-content: space-between;">
+          <div v-if="selectedLabels.Nabavka && routeName === 'Welcome' " class="ion-text-left">
+            <ion-button color="dark" size="large" type="submit" fill="solid">Nabavka</ion-button>
+          </div>
+
+          <div v-if="selectedLabels.Alati && routeName === 'Welcome' " class="ion-text-right">
+            <ion-button color="dark" size="large" type="submit" fill="solid">Alati</ion-button>
+          </div>
+
+          <div v-if="selectedLabels.Magacin && routeName === 'Welcome' " class="ion-text-center">
+            <ion-button color="dark" size="large" type="submit" fill="solid" :router-link="{ path:'/magacin'}">
+              Magacin
+            </ion-button>
+          </div>
+        </div>
+
       
-        <div v-if="selectedLabels.Crtanje">
-          <h2>Crtanje</h2>
-        </div>
-
-        <div v-if="selectedLabels.Programiranje">
-          <h2>Programiranje</h2>
-        </div>
-
-        <div v-if="selectedLabels.PripremaZaSjecenje">
-          <h2>Priprema za sjecenje</h2>
-        </div>
-        
-        <div v-if="selectedLabels.Sjecenje">
-          <h2>Sjecenje</h2>
-        </div>
-
-        <div v-if="selectedLabels.PripremaZaFarbanje">
-          <h2>Priprema Za Farbanje</h2>
-        </div>
-
-        <div v-if="selectedLabels.Farbanje">
-          <h2>Farbanje</h2>
-        </div>
-
-        <div v-if="selectedLabels.Sklapanje">
-          <h2>Sklapanje</h2>
-        </div>
-        
-        <div v-if="selectedLabels.Predaja">
-          <h2>Predaja</h2>
-        </div>
-
-        <div v-if="selectedLabels.Transport">
-          <h2>Transport</h2>
-        </div>
-        
-        <div v-if="selectedLabels.Fotografisanje">
-          <h2>Fotografisanje</h2>
-        </div>
-        
-        <div v-if="selectedLabels.Nabavka">
-          <h2>Nabavka</h2>
-        </div>
-         -->
-
-        <!-- <div v-if="selectedLabels.Magacin">
-          <h2>Magacin</h2>
-        </div> -->
-        
-        
-        <div v-if="selectedLabels.Magacin && routeName === 'Welcome' " class="ion-text-center">
-          <ion-button type="submit" fill="clear" :router-link="{ path:'/magacin'}">Magacin</ion-button>
-        </div>
-        
         <slot name="content"></slot>
         
-        <!-- <div v-if="selectedLabels.Alati">
-          <h2>Alati</h2>
-        </div>  -->
-
 
         <ion-grid>
           <ion-row>
@@ -124,9 +134,9 @@
       </ion-content>
 
 
-      <ion-content>
+      <!-- <ion-content>
         <slot />
-      </ion-content>
+      </ion-content> -->
      
       <ion-footer>
         <ion-toolbar>

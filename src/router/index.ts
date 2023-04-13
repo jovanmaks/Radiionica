@@ -13,6 +13,8 @@ import QRPage from '../views/QRPage.vue';
 import PhotoGaleryPage from '../views/PhotoGaleryPage.vue';
 import WelcomePage from '../views/WelcomePage.vue';
 import MagacinPage from '../views/MagacinPage.vue';
+import MagacinUnesiPage from '../views/MagacinUnesiPage.vue';
+import MagacinStanjePage from '../views/MagacinStanjePage.vue';
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -75,6 +77,18 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Magacin',
     component: MagacinPage,
     meta: { requiresAuth: true, roles: ['magacin', 'admin'] } // only admins can access
+  }, 
+  {
+    path: '/magacinUnesi',
+    name: 'MagacinUnesi',
+    component: MagacinUnesiPage,
+    meta: { requiresAuth: true, roles: ['magacinUnesi', 'admin'] } // only admins can access
+  }, 
+  {
+    path: '/magacinStanje',
+    name: 'MagacinStanje',
+    component: MagacinStanjePage,
+    meta: { requiresAuth: true, roles: ['magacinStanje', 'admin'] } // only admins can access
   }, 
 ]
 
