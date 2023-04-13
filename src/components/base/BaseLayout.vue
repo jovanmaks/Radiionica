@@ -11,8 +11,7 @@
               :default-href="pageDefaultBackLink">
             </ion-back-button>
 
-            <ion-button fill="solid" tab="activity"  href="/activity" > 
-             </ion-button> 
+            <!-- <ion-button fill="solid" tab="activity"  href="/activity" > </ion-button>  -->
 
           </ion-buttons> 
           
@@ -27,11 +26,10 @@
 
             <ion-button fill="clear" @click="signOut">Log Out</ion-button>
             
-            <ion-button fill="outline" tab="meny"  href="/meny" > 
-            </ion-button> 
+            <!-- <ion-button fill="outline" tab="meny"  href="/meny" > </ion-button>  -->
 
-             <!-- <ion-menu-button auto-hide="false" tab="meny" href="/meny" >
-             </ion-menu-button> -->
+             <ion-menu-button auto-hide="false" tab="meny" href="/meny" >
+             </ion-menu-button>
 
           </ion-buttons>
 
@@ -141,13 +139,9 @@
       <ion-footer>
         <ion-toolbar>
 
-          <ion-button  slot="start" fill="solid" tab="home"  href="/home">
-            <!-- <ion-icon name="add"></ion-icon> -->
-          </ion-button>
+          <!-- <ion-button  slot="start" fill="solid" tab="home"  href="/home"></ion-button> -->
 
-          <ion-button  slot="end" fill="solid" tab="profile"  href="/profile">
-            <!-- <ion-icon name="add"></ion-icon> -->
-          </ion-button>
+          <!-- <ion-button  slot="end" fill="solid" tab="profile"  href="/profile"></ion-button> -->
 
           <center>
             <ion-button fill="solid" tab="qr" @click="toggleScanner">QR</ion-button>

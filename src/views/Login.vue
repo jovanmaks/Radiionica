@@ -8,8 +8,7 @@
   
       <ion-content>
         <div class="ion-padding">
-          <h1>Supabase + Ionic Vue</h1>
-          <p>Sign in via magic link with your email below</p>
+          <h1>Radionica</h1>
         </div>
         <ion-list :inset="true">
         
