@@ -139,9 +139,8 @@
       <ion-footer>
         <ion-toolbar>
 
-          <!-- <ion-button  slot="start" fill="solid" tab="home"  href="/home"></ion-button> -->
+          <ion-button  slot="start" fill="solid" tab="pocetna"  href="/pocetna">Pocetna</ion-button>
 
-          <!-- <ion-button  slot="end" fill="solid" tab="profile"  href="/profile"></ion-button> -->
 
           <center>
             <ion-button fill="solid" tab="qr" @click="toggleScanner">QR</ion-button>
@@ -153,6 +152,9 @@
               <!-- <ion-button  fill="solid" tab="photogalery"  href="/photogalery">Photo</ion-button> -->
               <ion-button  fill="solid" @click="takePhoto"> Photo</ion-button>
           </center>
+          
+          
+          <ion-button  slot="end" fill="solid" tab="profile"  href="/profile">Profil</ion-button>
 
         </ion-toolbar>
       </ion-footer>

@@ -12,10 +12,13 @@ import TehnicarPage from '../views/TehnicarPage.vue';
 import QRPage from '../views/QRPage.vue';
 import PhotoGaleryPage from '../views/PhotoGaleryPage.vue';
 import WelcomePage from '../views/WelcomePage.vue';
+
 import MagacinPage from '../views/MagacinPage.vue';
 import MagacinUnesiPage from '../views/MagacinUnesiPage.vue';
 import MagacinStanjePage from '../views/MagacinStanjePage.vue';
 
+import ProfilePage from '../views/ProfilePage.vue';
+import PocetnaPage from '../views/PocetnaPage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   { 
@@ -89,6 +92,16 @@ const routes: Array<RouteRecordRaw> = [
     name: 'MagacinStanje',
     component: MagacinStanjePage,
     meta: { requiresAuth: true, roles: ['magacinStanje', 'admin'] } // only admins can access
+  }, 
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: ProfilePage,
+  }, 
+  {
+    path: '/pocetna',
+    name: 'Pocetna',
+    component: PocetnaPage,
   }, 
 ]
 
