@@ -1,4 +1,3 @@
-
 <template>
 <base-layout page-title="Profil" page-default-back-link="/tabs">
     <template v-slot:content>
@@ -9,6 +8,9 @@
         <h1>Telefon:</h1>
         <h1>Projekti:</h1>
         <h1>Zaduzenja:</h1>
+
+
+        
 
         <!-- <router-link to="/magacinunesi">
             <ion-button color="dark" size="large" type="submit" fill="solid">unesi</ion-button>
@@ -42,6 +44,8 @@
         {
             // const router = userouter();
             
+            
+
             return{}
         },
     };

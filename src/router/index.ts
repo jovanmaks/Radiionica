@@ -20,6 +20,9 @@ import MagacinStanjePage from '../views/MagacinStanjePage.vue';
 import ProfilePage from '../views/ProfilePage.vue';
 import PocetnaPage from '../views/PocetnaPage.vue';
 
+import ProjektiPage from '../views/ProjektiPage.vue';
+import CreateProjectPage from '../views/CreateProjectPage.vue';
+
 const routes: Array<RouteRecordRaw> = [
   { 
     path: "/",
@@ -102,6 +105,16 @@ const routes: Array<RouteRecordRaw> = [
     path: '/pocetna',
     name: 'Pocetna',
     component: PocetnaPage,
+  }, 
+  {
+    path: '/projekti',
+    name: 'Projekti',
+    component: ProjektiPage,
+  }, 
+  {
+    path: '/napraviprojekat',
+    name: 'NapraviProjekat',
+    component: CreateProjectPage,
   }, 
 ]
 

@@ -3,16 +3,20 @@
 <base-layout page-title="Pocetna" page-default-back-link="/tabs">
     <template v-slot:content>
         <!-- <ion-button color="dark" size="large" type="submit" fill="solid">stanje</ion-button> -->
-        <h1>Pocetna:</h1>
 
-        <!-- <router-link to="/magacinunesi">
-            <ion-button color="dark" size="large" type="submit" fill="solid">unesi</ion-button>
+        <router-link to="/projekti">
+            <ion-button color="dark" size="large" type="submit" fill="solid">Projekti</ion-button>
         </router-link>
 
-        <router-link to="/magacinstanje">
-            <ion-button color="dark" size="large" type="submit" fill="solid">stanje</ion-button>
+        <!-- <router-link to="/magacin">
+            <ion-button color="dark" size="large" type="submit" fill="solid">Magacin</ion-button>
+        </router-link>
+
+        <router-link to="/alati">
+            <ion-button color="dark" size="large" type="submit" fill="solid">Alati</ion-button>
         </router-link> -->
 
+        
     </template>
   </base-layout>
   
