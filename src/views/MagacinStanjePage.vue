@@ -142,7 +142,7 @@ export default {
   }
 };
 
-const filteredData = computed(() => {
+  const filteredData = computed(() => {
   const itemsCount = new Map();
 
   // Count the number of identical items

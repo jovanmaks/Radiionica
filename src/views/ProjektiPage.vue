@@ -8,9 +8,9 @@
             <ion-button color="dark" size="large" type="submit" fill="solid">Napravi projekat</ion-button>
         </router-link>
 
-        <!-- <router-link to="/magacinStanje">
-            <ion-button color="dark" size="large" type="submit" fill="solid">Stanje</ion-button>
-        </router-link> -->
+        <router-link to="/projektistanje">
+            <ion-button color="dark" size="large" type="submit" fill="solid">Lista projekata</ion-button>
+        </router-link>
 
     </template>
   </base-layout>

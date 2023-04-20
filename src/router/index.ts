@@ -22,6 +22,7 @@ import PocetnaPage from '../views/PocetnaPage.vue';
 
 import ProjektiPage from '../views/ProjektiPage.vue';
 import CreateProjectPage from '../views/CreateProjectPage.vue';
+import ProjektiStanjePage from '../views/ProjektiStanjePage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   { 
@@ -115,6 +116,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/napraviprojekat',
     name: 'NapraviProjekat',
     component: CreateProjectPage,
+  }, 
+  {
+    path: '/projektistanje',
+    name: 'ProjektiStanje',
+    component: ProjektiStanjePage,
   }, 
 ]
 

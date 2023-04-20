@@ -9,7 +9,6 @@
         <ion-item>
           <ion-label>Materijal</ion-label>
           <ion-select v-model="materijal">
-          <!-- <ion-select > -->
             <ion-select-option value="polistirol">Polistirol</ion-select-option>
             <ion-select-option value="poliuretan">Poliuretan</ion-select-option>
             <ion-select-option value="drvo">Drvo</ion-select-option>
