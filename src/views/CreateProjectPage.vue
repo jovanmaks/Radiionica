@@ -4,19 +4,30 @@
         
         <ion-content>
         <ion-list>
+
           <ion-item>
             <ion-label>Ime projekta</ion-label>
             <ion-input v-model="ime_projekta" type="text"></ion-input>
           </ion-item>
 
           <ion-item>
+
             <ion-label>Pocetak Projekta</ion-label>
-            <ion-datetime v-model="pocetak_projekta"></ion-datetime>
+            <ion-datetime-button datetime="datetime"></ion-datetime-button>
+            <ion-modal :keep-contents-mounted="true">
+              <ion-datetime id="datetime" v-model="pocetak_projekta"></ion-datetime>
+            </ion-modal>
+
+            <!-- <ion-datetime v-model="pocetak_projekta"></ion-datetime> -->
           </ion-item>
 
           <ion-item>
             <ion-label>Rok predaja</ion-label>
-            <ion-datetime v-model="rok_predaja"></ion-datetime>
+            <ion-datetime-button  datetime="datetime2"></ion-datetime-button>
+            <ion-modal :keep-contents-mounted="true">
+              <ion-datetime id="datetime2" v-model="rok_predaja"></ion-datetime>
+            </ion-modal>
+            <!-- <ion-datetime v-model="rok_predaja"></ion-datetime> -->
           </ion-item>
 
           <ion-item>
@@ -79,8 +90,12 @@
     import { ref } from 'vue';
     import { supabase } from '@/supabase'; // assuming you have a 'supabase.js' file in your project for Supabase configuration
     import { useRouter, RouterLink } from "vue-router";
+    import { format } from 'date-fns';
     import { 
-        IonList, 
+        IonList,
+        IonDatetime,
+        IonDatetimeButton,
+        IonModal,
         // IonTitle,
         IonItem, 
         // IonTabBar,
@@ -104,6 +119,9 @@
         components: {
             // RouterLink,
             IonList,
+            IonDatetime,
+            IonDatetimeButton,
+            IonModal,
             // IonTitle,
             IonItem,
             // IonTabBar,
@@ -136,13 +154,13 @@
       try {
         const { error } = await supabase.from("Projekti").insert([
           {
-            ime_projekta: ime_projekta.value,
-            pocetak_projekta: pocetak_projekta.value,
-            rok_predaja: rok_predaja.value,
-            investitor: investitor.value,
-            lokacija: lokacija.value,
-            velicina: velicina.value,
-            cena: cena.value,
+            ime_projekta: ime_projekta.value, //radi
+            pocetak_projekta: pocetak_projekta.value ,
+            rok_predaja: rok_predaja.value , 
+            investitor: investitor.value, // radi
+            lokacija: lokacija.value, //radi
+            velicina: velicina.value, //radi
+            cena: cena.value, //radi
             postolje: postolje.value,
             kolorit: kolorit.value,
             zastakljenost: zastakljenost.value,
@@ -150,6 +168,9 @@
             pokretni_elementi: pokretni_elementi.value,
           },
         ]);
+
+        // write me a log that displays the pocetak_projekta value and add some tekst
+        console.log("testVremena", pocetak_projekta.value);
 
         if (error) {
           throw error;
