@@ -6,7 +6,7 @@
         <ion-list>
 
           <ion-item>
-            <ion-label>Ime projekta</ion-label>
+            <ion-label>Ime projekta:</ion-label>
             <ion-input v-model="ime_projekta" type="text"></ion-input>
           </ion-item>
 
@@ -29,13 +29,18 @@
           </ion-item>
 
           <ion-item>
-            <ion-label>Investitor</ion-label>
+            <ion-label>Investitor:</ion-label>
             <ion-input v-model="investitor" type="text"></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label>Lokacija</ion-label>
+            <ion-label>Lokacija:</ion-label>
             <ion-input v-model="lokacija" type="text"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Cena:</ion-label>
+            <ion-input v-model="cena" type="number"></ion-input>
           </ion-item>
 
           <ion-item>
@@ -49,9 +54,13 @@
             </ion-select>
           </ion-item>
 
+
           <ion-item>
-            <ion-label>Cena</ion-label>
-            <ion-input v-model="cena" type="number"></ion-input>
+            <ion-label>Stil</ion-label>
+            <ion-select v-model="kolorit" >
+              <ion-select-option value="bijela">Bijela</ion-select-option>
+              <ion-select-option value="realisticna">Realisticna</ion-select-option>
+            </ion-select>
           </ion-item>
 
           <ion-item>
@@ -59,10 +68,6 @@
             <ion-checkbox v-model="postolje"></ion-checkbox>
           </ion-item>
 
-          <ion-item>
-            <ion-label>Kolorit</ion-label>
-            <ion-checkbox v-model="kolorit"></ion-checkbox>
-          </ion-item>
 
           <ion-item>
             <ion-label>Zastakljenost</ion-label>
@@ -107,6 +112,7 @@
         IonContent,
         IonInput,
         IonButton,
+        IonCheckbox,
          } from '@ionic/vue';
 
     import { ellipse, square, triangle, star } from 'ionicons/icons';
@@ -126,6 +132,7 @@
             IonContent,
             IonInput,
             IonButton,
+            IonCheckbox,
         },
         setup() {
     const ime_projekta = ref("");
@@ -136,7 +143,7 @@
     const velicina = ref('');
     const cena = ref(null);
     const postolje = ref(false);
-    const kolorit = ref(true);
+    const kolorit = ref('');
     const zastakljenost = ref(false);
     const rasvjeta = ref(false);
     const pokretni_elementi = ref(false);
@@ -174,7 +181,7 @@
         velicina.value = "";
         cena.value = null;
         postolje.value = false;
-        kolorit.value = true;
+        kolorit.value = "";
         zastakljenost.value = false;
         rasvjeta.value = false;
         pokretni_elementi.value = false;
