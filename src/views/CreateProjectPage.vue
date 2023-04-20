@@ -12,22 +12,20 @@
 
           <ion-item>
 
-            <ion-label>Pocetak Projekta</ion-label>
+            <ion-label>Pocetak projekta:</ion-label>
             <ion-datetime-button datetime="datetime"></ion-datetime-button>
             <ion-modal :keep-contents-mounted="true">
               <ion-datetime id="datetime" v-model="pocetak_projekta"></ion-datetime>
             </ion-modal>
 
-            <!-- <ion-datetime v-model="pocetak_projekta"></ion-datetime> -->
           </ion-item>
 
           <ion-item>
-            <ion-label>Rok predaja</ion-label>
+            <ion-label>Rok za predaju:</ion-label>
             <ion-datetime-button  datetime="datetime2"></ion-datetime-button>
             <ion-modal :keep-contents-mounted="true">
               <ion-datetime id="datetime2" v-model="rok_predaja"></ion-datetime>
             </ion-modal>
-            <!-- <ion-datetime v-model="rok_predaja"></ion-datetime> -->
           </ion-item>
 
           <ion-item>
@@ -42,7 +40,13 @@
 
           <ion-item>
             <ion-label>Velicina</ion-label>
-            <ion-input v-model="velicina" type="number"></ion-input>
+            <!-- <ion-input v-model="velicina" type="number"></ion-input> -->
+            <ion-select v-model="velicina" >
+              <ion-select-option value="mala">Mala</ion-select-option>
+              <ion-select-option value="srednja">Srednja</ion-select-option>
+              <ion-select-option value="velika">Velika</ion-select-option>
+              <ion-select-option value="specijalna">Specijalna</ion-select-option>
+            </ion-select>
           </ion-item>
 
           <ion-item>
@@ -96,16 +100,10 @@
         IonDatetime,
         IonDatetimeButton,
         IonModal,
-        // IonTitle,
+        IonSelect,
+        IonSelectOption,
         IonItem, 
-        // IonTabBar,
-        // IonMenu, 
-        // IonTabButton, 
-        // IonTabs, 
         IonLabel, 
-        // IonIcon, 
-        // IonPage, 
-        // IonRouterOutlet,
         IonContent,
         IonInput,
         IonButton,
@@ -117,21 +115,14 @@
     export default{
         name: 'CreateProjectPage',
         components: {
-            // RouterLink,
             IonList,
             IonDatetime,
             IonDatetimeButton,
             IonModal,
-            // IonTitle,
+            IonSelect,
+            IonSelectOption,
             IonItem,
-            // IonTabBar,
-            // IonMenu,
-            // IonTabButton,
-            // IonTabs,
             IonLabel,
-            // IonIcon,
-            // IonPage,
-            // IonRouterOutlet,
             IonContent,
             IonInput,
             IonButton,
@@ -142,7 +133,7 @@
     const rok_predaja = ref(null);
     const investitor = ref("");
     const lokacija = ref("");
-    const velicina = ref(null);
+    const velicina = ref('');
     const cena = ref(null);
     const postolje = ref(false);
     const kolorit = ref(true);
@@ -169,8 +160,6 @@
           },
         ]);
 
-        // write me a log that displays the pocetak_projekta value and add some tekst
-        console.log("testVremena", pocetak_projekta.value);
 
         if (error) {
           throw error;
@@ -182,7 +171,7 @@
         rok_predaja.value = null;
         investitor.value = "";
         lokacija.value = "";
-        velicina.value = null;
+        velicina.value = "";
         cena.value = null;
         postolje.value = false;
         kolorit.value = true;
