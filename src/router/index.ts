@@ -24,6 +24,8 @@ import ProjektiPage from '../views/ProjektiPage.vue';
 import CreateProjectPage from '../views/CreateProjectPage.vue';
 import ProjektiStanjePage from '../views/ProjektiStanjePage.vue';
 
+import CrtanjePage from '../views/CrtanjePage.vue';
+
 const routes: Array<RouteRecordRaw> = [
   { 
     path: "/",
@@ -121,6 +123,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/projektistanje',
     name: 'ProjektiStanje',
     component: ProjektiStanjePage,
+  }, 
+  {
+    path: '/crtanje',
+    name: 'Crtanje',
+    component: CrtanjePage,
   }, 
 ]
 

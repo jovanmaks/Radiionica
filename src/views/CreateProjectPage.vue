@@ -68,7 +68,14 @@
             <ion-checkbox v-model="postolje"></ion-checkbox>
           </ion-item>
 
+         
+          <ion-item>
+            <ion-label>Broj objekata:</ion-label>
+            <ion-input v-model="broj_objekata" type="number"></ion-input>
+          </ion-item>
 
+
+          
           <ion-item>
             <ion-label>Zastakljenost</ion-label>
             <ion-checkbox v-model="zastakljenost"></ion-checkbox>
@@ -143,6 +150,7 @@
     const velicina = ref('');
     const cena = ref(null);
     const postolje = ref(false);
+    const broj_objekata = ref(null);
     const kolorit = ref('');
     const zastakljenost = ref(false);
     const rasvjeta = ref(false);
@@ -159,6 +167,7 @@
             lokacija: lokacija.value, //radi
             velicina: velicina.value, //radi
             cena: cena.value, //radi
+            broj_objekata: broj_objekata.value,
             postolje: postolje.value,
             kolorit: kolorit.value,
             zastakljenost: zastakljenost.value,
@@ -180,6 +189,7 @@
         lokacija.value = "";
         velicina.value = "";
         cena.value = null;
+        broj_objekata.value = null;
         postolje.value = false;
         kolorit.value = "";
         zastakljenost.value = false;
@@ -198,6 +208,7 @@
       lokacija,
       velicina,
       cena,
+      broj_objekata,
       postolje,
       kolorit,
       zastakljenost,

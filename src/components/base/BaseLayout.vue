@@ -44,7 +44,7 @@
           </div>
 
           <div v-if="selectedLabels.Crtanje && routeName === 'Welcome' " class="ion-text-right">
-            <ion-button color="dark" size="large" type="submit" fill="solid" >Crtanje</ion-button>
+            <ion-button color="dark" size="large" type="submit" fill="solid" :router-link="{ path:'/crtanje'}" >Crtanje</ion-button>
           </div>
 
           <div v-if="selectedLabels.Programiranje && routeName === 'Welcome' " class="ion-text-center">
@@ -139,7 +139,7 @@
       <ion-footer>
         <ion-toolbar>
 
-          <ion-button  slot="start" fill="solid" tab="pocetna"  href="/pocetna">Pocetna</ion-button>
+          <ion-button  slot="start" fill="solid" tab="pocetna"  href="/pocetna">Projekti</ion-button>
 
 
           <center>
