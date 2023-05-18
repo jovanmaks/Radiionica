@@ -51,7 +51,6 @@
     </ion-page>
   </template>
   
-  <!-- <script > -->
   <script lang="ts">
   import { store } from '@/store';
   import { supabase } from '@/supabase';
