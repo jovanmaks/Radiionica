@@ -21,7 +21,12 @@
                 Opis projekta. Treba unijeti ovo polje u tabelu i dodati pri kreiranju projekta.
             </ion-card-content>
             
-            <ion-button id="open-modal" expand="block" fill="clear">Statistika</ion-button>
+            <!-- <ion-button id="open-modal" expand="block" fill="clear">
+              <ion-icon :icon="home-outline"></ion-icon>
+            </ion-button> -->
+            
+            
+            
             <ion-modal ref="modalRef" @willDismiss="onWillDismiss">
               <ion-header>
                 <ion-toolbar>
@@ -43,10 +48,81 @@
             </ion-modal>
 
 
-            <ion-button fill="clear">Organizacija rada</ion-button>
+            <!-- <ion-button fill="clear">Organizacija rada</ion-button> -->
+            <ion-button fill="outline" >
+              <ion-icon :icon="people"></ion-icon>
+            </ion-button>
+
+            <ion-button fill="outline" >
+              <ion-icon :icon="build"></ion-icon>
+            </ion-button>
+
+            <ion-button fill="outline" >
+              <ion-icon :icon="chatbubble"></ion-icon>
+            </ion-button>
+
+
+            
+            <ion-button  fill="outline" @click="setOpen(true) ">
+              <ion-icon :icon="analytics"></ion-icon>
+            </ion-button>
+            <ion-action-sheet :is-open="isOpen"
+              header="Actions"
+              :buttons="actionSheetButtons"
+              @didDismiss="setOpen(false)">
+            </ion-action-sheet>
+            
             <ion-button fill="clear" @click="removeItem(item.id)">
               <ion-icon :icon="trash"></ion-icon>
             </ion-button>
+
+            <ion-item>
+            <ion-label>Status</ion-label>
+            <!-- <ion-input v-model="velicina" type="number"></ion-input> -->
+            <ion-select v-model="velicina" >
+              <ion-select-option value="mala">Ceka odgovor</ion-select-option>
+              <ion-select-option value="srednja">U toku</ion-select-option>
+              <ion-select-option value="velika">Ceka naplatu</ion-select-option>
+              <ion-select-option value="specijalna">Zavrseno</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+    <!--
+            <ion-segment :scrollable="true" value="heart">
+    <ion-segment-button value="home">
+      <ion-icon :icon="home"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="heart">
+      <ion-icon :icon="heart"></ion-icon>
+    </ion-segment-button>
+       <ion-segment-button value="pin">
+      <ion-icon :icon="pin"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="star">
+      <ion-icon :icon="star"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="call">
+      <ion-icon :icon="call"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="globe">
+      <ion-icon :icon="globe"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="basket">
+      <ion-icon :icon="basket"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="barbell">
+      <ion-icon :icon="barbell"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="trash">
+      <ion-icon :icon="trash"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="person">
+      <ion-icon :icon="person"></ion-icon>
+    </ion-segment-button> 
+  </ion-segment>
+  -->
+
+
           </ion-card>
         </div>
         
@@ -59,11 +135,13 @@
   
   <script lang="js">
 
-    import { trash, flask, diamond, cube} from "ionicons/icons"; 
+    import { trash, flask, diamond, cube, home, heart, pin, analytics, build, chatbubble,people } from "ionicons/icons"; 
     import { ref, computed } from 'vue';
     import { supabase } from '@/supabase'; 
 
+
     import {
+    IonIcon,
     IonContent,
     IonButtons,
     IonButton,
@@ -74,17 +152,29 @@
     IonItem,
     IonInput,
     IonLabel,
+
+    IonCard,
+    IonCardContent,
+    IonCardHeader,
+    IonCardSubtitle,
+    IonCardTitle,
+
+    IonActionSheet,
+
+    // IonSegment,
+    // IonSegmentButton,
+    
     // IonList,
     // IonItem,
     // IonLabel,
     // IonRefresher,
     // IonRefresherContent,
     // IonButton,
-    // IonIcon,
   } from "@ionic/vue";
 
 export default {
   components: {
+    IonIcon,
     IonContent,
     IonButtons,
     IonButton,
@@ -95,6 +185,18 @@ export default {
     IonItem,
     IonInput,
     IonLabel,
+
+    IonCard,
+    IonCardContent,
+    IonCardHeader,
+    IonCardSubtitle,
+    IonCardTitle,
+
+    IonActionSheet,
+
+    // IonSegment,
+    // IonSegmentButton,
+
     // IonList,
     // IonItem,
     // IonLabel,
@@ -154,6 +256,36 @@ export default {
     
     loadData();
     
+
+      const isOpen = ref(false);
+      const actionSheetButtons = [
+        {
+          text: 'Delete',
+          role: 'destructive',
+          data: {
+            action: 'delete',
+          },
+        },
+        {
+          text: 'Share',
+          data: {
+            action: 'share',
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          data: {
+            action: 'cancel',
+          },
+        },
+      ];
+
+      const setOpen = (state) => {
+        isOpen.value = state;
+      };
+
+
     const message = ref(
       "This modal example uses triggers to automatically open a modal when the button is clicked."
     );
@@ -179,13 +311,26 @@ export default {
       data,
       loadData,
       removeItem,
+
       trash,
+      home, 
+      heart,
+      pin,
+      analytics,
+      build,
+      chatbubble,
+      people,
+
       cancel,
       confirm,
       onWillDismiss,
       modalRef,
       inputRef,
-      message, // Add message ref to the returned object
+      message,
+      
+      actionSheetButtons,
+      isOpen,
+      setOpen,
     };
   },
 };

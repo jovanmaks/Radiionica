@@ -12,7 +12,19 @@
   import { onMounted, ref } from 'vue';
   import { Chart, registerables } from 'chart.js';
   import { useRouter, RouterLink } from "vue-router";
-  import { IonList, IonTitle,IonItem, IonTabBar,IonMenu, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
+  import { 
+    IonList, 
+    IonTitle,
+    IonItem,
+    IonTabBar,
+    IonMenu,
+    IonTabButton,
+    IonTabs,
+    IonLabel,
+    IonIcon,
+    IonPage,
+    IonRouterOutlet } from '@ionic/vue';
+    
   import { ellipse, square, triangle, star } from 'ionicons/icons';
   
   Chart.register(...registerables);

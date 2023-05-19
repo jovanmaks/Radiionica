@@ -139,22 +139,28 @@
       <ion-footer>
         <ion-toolbar>
 
-          <ion-button  slot="start" fill="solid" tab="pocetna"  href="/pocetna">Projekti</ion-button>
+          <ion-button  slot="start" fill="solid" tab="pocetna"  href="/pocetna">
+              <ion-icon :icon="home"></ion-icon>
+          </ion-button>
 
 
           <center>
-            <ion-button fill="solid" tab="qr" @click="toggleScanner">QR</ion-button>
+            <ion-button fill="solid" tab="qr" @click="toggleScanner">
+              <ion-icon :icon=" qrCode"></ion-icon>
+            </ion-button>
+
             <div v-if="showScanner">
               <qrcode-reader @decode="onDecode" @init="onInit"></qrcode-reader>
             </div>
-
-              <!-- <ion-button  fill="solid" tab="qr"  href="/qr">QR</ion-button> -->
-              <!-- <ion-button  fill="solid" tab="photogalery"  href="/photogalery">Photo</ion-button> -->
-              <ion-button  fill="solid" @click="takePhoto"> Photo</ion-button>
+              <ion-button  fill="solid" @click="takePhoto"> 
+                <ion-icon :icon="camera"></ion-icon>
+              </ion-button>
           </center>
           
           
-          <ion-button  slot="end" fill="solid" tab="profile"  href="/profile">Profil</ion-button>
+          <ion-button  slot="end" fill="solid" tab="profile"  href="/profile">
+              <ion-icon :icon="person"></ion-icon>
+          </ion-button>
 
         </ion-toolbar>
       </ion-footer>
@@ -177,6 +183,7 @@
     IonBackButton,
     IonButton,
     IonButtons,
+    // IonMenu,
   } from "@ionic/vue";
 
   import { 
@@ -184,6 +191,10 @@
     square,
     triangle,
     star, 
+    qrCode,
+    camera,
+    person,
+    home,
     } from 'ionicons/icons';
 
     import { defineComponent, ref} from 'vue';
@@ -191,7 +202,7 @@
     import { supabase } from '@/supabase';
     import ExploreContainer from '@/components/ExploreContainer.vue';
 
-    import { camera, trash, close } from 'ionicons/icons';
+    import { trash, close } from 'ionicons/icons';
     import { usePhotoGallery,UserPhoto } from '@/composables/usePhotoGallery';
     
     import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader'
@@ -227,6 +238,7 @@
       IonBackButton,
       IonButton,
       IonButtons,
+      // IonMenu,
       
     },
     
@@ -405,7 +417,22 @@ const onDecode = (content) => {
           await loader.dismiss();
         }
       }
-      return {signOut, takePhoto, photos,  onDecode, onInit, showScanner, toggleScanner, selectedLabels, routeName  };
+      return {
+        signOut, 
+        takePhoto, 
+        photos,  
+        onDecode, 
+        onInit, 
+        showScanner, 
+        toggleScanner, 
+        selectedLabels, 
+        routeName,
+
+        person,
+        qrCode,
+        camera,
+        home
+        };
     },
 
 
