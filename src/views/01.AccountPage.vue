@@ -3,9 +3,8 @@
 <base-layout page-title="Account" page-default-back-link="/tabs">
     <template v-slot:content>
 
-          <!-- <ion-title>{{profile.username}}</ion-title>
-          <ion-title>{{ profile.full_name }}</ion-title> -->
 
+      <form @submit.prevent="updateProfile">
       <ion-list>
         <ion-item>
           <ion-label>
@@ -63,11 +62,13 @@
           </ion-label>
         </ion-item>
       </ion-list>
+      
+      
+          <ion-button fill="clear" type="submit">Update Profile</ion-button>
 
     <!-- <ion-content> -->
       <!-- <avatar v-model:path="profile.avatar_url" @upload="updateProfile"></avatar> -->
       
-      <form @submit.prevent="updateProfile">
       </form>
 
       <!-- <div class="ion-text-center">
