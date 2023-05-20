@@ -47,6 +47,6 @@ const app = createApp(App)
 
   app.component('base-layout', BaseLayout); 
 
-router.isReady().then(() => {
+  router.isReady().then(() => {
   app.mount('#app');
 });

@@ -1,151 +1,240 @@
 <template>
-  <ion-page>
-    <ion-header>
-        <ion-toolbar>
-          <ion-title>Home</ion-title>
-        </ion-toolbar>
-      </ion-header>
+  <base-layout page-title="Home" page-default-back-link="/admin" >
+    <template v-slot:content>
 
-       
-      <ion-content>
-      
+        <ion-fab slot="fixed" vertical="top" horizontal="start" >
+                <ion-fab-button size="small" color="dark">
+                  <ion-icon :icon="hammer"></ion-icon>
+                </ion-fab-button>
+                <ion-fab-list side="bottom">
+                  <ion-fab-button>
+                    <ion-icon :icon="cash"></ion-icon>
+                  </ion-fab-button>
+                  <router-link to="/crtanje">
+                    <ion-fab-button size="small">
+                      <ion-icon :icon="brush"></ion-icon>
+                    </ion-fab-button>
+                  </router-link>
+                  <ion-fab-button>
+                    <ion-icon :icon="desktop"></ion-icon>
+                  </ion-fab-button>
+                  <ion-fab-button>
+                    <ion-icon :icon="layers"></ion-icon>
+                  </ion-fab-button>
+                  <ion-fab-button>
+                    <ion-icon :icon="cut"></ion-icon>
+                  </ion-fab-button>
+                  <ion-fab-button>
+                    <ion-icon :icon="create"></ion-icon>
+                  </ion-fab-button>
+                  <ion-fab-button>
+                    <ion-icon :icon="colorFill"></ion-icon>
+                  </ion-fab-button>
+                  <ion-fab-button>
+                    <ion-icon :icon="extensionPuzzle"></ion-icon>
+                  </ion-fab-button>
+                </ion-fab-list>
+                <ion-fab-list side="end">
+                  <ion-fab-button>
+                    <ion-icon :icon="checkmarkDone"></ion-icon>
+                  </ion-fab-button>
+                  <ion-fab-button>
+                    <ion-icon :icon="car"></ion-icon>
+                  </ion-fab-button>
+                  <ion-fab-button>
+                    <ion-icon :icon="camera"></ion-icon>
+                  </ion-fab-button>
+                </ion-fab-list>
+              </ion-fab>
 
-        <ion-list :inset="true">
+        <ion-fab slot="fixed" vertical="bottom" horizontal="start" >
+                <ion-fab-button size="small" color="dark">
+                  <ion-icon :icon="easel"></ion-icon>
+                </ion-fab-button>
+                <ion-fab-list side="top">
+                  <ion-fab-button>
+                    <ion-icon :icon="add"></ion-icon>
+                  </ion-fab-button>
+                  <ion-fab-button>
+                    <ion-icon :icon="add"></ion-icon>
+                  </ion-fab-button>
+                </ion-fab-list>
+              </ion-fab>
+              
+        <ion-fab slot="fixed" vertical="bottom" horizontal="center" >
+                <ion-fab-button size="small" color="dark">
+                  <ion-icon :icon="library"></ion-icon>
+                </ion-fab-button>
+                <ion-fab-list side="top">
+                  <router-link to="/napraviprojekat">
+                    <ion-fab-button size="small">
+                      <ion-icon :icon="add"></ion-icon>
+                    </ion-fab-button>
+                  </router-link>
+                  <router-link to="/projektistanje">
+                    <ion-fab-button size="small">
+                      <ion-icon :icon="list"></ion-icon>
+                    </ion-fab-button>
+                  </router-link>
+                </ion-fab-list>
+              </ion-fab>
         
-          <div class="ion-text-center">
-            <ion-button fill="clear" :router-link="{ path: '/login' }">Login</ion-button>
-          </div>
+        <ion-fab slot="fixed" vertical="bottom" horizontal="end" >
+                <ion-fab-button size="small" color="dark">
+                  <ion-icon :icon="server"></ion-icon>
+                </ion-fab-button>
+                <ion-fab-list side="top">
+                  <router-link to="/magacin">
+                    <ion-fab-button size="small">
+                      <ion-icon :icon="folder"></ion-icon>
+                    </ion-fab-button>
+                  </router-link>
+                  <ion-fab-button>
+                    <ion-icon :icon="construct"></ion-icon>
+                  </ion-fab-button>
+                  <ion-fab-button>
+                    <ion-icon :icon="cart"></ion-icon>
+                  </ion-fab-button>
+                </ion-fab-list>
+              </ion-fab>
+              
 
-          <div class="ion-text-center">
-            <ion-button fill="clear" :router-link="{ path: '/register' }">Register</ion-button>
-          </div>
         
-        </ion-list>
-        
-      </ion-content>
-
-
-  </ion-page>
-
+  
+    </template>
+  </base-layout>
 </template>
+  
+  <script  lang="js">
 
-
-<script>
-
-import { supabase } from '../supabase';
-import { defineComponent, ref } from 'vue';
-import { useRouter } from "vue-router";
-
-  import {
-    IonContent,
-    IonHeader,
-    IonPage,
-    IonTitle,
-    IonToolbar,
-    IonList,
-    // IonItem,
-    // IonLabel,
-    // IonInput,
-    IonButton,
-    toastController,
-    loadingController,
-  } from '@ionic/vue';
-export default defineComponent({
-    name: 'HomePage',
-    components: {
-      IonContent,
-      IonHeader,
-      IonPage,
+    import { 
+      IonList, 
       IonTitle,
-      IonToolbar,
-      IonList,
-      // IonItem,
-      // IonLabel,
-      // IonInput,
-      IonButton,
-    },
+      IonItem,
+      IonTabBar,
+      IonMenu,
+      IonTabButton,
+      IonTabs,
+      IonLabel,
+      IonIcon,
+      IonPage,
+      IonRouterOutlet,
+      IonFab, 
+      IonFabButton,
+          IonFabList,
+    } from '@ionic/vue';
+    import { 
+    ellipse,
+    square,
+    triangle,
+    star ,
+    library,
+    hammer,
+    server,
+    easel,
+    add,
+    build,
+    construct,
+    folder,
+    cash,
+    brush,
+    desktop,
+    layers,
+    cut,
+    extensionPuzzle,
+    colorFill,
+    create,
+    cart,
+    camera,
+    car,
+    checkmarkDone,
+    list,
+  } from 'ionicons/icons';
 
 
-});
-</script>
+  export default{
+        name: 'HomePage',
+        components: {
+          IonFab, 
+          IonFabButton,
+          IonFabList,
+          IonIcon,
+            // RouterLink
+            // IonList, IonTitle,IonItem, IonTabBar,IonMenu, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet
+        },
+        setup() 
+        {
+            // const router = useRouter();
+            
+            return{
+              library,
+              hammer,
+              server,
+              easel,
+              add,
+              build,
+              construct,
+              folder,
+              cash,
+              brush,
+              desktop,
+              layers,
+              cut,
+              colorFill,
+              extensionPuzzle,
+              create,
+              cart,
+              camera,
+              car,
+              checkmarkDone,
+              list,
+            }
+        },
+    };
+
+  </script>
+  
+
 
 
 <!-- 
-<template>
+        <ion-grid >
+          <ion-row>
+            <ion-col  size="auto">
+              <ion-button expand="full" color="dark" size="large" type="submit" fill="solid">
+              <ion-icon slot="start" :icon="library"></ion-icon>
+            </ion-button>
+           
+            </ion-col>
+          </ion-row>
+          
+          <ion-row>
+            <ion-col size="auto">
+              <ion-button expand="full" color="dark" size="small" type="submit" fill="solid">
+              <ion-icon slot="start" :icon="hammer"></ion-icon>  
+                Zadaci  
+              </ion-button>
+              
+            </ion-col>
+          </ion-row>
 
-  <base-layout page-title="Home" page-default-back-link="/tabs" >
-  </base-layout>
+          <ion-row>
+            <ion-col size ="5">
+              <ion-button  expand="full" color="dark" size="small" type="submit" fill="solid">
+              <ion-icon slot="start" :icon="server"></ion-icon>
+                Inventar
+              </ion-button>
+            </ion-col>
+          </ion-row>
 
-</template>
-  
-  <script setup lang="ts">
 
-    import { IonList, IonTitle,IonItem, IonTabBar,IonMenu, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
-    import { ellipse, square, triangle,star } from 'ionicons/icons';
+          <ion-row>
+            <ion-col size="5">
+              <ion-button  expand="full" color="dark" size="small" type="submit" fill="solid">
+              <ion-icon slot="start" :icon="easel"></ion-icon>
+                Tabla
+              </ion-button>
+            </ion-col>
+          </ion-row>
 
-  </script> -->
-  <!-- <template>
-    <ion-page>
-      <ion-header :translucent="true">
-        <ion-toolbar>
-          <ion-title>Blank</ion-title>
-        </ion-toolbar>
-      </ion-header>
-      
-      <ion-content :fullscreen="true">
-        <ion-header collapse="condense">
-          <ion-toolbar>
-            <ion-title size="large">Blank</ion-title>
-          </ion-toolbar>
-        </ion-header>
-      
-        <div id="container">
-          <strong>Ready to create an app?</strong>
-          <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-        </div>
-      </ion-content>
-    </ion-page>
-  </template>
-  
-  <script lang="ts">
-  import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
-  import { defineComponent } from 'vue';
-  export default defineComponent({
-    name: 'HomePage',
-    components: {
-      IonContent,
-      IonHeader,
-      IonPage,
-      IonTitle,
-      IonToolbar
-    }
-  });
-  </script>
-  
-  <style scoped>
-  #container {
-    text-align: center;
-    
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  #container strong {
-    font-size: 20px;
-    line-height: 26px;
-  }
-  #container p {
-    font-size: 16px;
-    line-height: 22px;
-    
-    color: #8c8c8c;
-    
-    margin: 0;
-  }
-  #container a {
-    text-decoration: none;
-  }
-  </style>
-   -->
+        </ion-grid> -->

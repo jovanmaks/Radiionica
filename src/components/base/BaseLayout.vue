@@ -1,32 +1,34 @@
           <!-- <ion-back-button></ion-back-button> -->
 <template>
-    <ion-page>
 
-      <ion-header>
+<!-- <ion-menu content-id="main-content">
+    <ion-header>
+      <ion-toolbar color="tertiary">
+        <ion-title>Menu Content</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">This is the menu content.</ion-content>
+  </ion-menu> -->
+
+    <ion-page >
+
+      <ion-header >
         <ion-toolbar>
         
           <!-- <ion-router-outlet></ion-router-outlet> -->
+          
           <ion-buttons slot="start">
             <ion-back-button
               :default-href="pageDefaultBackLink">
             </ion-back-button>
-
-            <!-- <ion-button fill="solid" tab="activity"  href="/activity" > </ion-button>  -->
-
           </ion-buttons> 
-          
 
           <ion-title>{{ pageTitle }}</ion-title>
           
           <ion-buttons slot="end">
             <slot name="actions-end"></slot>
 
-            <!-- <ion-button fill="solid" tab="search"  href="/search" > 
-            </ion-button>  -->
-
             <ion-button fill="clear" @click="signOut">Log Out</ion-button>
-            
-            <!-- <ion-button fill="outline" tab="meny"  href="/meny" > </ion-button>  -->
 
              <ion-menu-button auto-hide="false" tab="meny" href="/meny" >
              </ion-menu-button>
@@ -38,7 +40,54 @@
       
       <ion-content>
 
-        <div style="display: flex; justify-content: space-between;">
+        <!-- <ion-grid >
+          <ion-row>
+            <ion-col  size="6">
+              <ion-button expand="full" color="dark" size="default" type="submit" fill="solid">
+              <ion-icon slot="start" :icon="library"></ion-icon>
+              Projekti
+            </ion-button>
+            </ion-col>
+          </ion-row>
+          
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="full" color="dark" size="default" type="submit" fill="solid">
+              <ion-icon slot="start" :icon="hammer"></ion-icon>  
+                Zadaci  
+              </ion-button>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size ="6">
+              <ion-button  expand="full" color="dark" size="default" type="submit" fill="solid">
+              <ion-icon slot="start" :icon="server"></ion-icon>
+                Inventar
+              </ion-button>
+            </ion-col>
+          </ion-row>
+
+
+          <ion-row>
+            <ion-col size="6">
+              <ion-button  expand="full" color="dark" size="default" type="submit" fill="solid">
+              <ion-icon slot="start" :icon="easel"></ion-icon>
+                Tabla
+              </ion-button>
+            </ion-col>
+          </ion-row>
+
+        </ion-grid> -->
+
+           
+
+           
+
+           
+
+
+        <!-- <div style="display: flex; justify-content: space-between;">
           <div v-if="selectedLabels.Ponuda && routeName === 'Welcome' " class="ion-text-left">
             <ion-button color="dark" size="large" type="submit" fill="solid">Ponuda</ion-button>
           </div>
@@ -107,7 +156,7 @@
               Magacin
             </ion-button>
           </div>
-        </div>
+        </div> -->
 
       
         <slot name="content"></slot>
@@ -139,7 +188,7 @@
       <ion-footer>
         <ion-toolbar>
 
-          <ion-button  slot="start" fill="solid" tab="pocetna"  href="/pocetna">
+          <ion-button  slot="start" fill="solid" tab="pocetna"  href="/home">
               <ion-icon :icon="home"></ion-icon>
           </ion-button>
 
@@ -183,6 +232,10 @@
     IonBackButton,
     IonButton,
     IonButtons,
+    IonMenuButton,
+    IonCol,
+    IonGrid,
+     IonRow,
     // IonMenu,
   } from "@ionic/vue";
 
@@ -195,6 +248,10 @@
     camera,
     person,
     home,
+    library,
+    hammer,
+    server,
+    easel,
     } from 'ionicons/icons';
 
     import { defineComponent, ref} from 'vue';
@@ -238,6 +295,10 @@
       IonBackButton,
       IonButton,
       IonButtons,
+      IonMenuButton,
+      IonCol, 
+      IonGrid, 
+      IonRow 
       // IonMenu,
       
     },
@@ -431,10 +492,24 @@ const onDecode = (content) => {
         person,
         qrCode,
         camera,
-        home
+        home,
+        library,
+        hammer,
+        server,
+        easel,
         };
     },
 
 
   };
   </script>
+
+<style scoped>
+  ion-col {
+    /* background-color: #135d54; */
+    border: solid 1px #fff;
+    color: #fff;
+    text-align: center;
+  }
+</style>
+

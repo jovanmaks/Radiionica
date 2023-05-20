@@ -2,25 +2,21 @@
   <!-- <ion-app v-if="appReady"> -->
   
  <ion-app >
-    <!-- <NavigationPage /> -->
     <ion-router-outlet />
   </ion-app>
 </template>
 
 <script stup lang="ts">
 import { IonApp, IonRouterOutlet,useIonRouter } from '@ionic/vue';
-import MenyPage from './views/MenyPage.vue';
 import { defineComponent, ref } from 'vue'
 
 import { store } from './store'
 import { supabase } from './supabase'
 import { Session } from 'inspector';
-// import NavigationPage from './components/NavigationPage.vue'
 
   export default defineComponent({
     name: 'App',
     components: {
-      // NavigationPage,
       IonApp,
       IonRouterOutlet,
     },
@@ -37,7 +33,7 @@ import { Session } from 'inspector';
       supabase.auth.onAuthStateChange((_, session) => {
   if (session?.user) {
     store.user = session.user;
-    router.replace('/home');
+    router.replace('/entrance');
   } else {
     store.user = {};
   }

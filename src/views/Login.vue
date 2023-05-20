@@ -121,8 +121,7 @@
           console.log('labele3',user.user_metadata.selectedLabels.Crtanje);
           console.log('labele4',user.user_metadata.selectedLabels.Magacin);
 
-          router.push({name: "Welcome"});
-          //  router.push({name: "Account"});
+          router.push({name: "Home"});
         }catch(error){
           errorMsg.value = error.message;
           setTimeout(()=>{
