@@ -207,7 +207,7 @@
           </center>
           
           
-          <ion-button  slot="end" fill="solid" tab="profile"  href="/profile">
+          <ion-button  slot="end" fill="solid" tab="account"  href="/account">
               <ion-icon :icon="person"></ion-icon>
           </ion-button>
 

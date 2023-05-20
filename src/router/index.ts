@@ -2,10 +2,10 @@ import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
 
 import EntrancePage from '../views/00.EntrancePage.vue'
+import AccountPage from '../views/01.AccountPage.vue'
 
 import HomePage from '../views/HomePage.vue'
 import LoginPage from '../views/Login.vue';
-import AccountPage from '../views/Account.vue';
 import RegisterPage from '../views/Register.vue';
 
 import AdminPage from '../views/AdminPage.vue';
@@ -36,16 +36,16 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Home',
     component: HomePage
   } ,
+  {
+    path: '/account',
+    name: 'Account',
+    component: AccountPage,
+  }, 
   { 
     path: "/login",
     name: 'Login',
     component: LoginPage
   } ,
-  { 
-    path: '/account',
-    name: 'Account',
-    component: AccountPage
-  }, 
   { 
     path: '/register',
     name: 'Register',

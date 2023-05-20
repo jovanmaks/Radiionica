@@ -1,126 +1,139 @@
-<!-- <template> -->
-<template v-slot:content>
-  <!-- <base-layout page-title="Profil?" page-default-back-link="/tabs" > -->
-            <!-- <ion-button color="dark" size="large" type="submit" fill="solid">Unesi</ion-button> -->
-  <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Account</ion-title>
-      </ion-toolbar>
-    </ion-header>
 
-    <ion-content>
+<template>
+<base-layout page-title="Account" page-default-back-link="/tabs">
+    <template v-slot:content>
+
+          <!-- <ion-title>{{profile.username}}</ion-title>
+          <ion-title>{{ profile.full_name }}</ion-title> -->
+
+      <ion-list>
+        <ion-item>
+          <ion-label>
+            <h3>Korisnik</h3>
+            <p>{{profile.username}}</p>
+            </ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>
+            <h3>Ime i prezime:</h3>
+            <p>{{profile.full_name}} </p>
+          </ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>
+            <h3>email:</h3>
+            <p>{{profile.email}} </p>
+          </ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>
+            <h3>Websajt:</h3>
+            <p>{{profile.website}} </p>
+          </ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>
+            <h3>Satnica:</h3>
+            <p>{{profile.hour_price}} </p>
+          </ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>
+            <h3>Zaduzenja:</h3>
+            <p>{{profile.user_roles}} </p>
+          </ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>
+            <h3>Aktivni projekti:</h3>
+            <p>{{profile.working_projects}} </p>
+          </ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>
+            <h3>Predhodni projekt:</h3>
+            <p>{{profile.past_projects}} </p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+
+    <!-- <ion-content> -->
       <!-- <avatar v-model:path="profile.avatar_url" @upload="updateProfile"></avatar> -->
-
       
       <form @submit.prevent="updateProfile">
-        <ion-item>
-          <ion-label position="stacked">Корисник</ion-label>
-          <ion-input type="text" name="username" v-model="profile.username"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="stacked">Име и презиме</ion-label>
-          <ion-input type="text" name="fullname" v-model="profile.full_name"></ion-input>
-        </ion-item>
-        
-        <ion-item>
-          <ion-label position="stacked">Пошта</ion-label>
-          <ion-input type="text" name="email" v-model="profile.email"></ion-input>
-        </ion-item>
-        
-        <ion-item>
-          <ion-label position="stacked">Вебсајт</ion-label>
-          <ion-input type="url" name="website" v-model="profile.website"></ion-input>
-        </ion-item>
-        
-        <ion-item>
-          <ion-label position="stacked">Задаци</ion-label>
-          <ion-input type="text" name="usrroles" v-model="profile.user_roles"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="stacked">Satnica</ion-label>
-          <ion-input type="text" name="hourprice" v-model="profile.hour_price"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="stacked">Projekti u toku</ion-label>
-          <ion-input type="text" name="workingProjects" v-model="profile.working_projects"></ion-input>
-        </ion-item>
-
-        
-        <ion-item>
-          <ion-label position="stacked">Prosli projekti</ion-label>
-          <ion-input type="text" name="pastprojects" v-model="profile.past_projects"></ion-input>
-        </ion-item>
-
-        <div class="ion-text-center">
-          <ion-button fill="clear" type="submit">Update Profile</ion-button>
-        </div>
       </form>
 
-      <div class="ion-text-center">
+      <!-- <div class="ion-text-center">
         <ion-button fill="clear" @click="signOut">Log Out</ion-button>
-      </div> 
-      
+      </div>  -->
 
-    </ion-content>
-  </ion-page>
-  <!-- </base-layout> -->
+    <!-- </ion-content> -->
+            
+    </template>
+  </base-layout>
+  
+  
+
 </template>
+  
+  <script lang="ts">
 
+    import { useRouter } from "vue-router";
+    import {store} from '@/store';
+    import { supabase} from '@/supabase';
+    import { User } from '@supabase/supabase-js';
 
-
-<script lang="ts">
-  import {  RouterLink } from "vue-router";
-  import {
-    store
-  } from '@/store';
-  import {
-    supabase
-  } from '@/supabase';
-  import {
-    // IonContent,
-    // IonHeader,
-    // IonPage,
-    // IonTitle,
-    // IonToolbar,
-    toastController,
-    loadingController,
-    // IonInput,
-    // IonItem,
-    IonButton,
-    // IonLabel,
-  } from '@ionic/vue';
-  import {
-    User
-  } from '@supabase/supabase-js';
   import {
     defineComponent,
     onMounted,
     ref
   } from 'vue';
-  import {
-    useRouter
-  } from "vue-router";
-  // import Avatar from '../components/Avatar.vue';
-  export default defineComponent({
-    name: 'AccountPage',
-    components: {
-      // Avatar,
-      // IonContent,
-      // IonHeader,
-      // IonPage,
-      // IonTitle,
-      // IonToolbar,
-      // IonInput,
-      // IonItem,
-      IonButton,
-      // IonLabel,
-    },
+  
+    import { 
+        // IonContent,
+        IonList,
+        IonTitle,
+        IonItem,
+        IonTabBar,
+        IonMenu,
+        IonTabButton,
+        IonTabs,
+        IonLabel,
+        IonIcon,
+        IonPage,
+        IonRouterOutlet ,
+        toastController,
+        loadingController,
+    } from '@ionic/vue';
+    import { ellipse, square, triangle, star } from 'ionicons/icons';
 
-    setup() {
+
+    export default{
+        name: 'AccountPage',
+        components: {
+            // IonContent,
+        IonList,
+        // IonTitle,
+        IonItem,
+        // IonTabBar,
+        // IonMenu,
+        // IonTabButton,
+        // IonTabs,
+        IonLabel,
+        // IonIcon,
+        // IonPage,
+        // IonRouterOutlet ,
+        // toastController,
+        // loadingController,
+        },
+        setup() {
       const router = useRouter();
 
       onMounted(async () => {
@@ -304,5 +317,7 @@
       };
     },
 
-  });
-</script>
+  };
+
+
+  </script>
