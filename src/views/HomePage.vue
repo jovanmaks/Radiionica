@@ -84,7 +84,7 @@
                   <ion-icon :icon="server"></ion-icon>
                 </ion-fab-button>
                 <ion-fab-list side="top">
-                  <router-link to="/magacin">
+                  <router-link to="/magacin_2">
                     <ion-fab-button size="small">
                       <ion-icon :icon="folder"></ion-icon>
                     </ion-fab-button>

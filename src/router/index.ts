@@ -3,6 +3,7 @@ import { RouteRecordRaw } from 'vue-router';
 
 import EntrancePage from '../views/00.EntrancePage.vue'
 import AccountPage from '../views/01.AccountPage.vue'
+import MagacinPage_2 from '../views/02.MagacinPage.vue'
 
 import HomePage from '../views/HomePage.vue'
 import LoginPage from '../views/Login.vue';
@@ -17,13 +18,13 @@ import MagacinPage from '../views/MagacinPage.vue';
 import MagacinUnesiPage from '../views/MagacinUnesiPage.vue';
 import MagacinStanjePage from '../views/MagacinStanjePage.vue';
 
-import ProfilePage from '../views/ProfilePage.vue';
 
 import ProjektiPage from '../views/ProjektiPage.vue';
 import CreateProjectPage from '../views/CreateProjectPage.vue';
 import ProjektiStanjePage from '../views/ProjektiStanjePage.vue';
 
 import CrtanjePage from '../views/CrtanjePage.vue';
+// import DynamicPage from '../views/CrtanjePage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -41,6 +42,22 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Account',
     component: AccountPage,
   }, 
+  {
+    path: '/magacin_2',
+    name: 'Magacin_2',
+    component: MagacinPage_2,
+  }, 
+  {
+    path: '/:pageRoute',
+    name: 'DynamicPage',
+    component: () => import(/* webpackChunkName: "dynamicPage" */ '../views/DynamicPage.vue'),
+    props: true // Pass route params as props to the component
+  },
+  // {
+  //   path: '/wharehouse/:name',
+  //   name: 'Wharehouse',
+  //   component: () => import(/* webpackChunkName: "list" */ './views/02.MagacinPage.vue')
+  // },
   { 
     path: "/login",
     name: 'Login',
@@ -90,11 +107,6 @@ const routes: Array<RouteRecordRaw> = [
     name: 'MagacinStanje',
     component: MagacinStanjePage,
     meta: { requiresAuth: true, roles: ['magacinStanje', 'admin'] } // only admins can access
-  }, 
-  {
-    path: '/profile',
-    name: 'Profile',
-    component: ProfilePage,
   }, 
   {
     path: '/projekti',
