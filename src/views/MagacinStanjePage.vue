@@ -37,18 +37,22 @@
 
         <ion-list>
           <ion-item v-for="(row, index) in filteredData" :key="index">
-            <ion-label>
-              Materijal: {{ row.materijal }}<br />
-              Oblik: {{ row.oblik }}<br />
-              Širina: {{ row.sirina }}<br />
-              Dužina: {{ row.duzina }}<br />
-              Debljina: {{ row.debljina }}
-              Količina: {{ calculateQuantity(row) }}
-            </ion-label>
-            <ion-button fill="clear" @click="removeItem(row.id)">
-              <ion-icon :icon="trash"></ion-icon>
-            </ion-button>
-          </ion-item>
+  <ion-label>
+    Materijal: {{ row.materijal }}<br />
+    Oblik: {{ row.oblik }}<br />
+    Širina: {{ row.sirina }}<br />
+    Dužina: {{ row.duzina }}<br />
+    Debljina: {{ row.debljina }}
+    Količina: {{ calculateQuantity(row) }}
+  </ion-label>
+  <ion-button fill="clear" @click="removeItem(row.id)">
+    <ion-icon :icon="trash"></ion-icon>
+  </ion-button>
+  <ion-button fill="clear" @click="shareQRCode(row)">
+    <ion-icon :icon="share"></ion-icon>
+  </ion-button>
+</ion-item>
+
         </ion-list>
       </ion-content>
     </template>
@@ -56,7 +60,7 @@
 </template>
 
 <script>
-import { trash, flask, diamond, add, leaf } from "ionicons/icons";
+import { trash, flask, diamond, add, leaf, share } from "ionicons/icons";
 import { ref, computed } from "vue";
 import { supabase } from "@/supabase";
 
@@ -89,6 +93,50 @@ export default {
   setup() {
     const data = ref([]);
     const filters = ref(new Set());
+
+
+
+
+
+    const qrCodeDataUrl = computed(() => {
+  const row = data.value.find(item => item.qr_code);
+  return row ? row.qr_code : null;
+});
+
+
+
+const shareQRCode = async () => {
+  try {
+    if (navigator.share) {
+      const img = new Image();
+      img.src = qrCodeDataUrl.value;
+
+      img.onload = async () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+
+        canvas.toBlob(async (blob) => {
+          const file = new File([blob], 'qr_code.png', { type: 'image/png' });
+
+          await navigator.share({
+            files: [file],
+            title: 'QR Code',
+            text: 'Check out this QR code',
+          });
+        });
+      };
+    } else {
+      console.warn('Sharing not supported on this device.');
+    }
+  } catch (error) {
+    console.error('Error sharing QR code:', error);
+  }
+};
+
+
 
     const loadData = async (event = null) => {
       try {
@@ -178,9 +226,14 @@ export default {
   }
 });
 
+
+
     loadData();
 
-    return { calculateQuantity, data, loadData, removeItem, trash, toggleFilter, filteredData, flask, diamond, add, leaf };
+    return { 
+      calculateQuantity, data, loadData, removeItem, 
+      trash, toggleFilter, filteredData, flask,
+       diamond, add, leaf, share, shareQRCode };
   },
 };
 </script>

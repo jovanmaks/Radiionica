@@ -38,15 +38,39 @@
           </ion-item>
         </ion-list>
 
-        <ion-button expand="block" @click="generateQRCode" color="secondary">Generate QR Code</ion-button>
-        <ion-button expand="block" @click="submitForm">Submit</ion-button>
+        <ion-row class="button-row">
+          <ion-col size="3">
+            <ion-button expand="full" size="small" @click="generateQRCode" color="dark">
+              <ion-icon :icon="qrCode"></ion-icon>
+            </ion-button>
+          </ion-col>
+          <ion-col size="3">
+            <ion-button expand="full" size="small" @click="submitForm" color="dark">
+              <ion-icon :icon="cloudUpload"></ion-icon>
+            </ion-button>
+          </ion-col>
+          <ion-col size="3">
+            <ion-button expand="full" size="small" @click="shareQRCode" color="dark">
+              <ion-icon :icon="share"></ion-icon>
+            </ion-button>
+          </ion-col>
 
-        <router-link to="/magacinStanje">
-          <ion-button expand="block" @click="finished">Finished</ion-button>
-        </router-link>
+          <ion-col size="3">
+            <router-link to="/magacinStanje">
+              <ion-button expand="full" size="small" @click="finished" color="dark">
+                <ion-icon :icon="checkmarkDone"></ion-icon>
+              </ion-button>
+            </router-link>
+          </ion-col>
+        </ion-row>
 
         <div v-if="qrCodeDataUrl" class="qr-code-container">
           <img :src="qrCodeDataUrl" alt="QR Code" />
+        </div>
+
+        <!-- Show printing status -->
+        <div v-if="isPrinting" class="printing-status">
+          Printing...
         </div>
 
       </ion-content>
@@ -55,10 +79,22 @@
 </template>
 
 <script>
-import { IonContent, IonList, IonItem, IonLabel, IonSelect, IonSelectOption, IonInput, IonButton } from '@ionic/vue';
+import {
+  IonContent,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonSelect,
+  IonSelectOption,
+  IonInput,
+  IonButton,
+  IonCol,
+  IonRow,
+} from '@ionic/vue';
 import { ref, onMounted } from 'vue';
 import { supabase } from '@/supabase';
 import QRCode from 'qrcode';
+import { print, qrCode, checkmarkDone, cloudUpload, share } from "ionicons/icons";
 
 export default {
   components: {
@@ -70,6 +106,8 @@ export default {
     IonSelectOption,
     IonInput,
     IonButton,
+    IonCol,
+    IonRow,
   },
   setup() {
     const materijal = ref('');
@@ -80,32 +118,54 @@ export default {
     const qrCodeDataUrl = ref('');
     const data = ref([]);
 
+    const isPrinting = ref(false);
+
+    // const generateQRCode = async () => {
+    //   try {
+    //     const dataObject = {
+    //       materijal: materijal.value,
+    //       oblik: oblik.value,
+    //       sirina: sirina.value,
+    //       duzina: duzina.value,
+    //       debljina: debljina.value,
+    //     };
+    //     const dataString = JSON.stringify(dataObject);
+    //     qrCodeDataUrl.value = await QRCode.toDataURL(dataString);
+    //   } catch (error) {
+    //     console.error('Error generating QR code:', error);
+    //   }
+    // };
+
     const generateQRCode = async () => {
-      try {
-        const dataObject = {
-          materijal: materijal.value,
-          oblik: oblik.value,
-          sirina: sirina.value,
-          duzina: duzina.value,
-          debljina: debljina.value,
-        };
-        const dataString = JSON.stringify(dataObject);
-        qrCodeDataUrl.value = await QRCode.toDataURL(dataString);
-      } catch (error) {
-        console.error('Error generating QR code:', error);
-      }
+  try {
+    const dataObject = {
+      materijal: materijal.value,
+      oblik: oblik.value,
+      sirina: sirina.value,
+      duzina: duzina.value,
+      debljina: debljina.value,
     };
+    const dataString = JSON.stringify(dataObject);
+    const canvas = document.createElement('canvas');
+    await QRCode.toCanvas(canvas, dataString);
+    const dataUrl = canvas.toDataURL('image/jpeg');
+    qrCodeDataUrl.value = dataUrl;
+  } catch (error) {
+    console.error('Error generating QR code:', error);
+  }
+};
+
 
     const loadData = async () => {
       try {
         const { data: fetchedData, error } = await supabase
           .from('Magacin')
           .select('*');
-        
+
         if (error) {
           throw error;
         }
-        
+
         data.value = fetchedData;
       } catch (error) {
         console.error('Error loading data:', error);
@@ -146,6 +206,74 @@ export default {
       }
     };
 
+    // const shareQRCode = async () => {
+    //   try {
+    //     if (navigator.share) {
+    //       await navigator.share({
+    //         title: 'QR Code',
+    //         text: 'Check out this QR code',
+    //         url: qrCodeDataUrl.value,
+    //       });
+    //     } else {
+    //       console.warn('Sharing not supported on this device.');
+    //     }
+    //   } catch (error) {
+    //     console.error('Error sharing QR code:', error);
+    //   }
+    // };
+
+//     const shareQRCode = async () => {
+//   try {
+//     if (navigator.share) {
+//       const response = await fetch(qrCodeDataUrl.value);
+//       const blob = await response.blob();
+      
+//       const file = new File([blob], 'qr_code.png', { type: 'image/png' });
+
+//       await navigator.share({
+//         files: [file],
+//         title: 'QR Code',
+//         text: 'Check out this QR code',
+//       });
+//     } else {
+//       console.warn('Sharing not supported on this device.');
+//     }
+//   } catch (error) {
+//     console.error('Error sharing QR code:', error);
+//   }
+// };
+
+const shareQRCode = async () => {
+  try {
+    if (navigator.share) {
+      const img = new Image();
+      img.src = qrCodeDataUrl.value;
+
+      img.onload = async () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+
+        canvas.toBlob(async (blob) => {
+          const file = new File([blob], 'qr_code.png', { type: 'image/png' });
+
+          await navigator.share({
+            files: [file],
+            title: 'QR Code',
+            text: 'Check out this QR code',
+          });
+        });
+      };
+    } else {
+      console.warn('Sharing not supported on this device.');
+    }
+  } catch (error) {
+    console.error('Error sharing QR code:', error);
+  }
+};
+
     onMounted(() => {
       loadData();
     });
@@ -159,7 +287,14 @@ export default {
       generateQRCode,
       qrCodeDataUrl,
       submitForm,
+      shareQRCode,
       finished,
+      print,
+      qrCode,
+      checkmarkDone,
+      cloudUpload,
+      share,
+      isPrinting,
     };
   },
 };
@@ -174,7 +309,19 @@ export default {
   text-align: center;
   margin-top: 1rem;
 }
+
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.printing-status {
+  margin-top: 1rem;
+  text-align: center;
+} 
 </style>
+
 
   
 
