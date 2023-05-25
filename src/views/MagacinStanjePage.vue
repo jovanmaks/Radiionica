@@ -16,20 +16,20 @@
 
         <div class="filter-icons-wrapper">
           <div class="filter-icons">
-            <ion-button fill="clear" color="medium" @click="toggleFilter('polistirol')">
+            <ion-button fill="clear" :color="isFilterActive('polistirol') ? 'danger' : 'medium'"  @click="toggleFilter('polistirol')">
               <ion-icon :icon="flask"></ion-icon>
             </ion-button>
-            <ion-button fill="clear" color="medium" @click="toggleFilter('poliuretan')">
+            <ion-button fill="clear" :color="isFilterActive('poliuretan') ? 'danger' : 'medium'" @click="toggleFilter('poliuretan')">
               <ion-icon :icon="flask"></ion-icon>
             </ion-button>
 
-            <ion-button fill="clear" color="medium" @click="toggleFilter('drvo')">
+            <ion-button fill="clear" :color="isFilterActive('drvo') ? 'danger' : 'medium'" @click="toggleFilter('drvo')">
               <ion-icon :icon="leaf"></ion-icon>
             </ion-button>
-            <ion-button fill="clear" color="medium" @click="toggleFilter('medijapan')">
+            <ion-button fill="clear" :color="isFilterActive('medijapan') ? 'danger' : 'medium'" @click="toggleFilter('medijapan')">
               <ion-icon :icon="leaf"></ion-icon>
             </ion-button>
-            <ion-button fill="clear" color="medium" @click="toggleFilter('iverica')">
+            <ion-button fill="clear" :color="isFilterActive('iverica') ? 'danger' : 'medium'" @click="toggleFilter('iverica')">
               <ion-icon :icon="leaf"></ion-icon>
             </ion-button>
           </div>
@@ -63,6 +63,7 @@
 import { trash, flask, diamond, add, leaf, share } from "ionicons/icons";
 import { ref, computed } from "vue";
 import { supabase } from "@/supabase";
+import { FileSharer } from 'capacitor-plugin-filesharer';
 
 import {
   IonContent,
@@ -105,32 +106,22 @@ export default {
 
 
 
-const shareQRCode = async () => {
+const shareQRCode = async (row) => {
   try {
-    if (navigator.share) {
-      const img = new Image();
-      img.src = qrCodeDataUrl.value;
+    const response = await fetch(row.qr_code);
+    const blob = await response.blob();
+    const reader = new FileReader();
 
-      img.onload = async () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
+    reader.onloadend = async function() {
+      const base64data = reader.result;
+      await FileSharer.share({
+        filename: 'qrcode.png',
+        base64Data: base64data.split(',')[1], // remove the data url prefix
+        contentType: 'image/png',
+      });
+    };
 
-        canvas.toBlob(async (blob) => {
-          const file = new File([blob], 'qr_code.png', { type: 'image/png' });
-
-          await navigator.share({
-            files: [file],
-            title: 'QR Code',
-            text: 'Check out this QR code',
-          });
-        });
-      };
-    } else {
-      console.warn('Sharing not supported on this device.');
-    }
+    reader.readAsDataURL(blob);
   } catch (error) {
     console.error('Error sharing QR code:', error);
   }
@@ -227,13 +218,18 @@ const shareQRCode = async () => {
 });
 
 
+const isFilterActive = (filter) => {
+  return filters.value.has(filter);
+};
 
     loadData();
 
-    return { 
-      calculateQuantity, data, loadData, removeItem, 
-      trash, toggleFilter, filteredData, flask,
-       diamond, add, leaf, share, shareQRCode };
+    return {
+  calculateQuantity, data, loadData, removeItem, 
+  trash, toggleFilter, filteredData, flask,
+  diamond, add, leaf, share, shareQRCode, isFilterActive
+};
+
   },
 };
 </script>

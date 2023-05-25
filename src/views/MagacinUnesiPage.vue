@@ -92,8 +92,11 @@ import {
   IonRow,
 } from '@ionic/vue';
 import { ref, onMounted } from 'vue';
+// import { Plugins } from '@capacitor/core';
+// const { Share } = Plugins;
 import { supabase } from '@/supabase';
 import QRCode from 'qrcode';
+import { FileSharer } from 'capacitor-plugin-filesharer';
 import { print, qrCode, checkmarkDone, cloudUpload, share } from "ionicons/icons";
 
 export default {
@@ -120,43 +123,50 @@ export default {
 
     const isPrinting = ref(false);
 
-    // const generateQRCode = async () => {
-    //   try {
-    //     const dataObject = {
-    //       materijal: materijal.value,
-    //       oblik: oblik.value,
-    //       sirina: sirina.value,
-    //       duzina: duzina.value,
-    //       debljina: debljina.value,
-    //     };
-    //     const dataString = JSON.stringify(dataObject);
-    //     qrCodeDataUrl.value = await QRCode.toDataURL(dataString);
-    //   } catch (error) {
-    //     console.error('Error generating QR code:', error);
-    //   }
-    // };
-
     const generateQRCode = async () => {
-  try {
-    const dataObject = {
-      materijal: materijal.value,
-      oblik: oblik.value,
-      sirina: sirina.value,
-      duzina: duzina.value,
-      debljina: debljina.value,
-    };
+      try {
+        const dataObject = {
+          materijal: materijal.value,
+          oblik: oblik.value,
+          sirina: sirina.value,
+          duzina: duzina.value,
+          debljina: debljina.value,
+      };
+
     const dataString = JSON.stringify(dataObject);
     const canvas = document.createElement('canvas');
     await QRCode.toCanvas(canvas, dataString);
     const dataUrl = canvas.toDataURL('image/jpeg');
     qrCodeDataUrl.value = dataUrl;
-  } catch (error) {
+    } catch (error) {
     console.error('Error generating QR code:', error);
   }
 };
 
+const shareQRCode = async () => {
+  try {
+    const response = await fetch(qrCodeDataUrl.value);
+    const blob = await response.blob();
+    const reader = new FileReader();
 
-    const loadData = async () => {
+    reader.onloadend = async function() {
+      const base64data = reader.result;
+      await FileSharer.share({
+        filename: 'qrcode.png',
+        base64Data: base64data.split(',')[1], // remove the data url prefix
+        contentType: 'image/png',
+      });
+    };
+
+    reader.readAsDataURL(blob);
+  } catch (error) {
+    console.error('Error sharing QR code:', error);
+  }
+};
+
+
+
+  const loadData = async () => {
       try {
         const { data: fetchedData, error } = await supabase
           .from('Magacin')
@@ -206,73 +216,6 @@ export default {
       }
     };
 
-    // const shareQRCode = async () => {
-    //   try {
-    //     if (navigator.share) {
-    //       await navigator.share({
-    //         title: 'QR Code',
-    //         text: 'Check out this QR code',
-    //         url: qrCodeDataUrl.value,
-    //       });
-    //     } else {
-    //       console.warn('Sharing not supported on this device.');
-    //     }
-    //   } catch (error) {
-    //     console.error('Error sharing QR code:', error);
-    //   }
-    // };
-
-//     const shareQRCode = async () => {
-//   try {
-//     if (navigator.share) {
-//       const response = await fetch(qrCodeDataUrl.value);
-//       const blob = await response.blob();
-      
-//       const file = new File([blob], 'qr_code.png', { type: 'image/png' });
-
-//       await navigator.share({
-//         files: [file],
-//         title: 'QR Code',
-//         text: 'Check out this QR code',
-//       });
-//     } else {
-//       console.warn('Sharing not supported on this device.');
-//     }
-//   } catch (error) {
-//     console.error('Error sharing QR code:', error);
-//   }
-// };
-
-const shareQRCode = async () => {
-  try {
-    if (navigator.share) {
-      const img = new Image();
-      img.src = qrCodeDataUrl.value;
-
-      img.onload = async () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
-
-        canvas.toBlob(async (blob) => {
-          const file = new File([blob], 'qr_code.png', { type: 'image/png' });
-
-          await navigator.share({
-            files: [file],
-            title: 'QR Code',
-            text: 'Check out this QR code',
-          });
-        });
-      };
-    } else {
-      console.warn('Sharing not supported on this device.');
-    }
-  } catch (error) {
-    console.error('Error sharing QR code:', error);
-  }
-};
 
     onMounted(() => {
       loadData();
