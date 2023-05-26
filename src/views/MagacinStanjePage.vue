@@ -40,7 +40,8 @@
         <ion-searchbar  @ionInput="handleInput($event)"></ion-searchbar>
         
         <ion-list>
-          <ion-item v-for="(row, index) in searchResults" :key="index">
+          <ion-item v-for="(row, index) in displayData" :key="index">
+          <!-- <ion-item v-for="(row, index) in searchResults" :key="index"> -->
           <!-- </ion-item> -->
           <!-- <ion-item v-for="(row, index) in searchQuery.value ? searchResults : filteredData" :key="index"> -->
 
@@ -107,6 +108,7 @@ export default {
     const filters = ref(new Set());
     const searchQuery = ref("");
     const searchResults = ref([]);
+    const displayData = ref([]);
 
 
 
@@ -141,25 +143,26 @@ const shareQRCode = async (row) => {
 
 
 
-    const loadData = async (event = null) => {
-      try {
-        const { data: fetchedData, error } = await supabase
-          .from("Magacin") // replace 'your_table_name' with the actual table name in Supabase
-          .select("*");
+const loadData = async (event = null) => {
+  try {
+    const { data: fetchedData, error } = await supabase
+      .from("Magacin") 
+      .select("*");
 
-        if (error) {
-          throw error;
-        }
+    if (error) {
+      throw error;
+    }
 
-        data.value = fetchedData;
-      } catch (error) {
-        console.error("Error loading data:", error);
-      } finally {
-        if (event) {
-          event.target.complete();
-        }
-      }
-    };
+    data.value = fetchedData;
+    displayData.value = [...fetchedData];  // Initialize displayData with the fetched data
+  } catch (error) {
+    console.error("Error loading data:", error);
+  } finally {
+    if (event) {
+      event.target.complete();
+    }
+  }
+};
 
     const removeItem = async (id) => {
       try {
@@ -193,13 +196,19 @@ const shareQRCode = async (row) => {
 
 
 
-    const toggleFilter = (filter) => {
-      if (filters.value.has(filter)) {
-        filters.value.delete(filter);
-      } else {
-        filters.value.add(filter);
-      }
-    };
+const toggleFilter = (filter) => {
+  if (filters.value.has(filter)) {
+    filters.value.delete(filter);
+  } else {
+    filters.value.add(filter);
+  }
+
+  if (filters.value.size === 0) {
+    displayData.value = [...data.value];
+  } else {
+    displayData.value = data.value.filter(item => filters.value.has(item.materijal));
+  }
+};
 
 //     const filteredData = computed(() => {
 //   if (filters.value.size === 0) {
@@ -324,14 +333,7 @@ const searchItem = (item, query) => {
 
 const handleInput = (event) => {
   const query = event.target.value.toLowerCase();
-  console.log('Search query:', query); // Log the search query
-
-  searchResults.value = data.value.filter((item) => {
-    const itemMatchesSearch = searchItem(item, query);
-    console.log('Item:', item, 'Matches search:', itemMatchesSearch); // Log each item and whether it matches the search
-    return itemMatchesSearch;
-  });
-  console.log('Search results:', searchResults.value); // Log the final search results
+  displayData.value = data.value.filter((item) => searchItem(item, query));
 };
 
 
@@ -362,7 +364,7 @@ const isFilterActive = (filter) => {
     return {
   calculateQuantity, data, loadData, removeItem, 
   trash, toggleFilter, filteredData, flask,
-  diamond, add, leaf, share, shareQRCode, isFilterActive, searchResults, searchQuery, handleInput
+  diamond, add, leaf, share, shareQRCode, isFilterActive, searchResults, searchQuery, handleInput, displayData
 };
 
   },
