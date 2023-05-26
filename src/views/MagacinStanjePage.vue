@@ -41,12 +41,9 @@
         
         <ion-list>
           <ion-item v-for="(row, index) in displayData" :key="index">
-          <!-- <ion-item v-for="(row, index) in searchResults" :key="index"> -->
-          <!-- </ion-item> -->
-          <!-- <ion-item v-for="(row, index) in searchQuery.value ? searchResults : filteredData" :key="index"> -->
-
               
   <ion-label>
+    Biljeska: {{ row.biljeska }}<br />
     Materijal: {{ row.materijal }}<br />
     Oblik: {{ row.oblik }}<br />
     Širina: {{ row.sirina }}<br />
@@ -117,6 +114,8 @@ export default {
   });
 
 
+  
+
 
 const shareQRCode = async (row) => {
   try {
@@ -176,9 +175,10 @@ const loadData = async (event = null) => {
     };
 
   const calculateQuantity = (item) => {
-  const { materijal, oblik, sirina, duzina, debljina } = item;
+  const { materijal, oblik, sirina, duzina, debljina, biljeska } = item;
   const filteredItems = data.value.filter((row) => {
     return (
+      row.biljeska === biljeska &&
       row.materijal === materijal &&
       row.oblik === oblik &&
       row.sirina === sirina &&
@@ -188,8 +188,6 @@ const loadData = async (event = null) => {
   });
   return filteredItems.length > 1 ? filteredItems.length : "";
 };
-
-
 
 const toggleFilter = (filter) => {
   if (filters.value.has(filter)) {
@@ -228,50 +226,9 @@ const filteredData = computed(() => {
   });
 });
 
-
-// const searchItem = (item, query) => {
-//   const itemValues = Object.values(item);
-//   console.log('Item values:', itemValues); // Log the values of the item
-
-//   return itemValues.some((value) =>
-//     String(value).toLowerCase().includes(query)
-//   );
-// };
-
-// const searchItem = (item, query) => {
-//   const itemValues = Object.values(item).filter(value => typeof value === 'string' || typeof value === 'number');
-//   console.log('Query:', query);
-//   console.log('Item values:', itemValues);
-//   return itemValues.some((value) =>
-//     String(value).toLowerCase().includes(query)
-//   );
-// };
-
-// const searchItem = (item, query) => {
-//   const itemValues = Object.values(item).filter(value => 
-//     (typeof value === 'string' || typeof value === 'number') && !value.startsWith('data:image/png;base64,')
-//   );
-//   console.log('Query:', query);
-//   console.log('Item values:', itemValues);
-//   return itemValues.some((value) =>
-//     String(value).toLowerCase().includes(query)
-//   );
-// };
-
-// const searchItem = (item, query) => {
-//   const itemValues = Object.values(item).filter(value => {
-//     return ((typeof value === 'string' && !value.startsWith('data:image/png;base64,')) || typeof value === 'number')
-//   });
-//   console.log('Query:', query);
-//   console.log('Item values:', itemValues);
-//   return itemValues.some((value) =>
-//     String(value).toLowerCase().includes(query)
-//   );
-// };
-
 const searchItem = (item, query) => {
   // Define fields you want to search in
-  const searchFields = ['materijal', 'oblik', 'sirina', 'duzina', 'debljina'];
+  const searchFields = ['materijal', 'oblik', 'sirina', 'duzina', 'debljina', 'biljeska'];
 
   // Get only those fields from the item
   const itemValues = searchFields.map(field => item[field]).filter(value => value);

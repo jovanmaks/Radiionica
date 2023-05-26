@@ -38,6 +38,11 @@
           </ion-item>
         </ion-list>
 
+          <ion-item>
+            <ion-label position="floating">Biljeska</ion-label>
+            <ion-input v-model="biljeska" type="string"></ion-input>
+          </ion-item>
+
         <ion-row class="button-row">
           <ion-col size="3">
             <ion-button expand="full" size="small" @click="generateQRCode" color="dark">
@@ -118,6 +123,7 @@ export default {
     const sirina = ref(null);
     const duzina = ref(null);
     const debljina = ref(null);
+    const biljeska = ref(null);
     const qrCodeDataUrl = ref('');
     const data = ref([]);
 
@@ -131,6 +137,7 @@ export default {
           sirina: sirina.value,
           duzina: duzina.value,
           debljina: debljina.value,
+          biljeska: biljeska.value,
       };
 
       const dataString = 
@@ -138,7 +145,8 @@ export default {
         "Oblik: " + oblik.value + "\n" +
         "Sirina: " + sirina.value + "\n" +
         "Duzina: " + duzina.value + "\n" +
-        "Debljina: " + debljina.value;
+        "Debljina: " + debljina.value + "\n" +
+        "Biljeska;" + biljeska.value;
 
     // const dataString = JSON.stringify(dataObject);
     const canvas = document.createElement('canvas');
@@ -204,6 +212,7 @@ const shareQRCode = async () => {
               sirina: sirina.value,
               duzina: duzina.value,
               debljina: debljina.value,
+              biljeska: biljeska.value,
               qr_code: qrCodeDataUrl.value,
             },
           ]);
@@ -217,6 +226,7 @@ const shareQRCode = async () => {
         sirina.value = null;
         duzina.value = null;
         debljina.value = null;
+        biljeska.value = null;
         qrCodeDataUrl.value = '';
       } catch (error) {
         console.error('Error submitting form:', error);
@@ -234,6 +244,7 @@ const shareQRCode = async () => {
       sirina,
       duzina,
       debljina,
+      biljeska,
       generateQRCode,
       qrCodeDataUrl,
       submitForm,
