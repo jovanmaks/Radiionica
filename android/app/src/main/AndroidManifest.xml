@@ -22,7 +22,11 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
+	ionic build
+	ionic cap copy
+	ionic cap sync
+	export CAPACITOR_ANDROID_STUDIO_PATH=/usr/local/bin/android-studio
+	ionic cap open android
         </activity>
 
         <provider

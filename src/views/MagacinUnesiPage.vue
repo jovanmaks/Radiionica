@@ -146,7 +146,7 @@ export default {
         "Sirina: " + sirina.value + "\n" +
         "Duzina: " + duzina.value + "\n" +
         "Debljina: " + debljina.value + "\n" +
-        "Biljeska;" + biljeska.value;
+        "Biljeska: " + biljeska.value;
 
     // const dataString = JSON.stringify(dataObject);
     const canvas = document.createElement('canvas');

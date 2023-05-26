@@ -248,6 +248,8 @@ const handleInput = (event) => {
 };
 
 
+
+
 watch(searchResults, newVal => {
   console.log('Updated searchResults:', newVal);
 });
