@@ -55,9 +55,11 @@
                   <ion-fab-button>
                     <ion-icon :icon="add"></ion-icon>
                   </ion-fab-button>
-                  <ion-fab-button>
-                    <ion-icon :icon="add"></ion-icon>
+                  <router-link to="/select">
+                  <ion-fab-button size="small">
+                    <ion-icon :icon="list"></ion-icon>
                   </ion-fab-button>
+                  </router-link>
                 </ion-fab-list>
               </ion-fab>
               
@@ -97,9 +99,6 @@
                   </ion-fab-button>
                 </ion-fab-list>
               </ion-fab>
-              
-
-        
   
     </template>
   </base-layout>

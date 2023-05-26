@@ -126,12 +126,31 @@ export default defineComponent({
       Alati: false,
     });
 
+
+    
     async function fetchUserMetadata() {
       const { user } = await supabase.auth.getUser();
+  console.log('User OVDEEEEEEE:', user); // Log the user object to the console
       Object.keys(selectedLabels.value).forEach((key) => {
         selectedLabels.value[key] = user.user_metadata.selectedLabels[key];
       });
     }
+
+//     async function fetchUserMetadata() {
+//   // const user = supabase.auth.user();
+//       const { user } = await supabase.auth.getUser();
+//   console.log('User OVDEEEEEEE:', user); // Log the user object to the console
+//   if (user && user.user_metadata) {
+//     Object.keys(selectedLabels.value).forEach((key) => {
+//       selectedLabels.value[key] = user.user_metadata.selectedLabels[key];
+//     });
+//   } else {
+//     // Handle the case where the user or user_metadata is not defined
+//     console.error("User or user metadata is not defined");
+//   }
+// }
+
+
 
     onMounted(() => {
       fetchUserMetadata();

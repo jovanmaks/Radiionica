@@ -1,6 +1,7 @@
 <template>
   <base-layout page-title="Magacin" page-default-back-link="/tabs">
     <template v-slot:content>
+    
       <ion-content class="content">
         <ion-refresher slot="fixed" @ionRefresh="loadData">
           <ion-refresher-content></ion-refresher-content>
@@ -13,6 +14,7 @@
             </ion-fab-button>
           </router-link>
         </ion-fab>
+
 
         <div class="filter-icons-wrapper">
           <div class="filter-icons">
@@ -35,8 +37,14 @@
           </div>
         </div>
 
+        <ion-searchbar  @ionInput="handleInput($event)"></ion-searchbar>
+        
         <ion-list>
-          <ion-item v-for="(row, index) in filteredData" :key="index">
+          <ion-item v-for="(row, index) in searchResults" :key="index">
+          <!-- </ion-item> -->
+          <!-- <ion-item v-for="(row, index) in searchQuery.value ? searchResults : filteredData" :key="index"> -->
+
+              
   <ion-label>
     Materijal: {{ row.materijal }}<br />
     Oblik: {{ row.oblik }}<br />
@@ -64,8 +72,10 @@ import { trash, flask, diamond, add, leaf, share } from "ionicons/icons";
 import { ref, computed } from "vue";
 import { supabase } from "@/supabase";
 import { FileSharer } from 'capacitor-plugin-filesharer';
+import { watch } from 'vue';
 
 import {
+  IonSearchbar,
   IonContent,
   IonList,
   IonItem,
@@ -80,6 +90,7 @@ import {
 
 export default {
   components: {
+    IonSearchbar,
     IonContent,
     IonList,
     IonItem,
@@ -94,7 +105,8 @@ export default {
   setup() {
     const data = ref([]);
     const filters = ref(new Set());
-
+    const searchQuery = ref("");
+    const searchResults = ref([]);
 
 
 
@@ -177,6 +189,10 @@ const shareQRCode = async (row) => {
   return filteredItems.length > 1 ? filteredItems.length : "";
 };
 
+
+
+
+
     const toggleFilter = (filter) => {
       if (filters.value.has(filter)) {
         filters.value.delete(filter);
@@ -185,37 +201,156 @@ const shareQRCode = async (row) => {
       }
     };
 
-    const filteredData = computed(() => {
-  if (filters.value.size === 0) {
-    return [];
-  } else {
-    const mergedItems = [];
-    const processedItems = new Set();
+//     const filteredData = computed(() => {
+//   if (filters.value.size === 0) {
+//     return [];
+//   } else {
+//     const mergedItems = [];
+//     const processedItems = new Set();
 
-    data.value.forEach((row) => {
-      if (
-        Array.from(filters.value).includes(row.materijal) &&
-        !processedItems.has(row.id)
-      ) {
-        const { materijal, oblik, sirina, duzina, debljina } = row;
-        const filteredItems = data.value.filter(
-          (item) =>
-            item.materijal === materijal &&
-            item.oblik === oblik &&
-            item.sirina === sirina &&
-            item.duzina === duzina &&
-            item.debljina === debljina
-        );
+//     data.value.forEach((row) => {
+//       if (
+//         Array.from(filters.value).includes(row.materijal) &&
+//         !processedItems.has(row.id)
+//       ) {
+//         const { materijal, oblik, sirina, duzina, debljina } = row;
+//         const filteredItems = data.value.filter(
+//           (item) =>
+//             item.materijal === materijal &&
+//             item.oblik === oblik &&
+//             item.sirina === sirina &&
+//             item.duzina === duzina &&
+//             item.debljina === debljina
+//         );
 
-        const mergedItem = { ...row, kolicina: filteredItems.length };
-        mergedItems.push(mergedItem);
-        filteredItems.forEach((item) => processedItems.add(item.id));
-      }
-    });
+//         const mergedItem = { ...row, kolicina: filteredItems.length };
+//         mergedItems.push(mergedItem);
+//         filteredItems.forEach((item) => processedItems.add(item.id));
+//       }
+//     });
 
-    return mergedItems;
+//     return mergedItems;
+//   }
+// });
+
+// const filteredData = computed(() => {
+//   if (filters.value.size === 0 && !searchQuery.value) {
+//     return [];
+//   } else {
+//     const mergedItems = [];
+//     const processedItems = new Set();
+//     const query = searchQuery.value.toLowerCase();
+
+//     data.value.forEach((row) => {
+//       const { materijal, oblik, sirina, duzina, debljina } = row;
+//       if (
+//         (Array.from(filters.value).includes(row.materijal) || searchQuery.value) &&
+//         !processedItems.has(row.id) &&
+//         searchItem(row, query)
+//       ) {
+//         const filteredItems = data.value.filter(
+//           (item) =>
+//             item.materijal === materijal &&
+//             item.oblik === oblik &&
+//             item.sirina === sirina &&
+//             item.duzina === duzina &&
+//             item.debljina === debljina &&
+//             searchItem(item, query)
+//         );
+
+//         const mergedItem = { ...row, kolicina: filteredItems.length };
+//         mergedItems.push(mergedItem);
+//         filteredItems.forEach((item) => processedItems.add(item.id));
+//       }
+//     });
+
+//     return mergedItems;
+//   }
+// });
+
+
+
+// const filteredData = computed(() => {
+//   if (!searchQuery.value && filters.value.size === 0) {
+//     return data.value;
+//   }
+
+//   const query = searchQuery.value.toLowerCase();
+
+//   return data.value.filter(item => {
+//     const matchesFilter = filters.value.size > 0 
+//       ? filters.value.has(item.materijal) 
+//       : true;
+      
+//     const matchesSearch = searchQuery.value 
+//       ? searchItem(item, query) 
+//       : true;
+
+//     return matchesFilter && matchesSearch;
+//   });
+// });
+
+const filteredData = computed(() => {
+  if (!searchQuery.value && filters.value.size === 0) {
+    return data.value;
   }
+
+  const query = searchQuery.value.toLowerCase();
+
+  return data.value.filter(item => {
+    const matchesFilter = filters.value.size > 0 
+      ? filters.value.has(item.materijal) 
+      : false;
+
+    const matchesSearch = searchQuery.value 
+      ? searchItem(item, query) 
+      : false;
+
+    return (matchesFilter && matchesSearch) || (filters.value.size === 0 && matchesSearch) || (searchQuery.value === '' && matchesFilter);
+  });
 });
+
+const searchItem = (item, query) => {
+  const itemValues = Object.values(item);
+  console.log('Item values:', itemValues); // Log the values of the item
+
+  return itemValues.some((value) =>
+    String(value).toLowerCase().includes(query)
+  );
+};
+
+
+
+
+const handleInput = (event) => {
+  const query = event.target.value.toLowerCase();
+  console.log('Search query:', query); // Log the search query
+
+  searchResults.value = data.value.filter((item) => {
+    const itemMatchesSearch = searchItem(item, query);
+    console.log('Item:', item, 'Matches search:', itemMatchesSearch); // Log each item and whether it matches the search
+    return itemMatchesSearch;
+  });
+  console.log('Search results:', searchResults.value); // Log the final search results
+};
+
+
+watch(searchResults, newVal => {
+  console.log('Updated searchResults:', newVal);
+});
+
+watch(filteredData, newVal => {
+  console.log('Updated filteredData:', newVal);
+});
+
+watch([searchQuery, filters], () => {
+  if (searchQuery.value === '') {
+    searchResults.value = filteredData.value;
+  } else {
+    handleInput(searchQuery.value);
+  }
+}, { immediate: true });
+
 
 
 const isFilterActive = (filter) => {
@@ -227,7 +362,7 @@ const isFilterActive = (filter) => {
     return {
   calculateQuantity, data, loadData, removeItem, 
   trash, toggleFilter, filteredData, flask,
-  diamond, add, leaf, share, shareQRCode, isFilterActive
+  diamond, add, leaf, share, shareQRCode, isFilterActive, searchResults, searchQuery, handleInput
 };
 
   },

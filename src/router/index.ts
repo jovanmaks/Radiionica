@@ -22,6 +22,8 @@ import MagacinStanjePage from '../views/MagacinStanjePage.vue';
 import ProjektiPage from '../views/ProjektiPage.vue';
 import CreateProjectPage from '../views/CreateProjectPage.vue';
 import ProjektiStanjePage from '../views/ProjektiStanjePage.vue';
+import SelektovanjeProjektaPage from '../views/04.SelectProjectPage.vue';
+
 
 import CrtanjePage from '../views/CrtanjePage.vue';
 // import DynamicPage from '../views/CrtanjePage.vue';
@@ -46,7 +48,12 @@ const routes: Array<RouteRecordRaw> = [
     path: '/magacin_2',
     name: 'Magacin_2',
     component: MagacinPage_2,
-  }, 
+  },
+  {
+    path: '/select',
+    name: 'Select',
+    component: SelektovanjeProjektaPage,
+  },  
   {
     path: '/:pageRoute',
     name: 'DynamicPage',

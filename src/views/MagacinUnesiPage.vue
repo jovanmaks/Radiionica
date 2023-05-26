@@ -133,7 +133,14 @@ export default {
           debljina: debljina.value,
       };
 
-    const dataString = JSON.stringify(dataObject);
+      const dataString = 
+        "Materijal: " + materijal.value + "\n" +
+        "Oblik: " + oblik.value + "\n" +
+        "Sirina: " + sirina.value + "\n" +
+        "Duzina: " + duzina.value + "\n" +
+        "Debljina: " + debljina.value;
+
+    // const dataString = JSON.stringify(dataObject);
     const canvas = document.createElement('canvas');
     await QRCode.toCanvas(canvas, dataString);
     const dataUrl = canvas.toDataURL('image/jpeg');
