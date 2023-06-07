@@ -31,13 +31,13 @@
       </ion-header>
       <ion-content class="ion-padding">
         <ion-item>
-          <ion-label position="stacked">Unesi sekciju</ion-label>
-          <ion-input ref="input" type="text" placeholder="Sekcija"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="stacked">Unesi postotak</ion-label>
-          <ion-input ref="input" type="number" placeholder="Postotak"></ion-input>
-        </ion-item>
+        <ion-label position="stacked">Unesi sekciju</ion-label>
+        <ion-input ref="nameInput" type="text" placeholder="Sekcija"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Unesi postotak</ion-label>
+        <ion-input ref="valueInput" type="number" placeholder="Postotak"></ion-input>
+      </ion-item>
       </ion-content>
     </ion-modal>
   </ion-content>
@@ -97,7 +97,16 @@
 
     data() {
       return {
+        sections: [],
         message: 'This modal example uses triggers to automatically open a modal when the button is clicked.',
+        colors: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ]
       };
     },
     methods: {
@@ -105,14 +114,12 @@
         this.$refs.modal.$el.dismiss(null, 'cancel');
       },
       confirm() {
-        const name = this.$refs.input.$el.value;
+        const name = this.$refs.nameInput.$el.value;
+        const value = this.$refs.valueInput.$el.value;
+        this.sections.push({ name, value });
         this.$refs.modal.$el.dismiss(name, 'confirm');
       },
-      onWillDismiss(ev) {
-  if (ev.detail.role === 'confirm') {
-    this.message = `Hello, ${ev.detail.data}!`;
-  }
-}
+      // existing methods
     },
 
 
