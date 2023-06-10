@@ -226,6 +226,7 @@
       const modalSections = ref([]);
       const selectedProjectName = localStorage.getItem('selectedProject');
       const chart = ref(null);
+      const chartInstance = ref(null); // reference to hold chart instance
   
 
       const loadSelectedProject = async () => {
@@ -245,8 +246,43 @@
 
 
     
-      onMounted(async () => {
+//       onMounted(async () => {
+//     const selectedProject = await loadSelectedProject();
+//     modalSections.value = Array(selectedProject.broj_objekata)
+//         .fill()
+//         .map((_, index) => ({ 
+//           name: `Object ${index + 1}`, 
+//           value: 1, // Replace with real value
+//           done: false 
+//         }));
+
+ 
+
+//     const ctx = chart.value.getContext('2d');
+//     new Chart(ctx, {
+//       type: 'doughnut',
+//       data: {
+//         labels: Array(selectedProject.broj_objekata).fill().map((_, i) => `Object ${i + 1}`),
+//         datasets: [{
+//           label: '# of Votes',
+//           data: Array(selectedProject.broj_objekata).fill(1), // Replace with real data
+//           backgroundColor: 'rgba(128, 128, 128, 1)', // Gray color
+//           borderColor: 'rgba(0, 0, 0, 1)', // Gray color
+//           borderWidth: 1
+//         }]
+//       },
+//       options: {
+//         cutout: '50%',
+//       }
+//     });
+// });
+
+let myChart; // Declare myChart outside of your function
+
+onMounted(async () => {
     const selectedProject = await loadSelectedProject();
+    const broj_nacrtanih = selectedProject.broj_nacrtanih;
+
     modalSections.value = Array(selectedProject.broj_objekata)
         .fill()
         .map((_, index) => ({ 
@@ -255,18 +291,27 @@
           done: false 
         }));
 
- 
+    const backgroundColor = Array(selectedProject.broj_objekata).fill('rgba(128, 128, 128, 1)');
+    for (let i = 0; i < broj_nacrtanih; i++) {
+        backgroundColor[i] = 'rgba(255, 0, 0, 1)';
+    }
 
     const ctx = chart.value.getContext('2d');
-    new Chart(ctx, {
+
+    // If myChart is not undefined, destroy it before creating a new one
+    if (myChart) {
+        myChart.destroy();
+    }
+
+    myChart = new Chart(ctx, {
       type: 'doughnut',
       data: {
         labels: Array(selectedProject.broj_objekata).fill().map((_, i) => `Object ${i + 1}`),
         datasets: [{
           label: '# of Votes',
           data: Array(selectedProject.broj_objekata).fill(1), // Replace with real data
-          backgroundColor: 'rgba(128, 128, 128, 1)', // Gray color
-          borderColor: 'rgba(0, 0, 0, 1)', // Gray color
+          backgroundColor: backgroundColor,
+          borderColor: 'rgba(0, 0, 0, 1)',
           borderWidth: 1
         }]
       },
