@@ -178,6 +178,9 @@ onWillDismiss: function(ev) {
 
 
 
+
+
+    
       onMounted(async () => {
     const selectedProject = await loadSelectedProject();
     modalSections.value = Array(selectedProject.broj_objekata)
