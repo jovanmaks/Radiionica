@@ -206,6 +206,7 @@ onWillDismiss: function(ev) {
       }
     });
 });
+
   
   return {
     chart,
