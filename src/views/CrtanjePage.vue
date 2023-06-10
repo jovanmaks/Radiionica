@@ -30,6 +30,7 @@
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
+
         <ion-item>
         <ion-label position="stacked">Unesi sekciju</ion-label>
         <ion-input ref="nameInput" type="text" placeholder="Sekcija"></ion-input>
@@ -39,8 +40,8 @@
         <ion-input ref="valueInput" type="number" placeholder="Postotak"></ion-input>
       </ion-item>
 
-      <ion-item v-for="(section, index) in modalSections" :key="index">
-      <ion-segment :value="section.done ? 'done' : 'notDone'" @ionChange="updateStatus(index, $event.detail.value)">
+      <!-- <ion-item v-for="(section, index) in modalSections" :key="index">
+      <ion-segment :value="section.done ? 'done' : 'notDone'" @ionChange="updateStatus(index, $event.detail.value)"   >
         <ion-segment-button value="done">
           <ion-label>Done</ion-label>
         </ion-segment-button>
@@ -48,7 +49,19 @@
           <ion-label>Not Done</ion-label>
         </ion-segment-button>
       </ion-segment>
-    </ion-item>
+    </ion-item> -->
+
+    <ion-item v-for="(section, index) in modalSections" :key="index">
+  <ion-segment :value="section.done ? 'done' : 'notDone'">
+    <ion-segment-button value="done" @click="updateStatus(index, 'done')">
+      <ion-label>Done</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="notDone" @click="updateStatus(index, 'notDone')">
+      <ion-label>Not Done</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-item>
+
 
       </ion-content>
 
@@ -115,14 +128,16 @@
       return {
         sections: [],
         message: 'This modal example uses triggers to automatically open a modal when the button is clicked.',
-        colors: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)'
-        ]
+        // colors: [
+        //   'rgba(255, 99, 132, 1)',
+        //   'rgba(54, 162, 235, 1)',
+        //   'rgba(255, 206, 86, 1)',
+        //   'rgba(75, 192, 192, 1)',
+        //   'rgba(153, 102, 255, 1)',
+        //   'rgba(255, 159, 64, 1)'
+        // ],
+        switchCount: 0, // add this new property to keep track of the count
+        // modalSections: [] // add modalSections here
       };
     },
     methods: {
@@ -133,33 +148,84 @@
    
       confirm() {
         console.log(this.$refs);
-  const name = this.$refs.nameInput.value;
-  const value = this.$refs.valueInput.value;
-  const data = {name: name, value: value};
-  this.$refs.modal.$el.dismiss(data, 'confirm');
-},
+        const name = this.$refs.nameInput.value;
+        const value = this.$refs.valueInput.value;
+        const data = {name: name, value: value};
+        this.$refs.modal.$el.dismiss(data, 'confirm');
+
+
+  // updating `broj_nacrtanih` column in `Projekti` table
+  supabase
+    .from('Projekti')
+    .update({ broj_nacrtanih: this.switchCount })
+    .eq('ime_projekta', localStorage.getItem('selectedProject'))
+    .then(({ data, error }) => {
+      if (error) {
+        console.error('Error updating count:', error);
+      } else {
+        console.log('Successfully updated count:', data);
+        console.log('switch count:', this.switchCount);
+      }
+    });
+
+      },
 
 
 
-onWillDismiss: function(ev) {
-  if (ev.detail.role === 'confirm') {
-    this.message = 'Hello, ' + ev.detail.data.name + ', your value is ' + ev.detail.data.value + '!';
-  }
-},
+      onWillDismiss: function(ev) {
+        if (ev.detail.role === 'confirm') {
+        this.message = 'Hello, ' + ev.detail.data.name + ', your value is ' + ev.detail.data.value + '!';
+        }
+      },
+
+  //     updateStatus(index, value) {
+  //   this.modalSections[index].done = value === 'done';
+  //   if (value === 'done') {
+  //     this.switchCount += 1;
+  //   } else {
+  //     this.switchCount -= 1;
+  //   }
+  //   // save switchCount to your backend here
+  //   const { data, error } = await supabase
+  //   .from('Projekti')
+  //   .update({ broj_nacrtanih: this.switchCount })
+  //   .eq('id', your_id);
+  // },
+
+  updateStatus(index, value) {
+    console.log('updateStatus called with:', index, value); // Add this
+    this.modalSections[index].done = value === 'done';
+    if (value === 'done') {
+      this.switchCount += 1;
+    } else {
+      this.switchCount -= 1;
+    }
+    console.log('switch triggered:', this.switchCount);
+    this.saveSwitchCountToBackend();
+  },
+  // Add new method to save to backend
+  saveSwitchCountToBackend() {
+    supabase
+      .from('Projekti')
+      .update({ broj_nacrtanih: this.switchCount })
+      .eq('ime_projekta', localStorage.getItem('selectedProject'))
+      .then(({ data, error }) => {
+        if (error) {
+          console.error('Error saving switch count:', error);
+        } else {
+          console.log('Successfully saved switch count:', data);
+        }
+      });
+  },
+
     },
 
 
     setup() {
 
-
       const modalSections = ref([]);
       const selectedProjectName = localStorage.getItem('selectedProject');
-
-
-
       const chart = ref(null);
-  
-    
   
 
       const loadSelectedProject = async () => {
@@ -178,8 +244,6 @@ onWillDismiss: function(ev) {
 
 
 
-
-
     
       onMounted(async () => {
     const selectedProject = await loadSelectedProject();
@@ -190,6 +254,8 @@ onWillDismiss: function(ev) {
           value: 1, // Replace with real value
           done: false 
         }));
+
+ 
 
     const ctx = chart.value.getContext('2d');
     new Chart(ctx, {
@@ -213,7 +279,8 @@ onWillDismiss: function(ev) {
   
   return {
     chart,
-    add, modalSections
+    add,
+     modalSections
     };
 
     }
