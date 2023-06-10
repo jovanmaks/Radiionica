@@ -1,6 +1,6 @@
 
 <template>
-<base-layout page-title="Account" page-default-back-link="/tabs">
+<base-layout page-title="Account" page-default-back-link="/home">
     <template v-slot:content>
 
 
@@ -66,22 +66,11 @@
       
           <ion-button fill="clear" type="submit">Update Profile</ion-button>
 
-    <!-- <ion-content> -->
-      <!-- <avatar v-model:path="profile.avatar_url" @upload="updateProfile"></avatar> -->
       
       </form>
-
-      <!-- <div class="ion-text-center">
-        <ion-button fill="clear" @click="signOut">Log Out</ion-button>
-      </div>  -->
-
-    <!-- </ion-content> -->
             
     </template>
   </base-layout>
-  
-  
-
 </template>
   
   <script lang="ts">

@@ -4,9 +4,17 @@
         
         <ion-content class="ion-padding">
         
+        
+     
+          <ion-refresher slot="fixed" @ionRefresh="loadData($event)">
+          <ion-refresher-content></ion-refresher-content>
+        </ion-refresher>
+
         <div>
           <canvas ref="chart"></canvas>
         </div>
+
+       
           
         <ion-fab slot="fixed" vertical="bottom" horizontal="center">
           <ion-fab-button id="open-modal" color="dark"  @click="openModal">
@@ -30,15 +38,15 @@
         <ion-content class="ion-padding">
 
           <ion-item v-for="(section, index) in modalSections" :key="index">
-    <ion-segment :value="section.done ? 'done' : 'notDone'">
-      <ion-segment-button value="notDone" @click="updateStatus(index, 'notDone')">
-        <ion-label>Not Done</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="done" @click="updateStatus(index, 'done')">
-        <ion-label>Done</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-  </ion-item>
+  <ion-segment :value="section.done ? 'done' : 'notDone'">
+    <ion-segment-button value="notDone" @click="updateStatus(index, 'notDone')">
+      <ion-label>{{index + 1}}</ion-label> <!-- changed this line -->
+    </ion-segment-button>
+    <ion-segment-button value="done" @click="updateStatus(index, 'done')">
+      <ion-label>Done</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-item>
 
 
         <ion-item>
@@ -61,6 +69,8 @@
     
     <script lang="js">
     import { 
+  IonRefresher,
+  IonRefresherContent,
       IonList, 
       IonTitle,
       IonItem,
@@ -83,7 +93,7 @@
       IonSegmentButton,
       IonRouterOutlet } from '@ionic/vue';
       import { OverlayEventDetail } from '@ionic/core/components';
-      import { onMounted, ref, defineComponent } from 'vue';
+      import { onMounted, ref, defineComponent, watchEffect } from 'vue';
       import { Chart, registerables } from 'chart.js';
       import { useRouter, RouterLink } from "vue-router";
       import { supabase } from '@/supabase';
@@ -99,6 +109,8 @@
     export default {
       name: 'ProjektiPage',
       components: {
+  IonRefresher,
+  IonRefresherContent,
         IonButtons,
         IonButton,
         IonModal,
@@ -115,13 +127,19 @@
         IonSegmentButton,
       },
 
+      
+
       data() {
         return {
           sections: [],
           switchCount: 0, // add this new property to keep track of the count
+          // chart: null,
+    chartInstance: null,
+
         };
       },
       methods: {
+
 
         openModal() {
     // Fetch the latest broj_nacrtanih value from the server here
@@ -167,6 +185,7 @@
         }
       });
 
+      this.updateChart();
         },
 
         onWillDismiss: function(ev) {
@@ -186,9 +205,17 @@
       }
       console.log('switch triggered:', this.switchCount);
       this.saveSwitchCountToBackend();
+      this.updateChart();
       // localStorage.setItem('switchCount', this.switchCount);
     },
 
+    updateChart() {
+    if (this.chartInstance) {
+      this.chartInstance.data.datasets[0].data = this.getDataArray(); // Replace with your data
+      this.chartInstance.update();
+    }
+  },
+// },
     
     // Add new method to save to backend
     saveSwitchCountToBackend() {
@@ -240,18 +267,10 @@
       const selectedProject = await loadSelectedProject();
       const broj_nacrtanih = selectedProject.broj_nacrtanih;
 
-      // this.switchCount = broj_nacrtanih;
-      // switchCount.value = broj_nacrtanih;
-
-      // modalSections.value = Array(selectedProject.broj_objekata)
-      //     .fill()
-      //     .map((_, index) => ({ 
-      //       name: `Object ${index + 1}`, 
-      //       value: 1, // Replace with real value
-      //       done: false 
-      //     }));
+   
 
        switchCount.value = broj_nacrtanih; // update the switchCount
+       chartInstance.value = myChart;
 
       modalSections.value = Array(selectedProject.broj_objekata)
       .fill()
@@ -286,16 +305,42 @@
           }]
         },
         options: {
-          cutout: '50%',
+          cutout: '30%',
+          plugins: {
+      legend: {
+        display: false
+      }
+    }
         }
       });
   });
 
-    
+  const loadData = async (event = null) => {
+    const selectedProject = await loadSelectedProject();
+    const broj_nacrtanih = selectedProject.broj_nacrtanih;
+
+    switchCount.value = broj_nacrtanih; 
+
+    // Rebuild your chart here
+    // ...
+
+    // Call event.target.complete() to stop the refreshing animation
+    if (event) {
+        event.target.complete();
+    }
+};
+    // Use watchEffect to monitor switchCount.value and call loadData when it changes
+    watchEffect(() => {
+        loadData();
+    });
+
+
+
     return {
       chart,
       add,
       modalSections,
+      loadData, 
       //  switchCount // add this line
       };
 

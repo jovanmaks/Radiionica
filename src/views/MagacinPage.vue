@@ -1,8 +1,6 @@
 <template>
 <base-layout page-title="Magacin" page-default-back-link="/tabs">
     <template v-slot:content>
-        <!-- <ion-button color="dark" size="large" type="submit" fill="solid">Stanje</ion-button> -->
-        <!-- <h1>Stanje</h1> -->
 
         <router-link to="/magacinUnesi">
             <ion-button color="dark" size="large" type="submit" fill="solid">Unesi</ion-button>
