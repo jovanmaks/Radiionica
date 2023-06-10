@@ -9,7 +9,7 @@
         </div>
           
         <ion-fab slot="fixed" vertical="bottom" horizontal="center">
-          <ion-fab-button id="open-modal" color="dark">
+          <ion-fab-button id="open-modal" color="dark"  @click="openModal">
             <ion-icon :icon="add"></ion-icon>
           </ion-fab-button>
         </ion-fab>
@@ -122,6 +122,24 @@
         };
       },
       methods: {
+
+        openModal() {
+    // Fetch the latest broj_nacrtanih value from the server here
+    supabase
+      .from('Projekti')
+      .select('broj_nacrtanih')
+      .eq('ime_projekta', localStorage.getItem('selectedProject'))
+      .then(({ data, error }) => {
+        if (error) {
+          console.error('Error loading count:', error);
+        } else {
+          this.switchCount = data[0].broj_nacrtanih;
+          // Now open the modal
+          this.$refs.modal.$el.present();
+        }
+      });
+  },
+
         cancel() {
           this.$refs.modal.$el.dismiss(null, 'cancel');
         },
@@ -198,7 +216,7 @@
 
  
     
-        // const switchCount = ref(0); // initialize switchCount
+        const switchCount = ref(0); // initialize switchCount
 
         const loadSelectedProject = async () => {
         const { data: fetchedData, error } = await supabase
@@ -233,6 +251,7 @@
       //       done: false 
       //     }));
 
+       switchCount.value = broj_nacrtanih; // update the switchCount
 
       modalSections.value = Array(selectedProject.broj_objekata)
       .fill()
