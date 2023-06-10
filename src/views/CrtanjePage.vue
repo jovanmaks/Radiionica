@@ -16,7 +16,7 @@
       </ion-fab>
 
 
-    <p>{{ message }}</p>
+    <!-- <p>{{ message }}</p> -->
     <ion-modal ref="modal" trigger="open-modal" @willDismiss="onWillDismiss">
       <ion-header>
         <ion-toolbar>
@@ -31,37 +31,30 @@
       </ion-header>
       <ion-content class="ion-padding">
 
-        <ion-item>
-        <ion-label position="stacked">Unesi sekciju</ion-label>
-        <ion-input ref="nameInput" type="text" placeholder="Sekcija"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="stacked">Unesi postotak</ion-label>
-        <ion-input ref="valueInput" type="number" placeholder="Postotak"></ion-input>
-      </ion-item>
+      
 
-      <!-- <ion-item v-for="(section, index) in modalSections" :key="index">
-      <ion-segment :value="section.done ? 'done' : 'notDone'" @ionChange="updateStatus(index, $event.detail.value)"   >
-        <ion-segment-button value="done">
-          <ion-label>Done</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="notDone">
-          <ion-label>Not Done</ion-label>
-        </ion-segment-button>
-      </ion-segment>
-    </ion-item> -->
+  
 
-    <ion-item v-for="(section, index) in modalSections" :key="index">
+        <ion-item v-for="(section, index) in modalSections" :key="index">
   <ion-segment :value="section.done ? 'done' : 'notDone'">
-    <ion-segment-button value="done" @click="updateStatus(index, 'done')">
-      <ion-label>Done</ion-label>
-    </ion-segment-button>
     <ion-segment-button value="notDone" @click="updateStatus(index, 'notDone')">
       <ion-label>Not Done</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="done" @click="updateStatus(index, 'done')">
+      <ion-label>Done</ion-label>
     </ion-segment-button>
   </ion-segment>
 </ion-item>
 
+
+      <ion-item>
+        <ion-label position="stacked">Biljeska</ion-label>
+        <ion-input ref="nameInput" type="text" placeholder="Sekcija"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Postotak</ion-label>
+        <ion-input ref="valueInput" type="number" placeholder="Postotak"></ion-input>
+      </ion-item>
 
       </ion-content>
 
@@ -120,14 +113,14 @@
       IonIcon,
       IonFab,
       IonFabButton,
-      // IonSegment, 
-      // IonSegmentButton,
+      IonSegment, 
+      IonSegmentButton,
     },
 
     data() {
       return {
         sections: [],
-        message: 'This modal example uses triggers to automatically open a modal when the button is clicked.',
+        // message: 'This modal example uses triggers to automatically open a modal when the button is clicked.',
         // colors: [
         //   'rgba(255, 99, 132, 1)',
         //   'rgba(54, 162, 235, 1)',
@@ -245,37 +238,6 @@
 
 
 
-    
-//       onMounted(async () => {
-//     const selectedProject = await loadSelectedProject();
-//     modalSections.value = Array(selectedProject.broj_objekata)
-//         .fill()
-//         .map((_, index) => ({ 
-//           name: `Object ${index + 1}`, 
-//           value: 1, // Replace with real value
-//           done: false 
-//         }));
-
- 
-
-//     const ctx = chart.value.getContext('2d');
-//     new Chart(ctx, {
-//       type: 'doughnut',
-//       data: {
-//         labels: Array(selectedProject.broj_objekata).fill().map((_, i) => `Object ${i + 1}`),
-//         datasets: [{
-//           label: '# of Votes',
-//           data: Array(selectedProject.broj_objekata).fill(1), // Replace with real data
-//           backgroundColor: 'rgba(128, 128, 128, 1)', // Gray color
-//           borderColor: 'rgba(0, 0, 0, 1)', // Gray color
-//           borderWidth: 1
-//         }]
-//       },
-//       options: {
-//         cutout: '50%',
-//       }
-//     });
-// });
 
 let myChart; // Declare myChart outside of your function
 

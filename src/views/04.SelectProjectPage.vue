@@ -1,5 +1,5 @@
 <template>
-  <base-layout page-title="Izaberi" page-default-back-link="/tabs">
+  <base-layout page-title="SelectProject" page-default-back-link="/tabs">
     <template v-slot:content>
       <ion-radio-group v-model="selectedProject">
         <ion-item v-for="(project, index) in projects" :key="index">
@@ -11,12 +11,26 @@
   </base-layout>
 </template>
 
-<script lang = "js">
-import { ref, onMounted , defineComponent} from 'vue';
+<script lang="js">
+import { createStore } from 'vuex';
+import { ref, onMounted , defineComponent, computed } from 'vue';
 import { IonList, IonItem, IonLabel,  IonRadio, IonRadioGroup } from '@ionic/vue';
 import { supabase } from '@/supabase'; 
 
-export default {
+// Vuex Store
+const store = createStore({
+  state: {
+    selectedProject: localStorage.getItem('selectedProject') || null,
+  },
+  mutations: {
+    setSelectedProject(state, selectedProject) {
+      state.selectedProject = selectedProject;
+      localStorage.setItem('selectedProject', selectedProject);
+    },
+  },
+});
+
+export default defineComponent({
   components: {
     IonItem,
     IonLabel,
@@ -26,9 +40,14 @@ export default {
 
   setup() {
     const projects = ref([]);
-    const selectedProject = ref(null);
     const error = ref(null);
-    const loading = ref(true); 
+    const loading = ref(true);
+
+    // Create a computed property that reflects the Vuex state
+    const selectedProject = computed({
+      get: () => store.state.selectedProject,
+      set: (value) => store.commit('setSelectedProject', value),
+    });
 
     const loadData = async () => {
       try {
@@ -55,5 +74,5 @@ export default {
       loading 
     };
   }
-};
+});
 </script>
