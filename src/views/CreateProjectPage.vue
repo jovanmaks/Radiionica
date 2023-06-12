@@ -153,6 +153,15 @@
     const postolje = ref(false);
     const broj_objekata = ref(null);
     const objekti = ref ([]);
+
+    const objekti_crtanje = ref ([]);
+    const objekti_programiranje = ref ([]);
+    const objekti_pripremaSjecenje = ref ([]);
+    const objekti_sjecenje = ref ([]);
+    const objekti_pripremaFarbanje = ref ([]);
+    const objekti_farbanje = ref ([]);
+    const objekti_sklapanje = ref ([]);
+    
     // const objekti = computed(() => new Array(broj_objekata.value).fill(false)); // added this line
     const kolorit = ref('');
     const zastakljenost = ref(false);
@@ -165,6 +174,15 @@
 
         const updateObjekti = () => {
           objekti.value = new Array(Number(broj_objekata.value)).fill(false);
+          
+          
+          objekti_crtanje.value = new Array(Number(broj_objekata.value)).fill(false);
+          objekti_programiranje.value = new Array(Number(broj_objekata.value)).fill(false);
+          objekti_pripremaSjecenje.value = new Array(Number(broj_objekata.value)).fill(false);
+          objekti_sjecenje.value = new Array(Number(broj_objekata.value)).fill(false);
+          objekti_pripremaFarbanje.value = new Array(Number(broj_objekata.value)).fill(false);
+          objekti_farbanje.value = new Array(Number(broj_objekata.value)).fill(false);
+          objekti_sklapanje.value = new Array(Number(broj_objekata.value)).fill(false);
         };
 
     const submitProject = async () => {
@@ -180,6 +198,16 @@
             cena: cena.value, //radi
             broj_objekata: broj_objekata.value,
             objekti: objekti.value,
+            
+            objekti_crtanje: objekti_crtanje.value,
+            objekti_programiranje: objekti_programiranje.value,
+            objekti_pripremaSjecenje: objekti_pripremaSjecenje.value,
+            objekti_sjecenje: objekti_sjecenje.value,
+            objekti_pripremaFarbanje: objekti_pripremaFarbanje.value,
+            objekti_farbanje: objekti_farbanje.value,
+            objekti_sklapanje: objekti_sklapanje.value,
+
+
             postolje: postolje.value ? false : null,
             kolorit: kolorit.value,
             zastakljenost: zastakljenost.value,
@@ -203,6 +231,15 @@
         cena.value = null;
         broj_objekata.value = null;
         objekti.value = []; // clear objekti array
+
+        objekti_crtanje.value = [];
+        objekti_programiranje.value = [];
+        objekti_pripremaSjecenje.value = [];
+        objekti_sjecenje.value = [];
+        objekti_pripremaFarbanje.value = [];
+        objekti_farbanje.value = [];
+        objekti_sklapanje.value = [];
+
         postolje.value = false;
         kolorit.value = "";
         zastakljenost.value = false;
@@ -223,6 +260,16 @@
       cena,
       broj_objekata,
       objekti,
+
+      objekti_crtanje,
+      objekti_programiranje,
+      objekti_pripremaSjecenje,
+      objekti_sjecenje,
+      objekti_pripremaFarbanje,
+      objekti_farbanje,
+      objekti_sklapanje,
+      
+
       postolje,
       kolorit,
       zastakljenost,
