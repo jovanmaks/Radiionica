@@ -6,6 +6,11 @@
 
  <ion-content class="ion-padding">
         
+  <div style="text-align:center">
+  <h2 v-if="selectedProject">Projekat: {{ selectedProject }}</h2>
+</div>
+ 
+
         <div>
           <canvas id="myChart" ref="chartRef"></canvas>
         </div>
@@ -45,16 +50,6 @@
   </ion-segment>
 </ion-item> 
 
-
-
-        <!-- <ion-item>
-          <ion-label position="stacked">Biljeska</ion-label>
-          <ion-input ref="nameInput" type="text" placeholder="Sekcija"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="stacked">Postotak</ion-label>
-          <ion-input ref="valueInput" type="number" placeholder="Postotak"></ion-input>
-        </ion-item> -->
 
         </ion-content>
 
@@ -136,6 +131,7 @@ setup() {
   const chartSize = ref(null);
   const chartData = ref([]);
   const chartColors = ref([]);
+  const postoljeRef = ref(null);
   
 
   // modal
@@ -145,34 +141,50 @@ setup() {
 
   const modalSections = ref([]); 
   const originalModalSections = ref([]);
+  const selectedProject = ref(localStorage.getItem('selectedProject'));
 
   const fetchData = async () => {
-    const { data, error } = await supabase
-      .from('Projekti')
-      .select('objekti');
+  const ime_projekta = localStorage.getItem('selectedProject');
 
-    if (error) {
-      console.error('Error fetching data:', error);
-      return;
-    }
 
-    data.forEach((record) => {
-      if (Array.isArray(record.objekti)) {
-        record.objekti.forEach((value) => {
-          modalSections.value.push({ done: value });
-          originalModalSections.value.push({ done: value });
-          chartData.value.push(value);
-          chartColors.value.push(value ? 'green' : 'gray');
+  const { data, error } = await supabase
+  .from('Projekti')
+  .select('objekti, postolje')
+  .eq('ime_projekta', ime_projekta);
 
-        });
-      }
+  if (error) {
+    console.error('Error fetching data:', error);
+    return;
+  }
+
+  // Now, we are assuming that there's only one project with the same name
+  const record = data[0];
+
+  if (Array.isArray(record.objekti)) {
+    record.objekti.forEach((value) => {
+      modalSections.value.push({ done: value });
+      originalModalSections.value.push({ done: value });
+      chartData.value.push(value);
+      chartColors.value.push(value ? 'green' : 'gray');
     });
-    chartSize.value = chartData.value.length;
+  }
 
-    console.log('chartData', chartData.value);
-    console.log('chartColors', chartColors.value);
-    console.log('chartSize', chartSize.value);
-  }; 
+  if (record.postolje !== null ) {
+    modalSections.value.push({ done: record.postolje });
+    originalModalSections.value.push({ done: record.postolje });
+    chartData.value.push(record.postolje);
+    chartColors.value.push(record.postolje ? 'green' : 'gray');
+  }
+  // postoljeRef.value = record.postolje;
+  postoljeRef.value = record.postolje;
+
+
+  chartSize.value = chartData.value.length;
+
+  console.log('chartData', chartData.value);
+  console.log('chartColors', chartColors.value);
+  console.log('chartSize', chartSize.value);
+}; 
   
   const updateStatus = (index, status) => {
       modalSections.value[index].done = status === 'done';
@@ -187,7 +199,8 @@ setup() {
   myChart = new Chart(ctx, {
   type: 'doughnut',
   data: {
-    labels: Array(chartSize.value).fill().map((_, i) => `Objekat ${i + 1}`),
+    labels: Array(chartSize.value).fill().map((_, i) => i === chartSize.value - 1 && postoljeRef.value !== null ? "Postolje" : `Objekat ${i + 1}`),
+    // labels: Array(chartSize.value).fill().map((_, i) => i === chartSize.value - 1 && record.postolje !== null && record.postolje !== false ? "Postolje" : `Objekat ${i + 1}`),
     datasets: [{
       label: '# of Votes',
       data: Array(chartSize.value).fill(1),
@@ -213,13 +226,18 @@ setup() {
 
 });
 
-
 const confirmChanges = async () => {
   const ime_projekta = localStorage.getItem('selectedProject');
+  
+  const newModalSections = [...modalSections.value];
+  const postolje = (postoljeRef.value !== null ) ? newModalSections.pop().done : null;
+  // const postolje = (record.postolje !== null ) ? newModalSections.pop().done : null; // Take the last element as postolje only if it exists and is not false
+  // const postolje = newModalSections.pop().done; // Take the last element as postolje
+  const objekti = newModalSections.map(section => section.done); // The rest are objekti
 
   const { error } = await supabase
     .from('Projekti')
-    .update({ objekti: modalSections.value.map(section => section.done) })
+    .update({ objekti, postolje })
     .eq('ime_projekta', ime_projekta);
 
   if (error) {
@@ -238,7 +256,7 @@ const confirmChanges = async () => {
   setOpen(false);
 };
 
-  return{   add,chartRef, isOpenRef, setOpen, data, modalSections, updateStatus,confirmChanges  };
+  return{   add,chartRef, isOpenRef, setOpen, data, modalSections, updateStatus,confirmChanges, selectedProject   };
 }};
   
     </script>

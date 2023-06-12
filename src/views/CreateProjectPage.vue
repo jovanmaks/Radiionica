@@ -180,7 +180,7 @@
             cena: cena.value, //radi
             broj_objekata: broj_objekata.value,
             objekti: objekti.value,
-            postolje: postolje.value,
+            postolje: postolje.value ? false : null,
             kolorit: kolorit.value,
             zastakljenost: zastakljenost.value,
             rasvjeta: rasvjeta.value,
