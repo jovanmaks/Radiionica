@@ -157,22 +157,42 @@ export default defineComponent({
       const urlParams = new URLSearchParams(window.location.search);
     });
 
-    const signOut = async () => {
-      const loader = await loadingController.create({});
-      const toast = await toastController.create({ duration: 5000 });
-      await loader.present();
-      try {
-        const { error } = await supabase.auth.signOut();
-        router.push({ name: "Home" });
+    // const signOut = async () => {
+    //   const loader = await loadingController.create({});
+    //   const toast = await toastController.create({ duration: 5000 });
+    //   await loader.present();
+    //   try {
+    //     const { error } = await supabase.auth.signOut();
+    //     router.push({ name: "Home" });
 
-        if (error) throw error;
-      } catch (error) {
-        toast.message = error.message;
-        await toast.present();
-      } finally {
-        await loader.dismiss();
-      }
-    };
+    //     if (error) throw error;
+    //   } catch (error) {
+    //     toast.message = error.message;
+    //     await toast.present();
+    //   } finally {
+    //     await loader.dismiss();
+    //   }
+    // };
+
+
+    const signOut = async () => {
+      console.log("Logout button clicked");
+  const loader = await loadingController.create({});
+  const toast = await toastController.create({ duration: 5000 });
+  await loader.present();
+  try {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+
+    // Redirects after successfully logging out
+    router.push({ name: "Entrance" });
+  } catch (error) {
+    toast.message = error.message;
+    await toast.present();
+  } finally {
+    await loader.dismiss();
+  }
+};
 
     return {
       signOut,
