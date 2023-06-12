@@ -1,6 +1,6 @@
 
 <template>
-  <base-layout page-title="Sjecenje" page-default-back-link="/tabs">
+  <base-layout page-title="Farbanje" page-default-back-link="/tabs">
     <template v-slot:content>
 
 
@@ -150,7 +150,7 @@ export default {
 
       const { data, error } = await supabase
         .from('Projekti')
-        .select('objekti_sjecenje')
+        .select('objekti_farbanje')
         .eq('ime_projekta', ime_projekta);
 
       if (error) {
@@ -161,8 +161,8 @@ export default {
       // Now, we are assuming that there's only one project with the same name
       const record = data[0];
 
-      if (Array.isArray(record.objekti_sjecenje)) {
-        record.objekti_sjecenje.forEach((value) => {
+      if (Array.isArray(record.objekti_farbanje)) {
+        record.objekti_farbanje.forEach((value) => {
           modalSections.value.push({ done: value });
           originalModalSections.value.push({ done: value });
           chartData.value.push(value);
@@ -218,11 +218,11 @@ export default {
 
       const newModalSections = [...modalSections.value];
       // const postolje = (postoljeRef.value !== null ) ? newModalSections.pop().done : null;
-      const objekti_sjecenje = newModalSections.map(section => section.done); // The rest are objekti_sjecenje
+      const objekti_farbanje = newModalSections.map(section => section.done); // The rest are objekti_farbanje
 
       const { error } = await supabase
         .from('Projekti')
-        .update({ objekti_sjecenje })
+        .update({ objekti_farbanje })
         .eq('ime_projekta', ime_projekta);
 
       if (error) {

@@ -9,7 +9,6 @@
     
     <script setup lang="js">
   
-      import { supabase } from '@/supabase';
       
 
 

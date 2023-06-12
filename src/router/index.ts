@@ -24,15 +24,15 @@ import ProjektiStanjePage from '../views/ProjektiStanjePage.vue';
 import SelektovanjeProjektaPage from '../views/04.SelectProjectPage.vue';
 
 
-import CrtanjePage from '../views/CrtanjePage.vue';
+// import CrtanjePage from '../views/CrtanjePage.vue';
 
+import CrtanjePage from '../views/maketa/01.CrtanjePage.vue';
 import ProgramiranjePage from '../views/maketa/02.ProgramiranjePage.vue';
 import PripremaSjecenjePage from '../views/maketa/03.PripremaSjecenjePage.vue';
-// import ProgramiranjePage from '../views/maketa/02.ProgramiranjePage.vue';
-// import ProgramiranjePage from '../views/maketa/02.ProgramiranjePage.vue';
-// import ProgramiranjePage from '../views/maketa/02.ProgramiranjePage.vue';
-// import ProgramiranjePage from '../views/maketa/02.ProgramiranjePage.vue';
-// import DynamicPage from '../views/CrtanjePage.vue';
+import SjecenjePage from '../views/maketa/04.SjecenjePage.vue';
+import PripremaFarbanjePage from '../views/maketa/05.PripremaFarbanjePage.vue';
+import FarbanjePage from '../views/maketa/06.FarbanjePage.vue';
+import SklapanjePage from '../views/maketa/07.SklapanjePage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -145,6 +145,26 @@ const routes: Array<RouteRecordRaw> = [
     path: '/pripremasjecenje',
     name: 'PripremaSjecenje',
     component: PripremaSjecenjePage,
+  }, 
+  {
+    path: '/sjecenje',
+    name: 'Sjecenje',
+    component: SjecenjePage,
+  }, 
+  {
+    path: '/pripremafarbanje',
+    name: 'PripremaFarbanje',
+    component: PripremaFarbanjePage,
+  }, 
+  {
+    path: '/farbanje',
+    name: 'Farbanje',
+    component: FarbanjePage,
+  }, 
+  {
+    path: '/sklapanje',
+    name: 'Sklapanje',
+    component: SklapanjePage,
   }, 
 ]
 

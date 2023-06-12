@@ -26,21 +26,33 @@
                     </ion-fab-button>
                   </router-link>
 
-                  <ion-fab-button>
+                  <router-link to="/sjecenje">
+                  <ion-fab-button size="small">
                     <ion-icon :icon="cut"></ion-icon>
                   </ion-fab-button>
-                  <ion-fab-button>
+                  </router-link>
+
+                  <router-link to="/pripremafarbanje">
+                  <ion-fab-button size="small">
                     <ion-icon :icon="create"></ion-icon>
                   </ion-fab-button>
-                  <ion-fab-button>
+                  </router-link>
+
+                  <router-link to="/farbanje">
+                  <ion-fab-button size="small">
                     <ion-icon :icon="colorFill"></ion-icon>
                   </ion-fab-button>
-                  <ion-fab-button>
+                  </router-link>
+
+                  <router-link to="/sklapanje">
+                  <ion-fab-button size="small">
                     <ion-icon :icon="extensionPuzzle"></ion-icon>
                   </ion-fab-button>
+                  </router-link>
+
                 </ion-fab-list>
                 <ion-fab-list side="end">
-                  <ion-fab-button>
+                  <ion-fab-button >
                     <ion-icon :icon="cash"></ion-icon>
                   </ion-fab-button>
                  
