@@ -134,12 +134,11 @@
           sections: [],
           switchCount: 0, // add this new property to keep track of the count
           // chart: null,
-    chartInstance: null,
-
+          chartInstance: null,
         };
       },
-      methods: {
 
+      methods: {
 
         openModal() {
     // Fetch the latest broj_nacrtanih value from the server here

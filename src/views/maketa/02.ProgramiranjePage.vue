@@ -22,18 +22,22 @@
       <!-- <ion-modal ref="modal" trigger="open-modal" @willDismiss="onWillDismiss"> -->
         <!-- <ion-modal ref="myModal" @willDismiss="onModalWillDismiss"> -->
           <!-- <ion-modal v-model="isModalOpen" @willDismiss="onModalWillDismiss"> -->
+          
+
+            
       <ion-modal :is-open="isOpenRef" css-class="my-custom-class" @didDismiss="setOpen(false)">
-        <!-- <ion-header>
+        <!-- <ion-button @click="setOpen(false)">Close</ion-button> -->
+        <ion-header>
           <ion-toolbar>
-            <ion-buttons slot="start">
+            <!-- <ion-buttons slot="start">
               <ion-button @click="cancel()">Cancel</ion-button>
-            </ion-buttons>
+            </ion-buttons> -->
             <ion-title>Sekcija</ion-title>
             <ion-buttons slot="end">
-              <ion-button :strong="true" @click="confirm()">Confirm</ion-button>
+              <ion-button :strong="true" @click="setOpen(false)">Confirm</ion-button>
             </ion-buttons>
           </ion-toolbar>
-        </ion-header> -->
+        </ion-header>
         <Modal :data="data"></Modal>
         <ion-content class="ion-padding">
 
@@ -51,14 +55,14 @@
 
 
 
-        <ion-item>
+        <!-- <ion-item>
           <ion-label position="stacked">Biljeska</ion-label>
           <ion-input ref="nameInput" type="text" placeholder="Sekcija"></ion-input>
         </ion-item>
         <ion-item>
           <ion-label position="stacked">Postotak</ion-label>
           <ion-input ref="valueInput" type="number" placeholder="Postotak"></ion-input>
-        </ion-item>
+        </ion-item> -->
 
         </ion-content>
 
@@ -79,21 +83,23 @@
       IonFab,
       IonFabButton,
       IonModal,
-      IonLabel,
       IonList, 
-      // IonTitle,
-      IonItem,
       IonTabBar,
       IonMenu,
       IonTabButton,
       IonTabs,
-      // IonButtons,
-      // IonButton,
       IonContent,
-      // IonToolbar,
-      IonInput,
       IonPage,
       IonRouterOutlet ,
+      IonButton,
+      IonToolbar,
+      IonHeader,
+      
+      // IonInput,
+      // IonItem,
+      // IonLabel,
+      // IonTitle,
+      // IonButtons,
       // IonSegment, 
       // IonSegmentButton,
       } from '@ionic/vue';
@@ -119,14 +125,15 @@
         IonFab,
         IonFabButton,
         IonModal,
-        // IonButtons,
-        // IonButton,
         IonContent,
-        // IonToolbar,
+        IonButton,
+        IonToolbar,
+        IonHeader,
+        // IonItem,
+        // IonInput,
+        // IonLabel,
+        // IonButtons,
         // IonTitle,
-        IonItem,
-        IonInput,
-        IonLabel,
         // IonSegment, 
         // IonSegmentButton,
       },
@@ -140,9 +147,11 @@ setup() {
   const chartData = ref([]);
   const chartColors = ref([]);
   
-  const isModalOpen = ref(false);
-  const myModal = ref(null);
 
+  // modal
+  const isOpenRef = ref(false);
+  const setOpen = (state) => (isOpenRef.value = state);
+  const data = { content: 'New Content' };
 
   const fetchData = async () => {
     const { data, error } = await supabase
@@ -199,16 +208,6 @@ setup() {
           }
         });
       });
-
-
-      const openModal = () => {
-    console.log('modal');
-    isModalOpen.value = true;
-};
-
-const isOpenRef = ref(false);
-const setOpen = (state) => (isOpenRef.value = state);
-      const data = { content: 'New Content' };
 
 
   return{
