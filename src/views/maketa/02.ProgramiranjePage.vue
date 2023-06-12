@@ -4,20 +4,70 @@
     <base-layout page-title="Programiranje" page-default-back-link="/tabs">
       <template v-slot:content>
 
-        <!-- Inicijalizacija charta -->
+ <ion-content class="ion-padding">
+        
         <div>
           <canvas id="myChart" ref="chartRef"></canvas>
         </div>
 
-
-
+        <!-- Add a button to open the modal -->
         <ion-fab slot="fixed" vertical="bottom" horizontal="center">
-          <ion-fab-button id="open-modal" color="dark"  @click="openModal">
+          <ion-fab-button id="open-modal" color="dark"  @click="setOpen(true)">
             <ion-icon :icon="add"></ion-icon>
           </ion-fab-button>
         </ion-fab>
 
+
+
+      <!-- <ion-modal ref="modal" trigger="open-modal" @willDismiss="onWillDismiss"> -->
+        <!-- <ion-modal ref="myModal" @willDismiss="onModalWillDismiss"> -->
+          <!-- <ion-modal v-model="isModalOpen" @willDismiss="onModalWillDismiss"> -->
+      <ion-modal :is-open="isOpenRef" css-class="my-custom-class" @didDismiss="setOpen(false)">
+        <!-- <ion-header>
+          <ion-toolbar>
+            <ion-buttons slot="start">
+              <ion-button @click="cancel()">Cancel</ion-button>
+            </ion-buttons>
+            <ion-title>Sekcija</ion-title>
+            <ion-buttons slot="end">
+              <ion-button :strong="true" @click="confirm()">Confirm</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header> -->
+        <Modal :data="data"></Modal>
+        <ion-content class="ion-padding">
+
+<!--           
+ <ion-item v-for="(section, index) in modalSections" :key="index">
+  <ion-segment :value="section.done ? 'done' : 'notDone'">
+    <ion-segment-button value="notDone" @click="updateStatus(index, 'notDone')">
+      <ion-label>{{index + 1}}</ion-label> 
+    </ion-segment-button>
+    <ion-segment-button value="done" @click="updateStatus(index, 'done')">
+      <ion-label>Done</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-item>  -->
+
+
+
+        <ion-item>
+          <ion-label position="stacked">Biljeska</ion-label>
+          <ion-input ref="nameInput" type="text" placeholder="Sekcija"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Postotak</ion-label>
+          <ion-input ref="valueInput" type="number" placeholder="Postotak"></ion-input>
+        </ion-item>
+
+        </ion-content>
+
+      </ion-modal>
+    </ion-content>
         
+        
+        <!-- Inicijalizacija charta -->
+     
       </template>
     </base-layout>
   </template>
@@ -28,24 +78,24 @@
       IonIcon,
       IonFab,
       IonFabButton,
-      // IonLabel,
-      // IonList, 
+      IonModal,
+      IonLabel,
+      IonList, 
       // IonTitle,
-      // IonItem,
-      // IonTabBar,
-      // IonMenu,
-      // IonTabButton,
-      // IonTabs,
+      IonItem,
+      IonTabBar,
+      IonMenu,
+      IonTabButton,
+      IonTabs,
       // IonButtons,
       // IonButton,
-      // IonModal,
-      // IonContent,
+      IonContent,
       // IonToolbar,
-      // IonInput,
-      // IonPage,
+      IonInput,
+      IonPage,
+      IonRouterOutlet ,
       // IonSegment, 
       // IonSegmentButton,
-      // IonRouterOutlet 
       } from '@ionic/vue';
 
       import { OverlayEventDetail } from '@ionic/core/components';
@@ -68,15 +118,15 @@
         IonIcon,
         IonFab,
         IonFabButton,
+        IonModal,
         // IonButtons,
         // IonButton,
-        // IonModal,
-        // IonContent,
+        IonContent,
         // IonToolbar,
         // IonTitle,
-        // IonItem,
-        // IonInput,
-        // IonLabel,
+        IonItem,
+        IonInput,
+        IonLabel,
         // IonSegment, 
         // IonSegmentButton,
       },
@@ -89,6 +139,9 @@ setup() {
   const chartSize = ref(null);
   const chartData = ref([]);
   const chartColors = ref([]);
+  
+  const isModalOpen = ref(false);
+  const myModal = ref(null);
 
 
   const fetchData = async () => {
@@ -131,7 +184,7 @@ setup() {
             datasets: [{
               label: '# of Votes',
               data: Array(chartSize.value).fill(1),
-              backgroundColor:'rgba(0, 0, 0, 1)',
+              backgroundColor:'rgba(128, 128, 128, 1)',
               borderColor: 'rgba(0, 0, 0, 1)',
               borderWidth: 1
             }]
@@ -147,10 +200,22 @@ setup() {
         });
       });
 
- 
+
+      const openModal = () => {
+    console.log('modal');
+    isModalOpen.value = true;
+};
+
+const isOpenRef = ref(false);
+const setOpen = (state) => (isOpenRef.value = state);
+      const data = { content: 'New Content' };
 
 
-  return{add, chartRef};
+  return{
+    add,
+     chartRef, isOpenRef, setOpen, data
+  
+      };
 }};
   
     </script>
