@@ -98,8 +98,9 @@
       import { Chart, registerables } from 'chart.js';
       import { useRouter, RouterLink } from "vue-router";
       import { supabase } from '@/supabase';
-      
-    
+      import ChartDataLabels from 'chartjs-plugin-datalabels';
+
+      Chart.register(ChartDataLabels);
       Chart.register(...registerables);
     
       import { print, qrCode, checkmarkDone, cloudUpload, share, add } from "ionicons/icons";
@@ -184,26 +185,32 @@ setup() {
 
   const ctx = chartRef.value.getContext('2d'); // Get the 2d context of the canvas
   myChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: Array(chartSize.value).fill().map((_, i) => `Section ${i + 1}`),
-      datasets: [{
-        label: '# of Votes',
-        data: Array(chartSize.value).fill(1),
-        backgroundColor: chartColors.value, // Use the color array here
-        borderColor: 'rgba(0, 0, 0, 1)',
-        borderWidth: 1
-      }]
-    },
-    options: {
-      cutout: '30%',
-      plugins: {
-        legend: {
-          display: false
-        }
+  type: 'doughnut',
+  data: {
+    labels: Array(chartSize.value).fill().map((_, i) => `Objekat ${i + 1}`),
+    datasets: [{
+      label: '# of Votes',
+      data: Array(chartSize.value).fill(1),
+      backgroundColor: chartColors.value,
+      borderColor: 'rgba(0, 0, 0, 1)',
+      borderWidth: 1
+    }]
+  },
+  options: {
+    cutout: '30%',
+    plugins: {
+      legend: {
+        display: false
+      },
+      // Add this section to configure the datalabels plugin
+      datalabels: {
+        color: '#000',
+        formatter: (value, context) => context.chart.data.labels[context.dataIndex]
       }
     }
-  });
+  }
+});
+
 });
 
 
