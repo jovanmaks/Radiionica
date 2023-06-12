@@ -10,19 +10,11 @@
           <canvas id="myChart" ref="chartRef"></canvas>
         </div>
 
-        <!-- Add a button to open the modal -->
         <ion-fab slot="fixed" vertical="bottom" horizontal="center">
           <ion-fab-button id="open-modal" color="dark"  @click="setOpen(true)">
             <ion-icon :icon="add"></ion-icon>
           </ion-fab-button>
         </ion-fab>
-
-
-
-      <!-- <ion-modal ref="modal" trigger="open-modal" @willDismiss="onWillDismiss"> -->
-        <!-- <ion-modal ref="myModal" @willDismiss="onModalWillDismiss"> -->
-          <!-- <ion-modal v-model="isModalOpen" @willDismiss="onModalWillDismiss"> -->
-          
 
             
       <ion-modal :is-open="isOpenRef" css-class="my-custom-class" @didDismiss="setOpen(false)">
@@ -34,7 +26,7 @@
             </ion-buttons>
             <ion-title>Sekcija</ion-title>
             <ion-buttons slot="end">
-              <ion-button :strong="true" @click="setOpen(false)">Confirm</ion-button>
+              <ion-button :strong="true"  @click="confirmChanges">Confirm</ion-button>
             </ion-buttons>
           </ion-toolbar>
         </ion-header>
@@ -68,9 +60,6 @@
 
       </ion-modal>
     </ion-content>
-        
-        
-        <!-- Inicijalizacija charta -->
      
       </template>
     </base-layout>
@@ -154,6 +143,7 @@ setup() {
   const data = { content: 'New Content' };
 
   const modalSections = ref([]); 
+  const originalModalSections = ref([]);
 
   const fetchData = async () => {
     const { data, error } = await supabase
@@ -169,8 +159,10 @@ setup() {
       if (Array.isArray(record.objekti)) {
         record.objekti.forEach((value) => {
           modalSections.value.push({ done: value });
+          originalModalSections.value.push({ done: value });
           chartData.value.push(value);
-          chartColors.value.push(value ? 'red' : 'gray');
+          chartColors.value.push(value ? 'green' : 'gray');
+
         });
       }
     });
@@ -188,34 +180,58 @@ setup() {
   let myChart; // Declare myChart outside of your function
 
   onMounted(async () => {
-        await fetchData();
+  await fetchData();
 
-        const ctx = chartRef.value.getContext('2d'); // Get the 2d context of the canvas
-        const myChart = new Chart(ctx, {
-          type: 'doughnut',
-          data: {
-            labels: Array(chartSize.value).fill().map((_, i) => `Section ${i + 1}`),
-            datasets: [{
-              label: '# of Votes',
-              data: Array(chartSize.value).fill(1),
-              backgroundColor:'rgba(128, 128, 128, 1)',
-              borderColor: 'rgba(0, 0, 0, 1)',
-              borderWidth: 1
-            }]
-          },
-          options: {
-            cutout: '30%',
-            plugins: {
-              legend: {
-                display: false
-              }
-            }
-          }
-        });
-      });
+  const ctx = chartRef.value.getContext('2d'); // Get the 2d context of the canvas
+  myChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: Array(chartSize.value).fill().map((_, i) => `Section ${i + 1}`),
+      datasets: [{
+        label: '# of Votes',
+        data: Array(chartSize.value).fill(1),
+        backgroundColor: chartColors.value, // Use the color array here
+        borderColor: 'rgba(0, 0, 0, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      cutout: '30%',
+      plugins: {
+        legend: {
+          display: false
+        }
+      }
+    }
+  });
+});
 
 
-  return{   add,chartRef, isOpenRef, setOpen, data, modalSections, updateStatus  };
+const confirmChanges = async () => {
+  const ime_projekta = localStorage.getItem('selectedProject');
+
+  const { error } = await supabase
+    .from('Projekti')
+    .update({ objekti: modalSections.value.map(section => section.done) })
+    .eq('ime_projekta', ime_projekta);
+
+  if (error) {
+    console.error('Error updating data:', error);
+    return;
+  }
+
+  // Update was successful, copy the changes to the original data
+  originalModalSections.value = [...modalSections.value];
+
+  // Update chart colors and re-render the chart
+  chartColors.value = modalSections.value.map(section => section.done ? 'green' : 'gray');
+  myChart.data.datasets[0].backgroundColor = chartColors.value;
+  myChart.update();
+
+  setOpen(false);
+};
+
+  return{   add,chartRef, isOpenRef, setOpen, data, modalSections, updateStatus,confirmChanges  };
 }};
   
     </script>
