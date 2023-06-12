@@ -71,7 +71,7 @@
          
           <ion-item>
             <ion-label>Broj objekata:</ion-label>
-            <ion-input v-model="broj_objekata" type="number"></ion-input>
+            <ion-input v-model="broj_objekata" type="number" @ionChange="updateObjekti" ></ion-input>
           </ion-item>
 
 
@@ -103,7 +103,7 @@
   
   <script >
 
-    import { ref } from 'vue';
+    import { ref,  watch } from 'vue';
     import { supabase } from '@/supabase'; // assuming you have a 'supabase.js' file in your project for Supabase configuration
     import { useRouter, RouterLink } from "vue-router";
     import { format } from 'date-fns';
@@ -142,6 +142,7 @@
             IonCheckbox,
         },
         setup() {
+
     const ime_projekta = ref("");
     const pocetak_projekta = ref(null);
     const rok_predaja = ref(null);
@@ -151,10 +152,20 @@
     const cena = ref(null);
     const postolje = ref(false);
     const broj_objekata = ref(null);
+    const objekti = ref ([]);
+    // const objekti = computed(() => new Array(broj_objekata.value).fill(false)); // added this line
     const kolorit = ref('');
     const zastakljenost = ref(false);
     const rasvjeta = ref(false);
     const pokretni_elementi = ref(false);
+
+    // watch(broj_objekata, () => {
+    //       objekti.value = new Array(broj_objekata.value).fill(false);
+    //     });
+
+        const updateObjekti = () => {
+          objekti.value = new Array(Number(broj_objekata.value)).fill(false);
+        };
 
     const submitProject = async () => {
       try {
@@ -168,6 +179,7 @@
             velicina: velicina.value, //radi
             cena: cena.value, //radi
             broj_objekata: broj_objekata.value,
+            objekti: objekti.value,
             postolje: postolje.value,
             kolorit: kolorit.value,
             zastakljenost: zastakljenost.value,
@@ -190,6 +202,7 @@
         velicina.value = "";
         cena.value = null;
         broj_objekata.value = null;
+        objekti.value = []; // clear objekti array
         postolje.value = false;
         kolorit.value = "";
         zastakljenost.value = false;
@@ -209,12 +222,14 @@
       velicina,
       cena,
       broj_objekata,
+      objekti,
       postolje,
       kolorit,
       zastakljenost,
       rasvjeta,
       pokretni_elementi,
       submitProject,
+      updateObjekti,
     };
   },
 };

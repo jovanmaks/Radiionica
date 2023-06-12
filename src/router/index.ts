@@ -25,6 +25,7 @@ import SelektovanjeProjektaPage from '../views/04.SelectProjectPage.vue';
 
 
 import CrtanjePage from '../views/CrtanjePage.vue';
+import ProgramiranjePage from '../views/maketa/02.ProgramiranjePage.vue';
 // import DynamicPage from '../views/CrtanjePage.vue';
 
 const routes: Array<RouteRecordRaw> = [
@@ -128,6 +129,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/crtanje',
     name: 'Crtanje',
     component: CrtanjePage,
+  }, 
+  {
+    path: '/programiranje',
+    name: 'Programiranje',
+    component: ProgramiranjePage,
   }, 
 ]
 

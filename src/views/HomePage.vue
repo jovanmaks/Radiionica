@@ -7,17 +7,19 @@
                   <ion-icon :icon="hammer"></ion-icon>
                 </ion-fab-button>
                 <ion-fab-list side="bottom">
-                  <ion-fab-button>
-                    <ion-icon :icon="cash"></ion-icon>
-                  </ion-fab-button>
+                  
                   <router-link to="/crtanje">
                     <ion-fab-button size="small">
                       <ion-icon :icon="brush"></ion-icon>
                     </ion-fab-button>
                   </router-link>
-                  <ion-fab-button>
-                    <ion-icon :icon="desktop"></ion-icon>
-                  </ion-fab-button>
+
+                  <router-link to="/programiranje">
+                    <ion-fab-button size="small">
+                      <ion-icon :icon="desktop"></ion-icon>
+                    </ion-fab-button>
+                  </router-link>
+
                   <ion-fab-button>
                     <ion-icon :icon="layers"></ion-icon>
                   </ion-fab-button>
@@ -36,18 +38,24 @@
                 </ion-fab-list>
                 <ion-fab-list side="end">
                   <ion-fab-button>
-                    <ion-icon :icon="checkmarkDone"></ion-icon>
+                    <ion-icon :icon="cash"></ion-icon>
                   </ion-fab-button>
+                 
                   <ion-fab-button>
                     <ion-icon :icon="car"></ion-icon>
                   </ion-fab-button>
                   <ion-fab-button>
                     <ion-icon :icon="camera"></ion-icon>
                   </ion-fab-button>
+                  <ion-fab-button>
+                    <ion-icon :icon="checkmarkDone"></ion-icon>
+                  </ion-fab-button>
                 </ion-fab-list>
               </ion-fab>
 
         <ion-fab slot="fixed" vertical="bottom" horizontal="start" >
+                  
+
                 <ion-fab-button size="small" color="dark">
                   <ion-icon :icon="easel"></ion-icon>
                 </ion-fab-button>

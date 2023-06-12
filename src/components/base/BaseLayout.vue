@@ -128,27 +128,43 @@ export default defineComponent({
 
 
     
-    async function fetchUserMetadata() {
-      const { user } = await supabase.auth.getUser();
-  console.log('User OVDEEEEEEE:', user); // Log the user object to the console
-      Object.keys(selectedLabels.value).forEach((key) => {
-        selectedLabels.value[key] = user.user_metadata.selectedLabels[key];
-      });
-    }
+    // async function fetchUserMetadata() {
+    //   const { user } = await supabase.auth.getUser();
+    //   console.log('User OVDEEEEEEE:', user); // Log the user object to the console
+    //   Object.keys(selectedLabels.value).forEach((key) => {
+    //     selectedLabels.value[key] = user.user_metadata.selectedLabels[key];
+    //   });
+    // }
 
 //     async function fetchUserMetadata() {
 //   // const user = supabase.auth.user();
 //       const { user } = await supabase.auth.getUser();
-//   console.log('User OVDEEEEEEE:', user); // Log the user object to the console
-//   if (user && user.user_metadata) {
-//     Object.keys(selectedLabels.value).forEach((key) => {
-//       selectedLabels.value[key] = user.user_metadata.selectedLabels[key];
-//     });
-//   } else {
+//       console.log('User OVDEEEEEEE:', user); // Log the user object to the console
+//       if (user && user.user_metadata) {
+//         Object.keys(selectedLabels.value).forEach((key) => {
+//         selectedLabels.value[key] = user.user_metadata.selectedLabels[key];
+//       });
+//      } else {
 //     // Handle the case where the user or user_metadata is not defined
-//     console.error("User or user metadata is not defined");
-//   }
+//       console.error("User or user metadata is not defined");
+//       }
 // }
+
+
+async function fetchUserMetadata() {
+  const { user } = await supabase.auth.getUser();
+  console.log('User OVDEEEEEEE:', user);
+
+  if (user && user.user_metadata) {
+    Object.keys(selectedLabels.value).forEach((key) => {
+      if(user.user_metadata.selectedLabels[key]){
+        selectedLabels.value[key] = user.user_metadata.selectedLabels[key];
+      }
+    });
+  } else {
+    console.error("User or user metadata is not defined");
+  }
+}
 
 
 
@@ -156,23 +172,6 @@ export default defineComponent({
       fetchUserMetadata();
       const urlParams = new URLSearchParams(window.location.search);
     });
-
-    // const signOut = async () => {
-    //   const loader = await loadingController.create({});
-    //   const toast = await toastController.create({ duration: 5000 });
-    //   await loader.present();
-    //   try {
-    //     const { error } = await supabase.auth.signOut();
-    //     router.push({ name: "Home" });
-
-    //     if (error) throw error;
-    //   } catch (error) {
-    //     toast.message = error.message;
-    //     await toast.present();
-    //   } finally {
-    //     await loader.dismiss();
-    //   }
-    // };
 
 
     const signOut = async () => {
