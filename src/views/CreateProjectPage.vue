@@ -63,10 +63,10 @@
             </ion-select>
           </ion-item>
 
-          <ion-item>
+          <!-- <ion-item>
             <ion-label>Postolje</ion-label>
             <ion-checkbox v-model="postolje"></ion-checkbox>
-          </ion-item>
+          </ion-item> -->
 
          
           <ion-item>
@@ -150,7 +150,7 @@
     const lokacija = ref("");
     const velicina = ref('');
     const cena = ref(null);
-    const postolje = ref(false);
+    // const postolje = ref(false);
     const broj_objekata = ref(null);
     const objekti = ref ([]);
 
@@ -173,16 +173,18 @@
     //     });
 
         const updateObjekti = () => {
-          objekti.value = new Array(Number(broj_objekata.value)).fill(false);
+          const count = Number(broj_objekata.value) + 1;  // Increase the number of objects by 1
+
+          objekti.value = new Array(count).fill(false);
           
+          objekti_crtanje.value = new Array(count).fill(false);
+          objekti_programiranje.value = new Array(count).fill(false);
+          objekti_pripremaSjecenje.value = new Array(count).fill(false);
+          objekti_sjecenje.value = new Array(count).fill(false);
+          objekti_pripremaFarbanje.value = new Array(count).fill(false);
+          objekti_farbanje.value = new Array(count).fill(false);
+          objekti_sklapanje.value = new Array(count).fill(false);
           
-          objekti_crtanje.value = new Array(Number(broj_objekata.value)).fill(false);
-          objekti_programiranje.value = new Array(Number(broj_objekata.value)).fill(false);
-          objekti_pripremaSjecenje.value = new Array(Number(broj_objekata.value)).fill(false);
-          objekti_sjecenje.value = new Array(Number(broj_objekata.value)).fill(false);
-          objekti_pripremaFarbanje.value = new Array(Number(broj_objekata.value)).fill(false);
-          objekti_farbanje.value = new Array(Number(broj_objekata.value)).fill(false);
-          objekti_sklapanje.value = new Array(Number(broj_objekata.value)).fill(false);
         };
 
     const submitProject = async () => {
@@ -208,7 +210,7 @@
             objekti_sklapanje: objekti_sklapanje.value,
 
 
-            postolje: postolje.value ? false : null,
+            // postolje: postolje.value ? false : null,
             kolorit: kolorit.value,
             zastakljenost: zastakljenost.value,
             rasvjeta: rasvjeta.value,
@@ -240,7 +242,7 @@
         objekti_farbanje.value = [];
         objekti_sklapanje.value = [];
 
-        postolje.value = false;
+        // postolje.value = false;
         kolorit.value = "";
         zastakljenost.value = false;
         rasvjeta.value = false;
@@ -270,7 +272,7 @@
       objekti_sklapanje,
       
 
-      postolje,
+      // postolje,
       kolorit,
       zastakljenost,
       rasvjeta,

@@ -20,9 +20,12 @@
                     </ion-fab-button>
                   </router-link>
 
-                  <ion-fab-button>
-                    <ion-icon :icon="layers"></ion-icon>
-                  </ion-fab-button>
+                  <router-link to="/pripremasjecenje">
+                    <ion-fab-button  size="small">
+                      <ion-icon :icon="layers"></ion-icon>
+                    </ion-fab-button>
+                  </router-link>
+
                   <ion-fab-button>
                     <ion-icon :icon="cut"></ion-icon>
                   </ion-fab-button>
