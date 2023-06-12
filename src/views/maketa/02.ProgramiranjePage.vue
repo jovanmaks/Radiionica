@@ -6,7 +6,7 @@
 
         <!-- Inicijalizacija charta -->
         <div>
-          <canvas id="myChart" ref="chart"></canvas>
+          <canvas id="myChart" ref="chartRef"></canvas>
         </div>
 
 
@@ -83,54 +83,74 @@
 
 setup() {
 
-  const chart = ref(null)
+  const chart = ref(null);
+  const chartRef = ref(null);
 
-  // onMounted(async () => {
-  //     let { data: broj_objekata, error } = await supabase
-  //       .from('Projekti') 
-  //       .select('broj_objekata')
-      
-  //     if (error) {
-  //       console.error('Error fetching data:', error)
-  //       return
-  //     }
-
-  //     // Assuming broj_objekata is an array of integers, you might want to aggregate 
-  //     // this data somehow to produce your doughnut chart's data, e.g. count frequencies
-
-  //     let aggregatedData = broj_objekata.reduce((counts, obj) => {
-  //       if (counts[obj.broj_objekata] === undefined) {
-  //         counts[obj.broj_objekata] = 1
-  //       } else {
-  //         counts[obj.broj_objekata] += 1
-  //       }
-  //       return counts
-  //     }, {})
-
-  //     let labels = Object.keys(aggregatedData)
-  //     let data = Object.values(aggregatedData)
-
-  //     // Create your chart
-  //     chart.value = new Chart(chart.value.getContext('2d'), {
-  //       type: 'doughnut',
-  //       data: {
-  //         labels: labels,
-  //         datasets: [{
-  //           data: data,
-  //           // add colors and other chart settings here...
-  //         }]
-  //       }
-  //     })
-  //   })
+  const chartSize = ref(null);
+  const chartData = ref([]);
+  const chartColors = ref([]);
 
 
+  const fetchData = async () => {
+    const { data, error } = await supabase
+      .from('Projekti')
+      .select('objekti');
 
-  return{add};
-}};
+    if (error) {
+      console.error('Error fetching data:', error);
+      return;
+    }
 
-    
+    data.forEach((record) => {
+      if (Array.isArray(record.objekti)) {
+        record.objekti.forEach((value) => {
+          chartData.value.push(value);
+          chartColors.value.push(value ? 'red' : 'gray');
+        });
+      }
+    });
+    chartSize.value = chartData.value.length;
 
+    console.log('chartData', chartData.value);
+    console.log('chartColors', chartColors.value);
+    console.log('chartSize', chartSize.value);
+  }; 
+  
 
   
+  let myChart; // Declare myChart outside of your function
+
+  onMounted(async () => {
+        await fetchData();
+
+        const ctx = chartRef.value.getContext('2d'); // Get the 2d context of the canvas
+        const myChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: Array(chartSize.value).fill().map((_, i) => `Section ${i + 1}`),
+            datasets: [{
+              label: '# of Votes',
+              data: Array(chartSize.value).fill(1),
+              backgroundColor:'rgba(0, 0, 0, 1)',
+              borderColor: 'rgba(0, 0, 0, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            cutout: '30%',
+            plugins: {
+              legend: {
+                display: false
+              }
+            }
+          }
+        });
+      });
+
+ 
+
+
+  return{add, chartRef};
+}};
   
     </script>
