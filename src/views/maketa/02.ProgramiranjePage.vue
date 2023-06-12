@@ -29,9 +29,9 @@
         <!-- <ion-button @click="setOpen(false)">Close</ion-button> -->
         <ion-header>
           <ion-toolbar>
-            <!-- <ion-buttons slot="start">
-              <ion-button @click="cancel()">Cancel</ion-button>
-            </ion-buttons> -->
+            <ion-buttons slot="start">
+              <ion-button @click="setOpen(false)">Cancel</ion-button>
+            </ion-buttons>
             <ion-title>Sekcija</ion-title>
             <ion-buttons slot="end">
               <ion-button :strong="true" @click="setOpen(false)">Confirm</ion-button>
@@ -41,7 +41,7 @@
         <Modal :data="data"></Modal>
         <ion-content class="ion-padding">
 
-<!--           
+          
  <ion-item v-for="(section, index) in modalSections" :key="index">
   <ion-segment :value="section.done ? 'done' : 'notDone'">
     <ion-segment-button value="notDone" @click="updateStatus(index, 'notDone')">
@@ -51,7 +51,7 @@
       <ion-label>Done</ion-label>
     </ion-segment-button>
   </ion-segment>
-</ion-item>  -->
+</ion-item> 
 
 
 
@@ -96,12 +96,12 @@
       IonHeader,
       
       // IonInput,
-      // IonItem,
-      // IonLabel,
+      IonItem,
+      IonLabel,
       // IonTitle,
-      // IonButtons,
-      // IonSegment, 
-      // IonSegmentButton,
+      IonButtons,
+      IonSegment, 
+      IonSegmentButton,
       } from '@ionic/vue';
 
       import { OverlayEventDetail } from '@ionic/core/components';
@@ -129,13 +129,13 @@
         IonButton,
         IonToolbar,
         IonHeader,
-        // IonItem,
+        IonItem,
         // IonInput,
-        // IonLabel,
-        // IonButtons,
+        IonLabel,
+        IonButtons,
         // IonTitle,
-        // IonSegment, 
-        // IonSegmentButton,
+        IonSegment, 
+        IonSegmentButton,
       },
 
 setup() {
@@ -153,6 +153,8 @@ setup() {
   const setOpen = (state) => (isOpenRef.value = state);
   const data = { content: 'New Content' };
 
+  const modalSections = ref([]); 
+
   const fetchData = async () => {
     const { data, error } = await supabase
       .from('Projekti')
@@ -166,6 +168,7 @@ setup() {
     data.forEach((record) => {
       if (Array.isArray(record.objekti)) {
         record.objekti.forEach((value) => {
+          modalSections.value.push({ done: value });
           chartData.value.push(value);
           chartColors.value.push(value ? 'red' : 'gray');
         });
@@ -178,7 +181,9 @@ setup() {
     console.log('chartSize', chartSize.value);
   }; 
   
-
+  const updateStatus = (index, status) => {
+      modalSections.value[index].done = status === 'done';
+    };
   
   let myChart; // Declare myChart outside of your function
 
@@ -210,11 +215,7 @@ setup() {
       });
 
 
-  return{
-    add,
-     chartRef, isOpenRef, setOpen, data
-  
-      };
+  return{   add,chartRef, isOpenRef, setOpen, data, modalSections, updateStatus  };
 }};
   
     </script>
