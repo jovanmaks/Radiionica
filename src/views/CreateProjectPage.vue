@@ -4,19 +4,6 @@
         
         <ion-content>
 
-          <!-- <div>
-            <canvas id="saradnici" ref="saradniciRef"></canvas>
-          </div> -->
-
-
-        <!-- <ion-fab slot="fixed" vertical="bottom" horizontal="center">
-          <ion-fab-button id="open-modal" color="dark" @click="setOpen(true)">
-            <ion-icon :icon="add"></ion-icon>
-          </ion-fab-button>
-        </ion-fab> -->
-
-
-
         <ion-list>
 
           <ion-item>
@@ -109,7 +96,9 @@
               <ion-buttons slot="start">
                 <ion-button @click="setOpen(false)">Cancel</ion-button>
               </ion-buttons>
-              <ion-title>Saradnici</ion-title>
+              
+        
+              <!-- <ion-title>Saradnici</ion-title> -->
               <ion-buttons slot="end">
                 <ion-button :strong="true" @click="confirmChanges">Confirm</ion-button>
               </ion-buttons>
@@ -117,7 +106,20 @@
           </ion-header>
           <Modal :data="data"></Modal>
           <ion-content class="ion-padding">
+            <ion-item>
+              <!-- <ion-searchbar  @ionInput="handleInput($event)"></ion-searchbar> -->
+              <ion-searchbar></ion-searchbar>
 
+
+
+            </ion-item>
+
+
+            <ion-list>
+              <ion-item v-for="(user, index) in allUsers" :key="index">
+                <ion-label>{{ user.name }}</ion-label>
+              </ion-item>
+            </ion-list>
           </ion-content>
         </ion-modal>
 
@@ -136,11 +138,12 @@
     import { useRouter, RouterLink } from "vue-router";
     import { format } from 'date-fns';
     import { 
+        IonSearchbar,
         IonModal,
         IonHeader,
         IonToolbar,
         IonButtons,
-        IonTitle,
+        // IonTitle,
         
         IonList,
         IonDatetime,
@@ -164,11 +167,12 @@
     export default{
         name: 'CreateProjectPage',
         components: {
+            IonSearchbar,
             IonModal,
             IonHeader,
             IonToolbar,
             IonButtons,
-            IonTitle,
+            // IonTitle,
         
             IonList,
             IonDatetime,
@@ -189,10 +193,7 @@
     const setOpen = (state) => (isOpenRef.value = state);
     const isOpenRef = ref(false);
 
-    const confirmChanges = async () => {
-
-      setOpen(false);
-    };
+   
 
 
     
@@ -220,10 +221,54 @@
     const zastakljenost = ref(false);
     const rasvjeta = ref(false);
     const pokretni_elementi = ref(false);
+    
 
-    // watch(broj_objekata, () => {
-    //       objekti.value = new Array(broj_objekata.value).fill(false);
-    //     });
+    const allUsers = ref([]);
+    const currentUserID = supabase.auth.getUser().id;
+
+
+    const confirmChanges = async () => {
+      setOpen(false);
+    };
+
+
+    const fetchUsers = async () => {
+      const { data: users, error } = await supabase
+      .from('publicusers')
+      .select('*')
+      // .neq('id', currentUserID)
+      
+      allUsers.value = users;
+    console.log('USERIIII', allUsers.value);
+
+      if (error) console.log('Error: ', error)
+  else {
+    allUsers.value = users;
+    console.log('USERIIII', allUsers.value);
+  }
+    };
+
+//   const fetchUsers = async () => {
+//   try {
+//     const { data: { users }, error } = await supabase.auth.admin.listUsers({
+//       page: 1,
+//       perPage: 1000
+//     })
+//     if (error) {
+//       console.log('Error: ', error);
+//     console.log('test 1');
+//     } else {
+//       allUsers.value = users;
+//       console.log('USERIIII', allUsers.value);
+//     }
+//   } catch (error) {
+//     console.log('Error: ', error);
+//     console.log('test');
+//   }
+// };
+
+
+    fetchUsers();
 
         const updateObjekti = () => {
           const count = Number(broj_objekata.value) + 1;  // Increase the number of objects by 1
@@ -263,7 +308,6 @@
             objekti_sklapanje: objekti_sklapanje.value,
 
 
-            // postolje: postolje.value ? false : null,
             kolorit: kolorit.value,
             zastakljenost: zastakljenost.value,
             rasvjeta: rasvjeta.value,
@@ -295,7 +339,6 @@
         objekti_farbanje.value = [];
         objekti_sklapanje.value = [];
 
-        // postolje.value = false;
         kolorit.value = "";
         zastakljenost.value = false;
         rasvjeta.value = false;
@@ -323,9 +366,7 @@
       objekti_pripremaFarbanje,
       objekti_farbanje,
       objekti_sklapanje,
-      
 
-      // postolje,
       kolorit,
       zastakljenost,
       rasvjeta,

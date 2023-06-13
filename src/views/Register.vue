@@ -151,39 +151,84 @@ export default defineComponent({
           return item ? item.checked : false;
         };
 
-          // Register function
-          const register = async () =>{
-              if (password.value === confirmPassword.value){
-                try{
+          // // Register function
+          // const register = async () =>{
+          //     if (password.value === confirmPassword.value){
+          //       try{
 
-                      const userSingUp = await supabase.auth.signUp({
-                          email: email.value,
-                          password: password.value,
-                          options: {
-                            data:
-                            {
-                              selectedLabels: getSelectedLabels(),
-                            },
-                          },
-                      });
-                  if (userSingUp.error) throw userSingUp.error;
+          //             const userSingUp = await supabase.auth.signUp({
+          //                 email: email.value,
+          //                 password: password.value,
+          //                 options: {
+          //                   data:
+          //                   {
+          //                     selectedLabels: getSelectedLabels(),
+          //                   },
+          //                 },
+          //             });
+          //         if (userSingUp.error) throw userSingUp.error;
                   
 
-                  router.push({name: 'Login'});   
-                  }catch(error){
-                  console.log('u ketchu si');
-                  errorMsg.value = error.message;
-                  setTimeout(()=>{
-                    errorMsg.value = null;
-                  }, 5000);
-                } 
-                return;
-              }
-              errorMsg.value = "Error: Password do not match";
-              setTimeout( () => {
-                  errorMsg.value = '';
-              }, 5000);
-          };
+          //         router.push({name: 'Login'});   
+          //         }catch(error){
+          //         console.log('u ketchu si');
+          //         errorMsg.value = error.message;
+          //         setTimeout(()=>{
+          //           errorMsg.value = null;
+          //         }, 5000);
+          //       } 
+          //       return;
+          //     }
+          //     errorMsg.value = "Error: Password do not match";
+          //     setTimeout( () => {
+          //         errorMsg.value = '';
+          //     }, 5000);
+
+          // };
+
+          // Register function
+          const register = async () => {
+  if (password.value === confirmPassword.value) {
+    try {
+      const { user, error: signUpError } = await supabase.auth.signUp({
+        email: email.value,
+        password: password.value,
+      });
+
+      if (signUpError) throw signUpError;
+      
+      // If signup is successful, insert the new user data into publicusers table
+      // if (user) {
+      //   const { data, error: insertError } = await supabase
+      //     .from('publicusers')
+      //     .insert([
+      //       {
+      //         userid: user.id,
+      //         user_email: email.value,
+      //       },
+      //     ]);
+
+      //   // Log the response from the insert query
+      //   console.log('Insert Response:', data, insertError);
+        
+      //   if (insertError) throw insertError;
+      // }
+
+      router.push({ name: 'Login' });   
+    } catch(error) {
+      console.log('Error occurred:', error.message);
+      errorMsg.value = error.message;
+      setTimeout(() => {
+        errorMsg.value = null;
+      }, 5000);
+    } 
+  } else {
+    errorMsg.value = "Error: Passwords do not match";
+    setTimeout(() => {
+        errorMsg.value = '';
+    }, 5000);
+  }
+};
 
           return { email, password, confirmPassword, errorMsg, items, register  };
       },

@@ -111,15 +111,15 @@
           const {
             data: { user },
           } = await supabase.auth.getUser()
-          const metadata = user.user_metadata.value
-          console.log('meta')
-          console.log(user.user_metadata.role)
+          // const metadata = user.user_metadata.value
+          // console.log('meta')
+          // console.log(user.user_metadata.role)
 
 
-          console.log('labele',user.user_metadata.selectedLabels.Alati);
-          console.log('labele2',user.user_metadata.selectedLabels.Ponuda);
-          console.log('labele3',user.user_metadata.selectedLabels.Crtanje);
-          console.log('labele4',user.user_metadata.selectedLabels.Magacin);
+          // console.log('labele',user.user_metadata.selectedLabels.Alati);
+          // console.log('labele2',user.user_metadata.selectedLabels.Ponuda);
+          // console.log('labele3',user.user_metadata.selectedLabels.Crtanje);
+          // console.log('labele4',user.user_metadata.selectedLabels.Magacin);
 
           router.push({name: "Home"});
         }catch(error){
