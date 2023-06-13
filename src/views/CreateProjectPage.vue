@@ -3,6 +3,20 @@
     <template v-slot:content>
         
         <ion-content>
+
+          <!-- <div>
+            <canvas id="saradnici" ref="saradniciRef"></canvas>
+          </div> -->
+
+
+        <!-- <ion-fab slot="fixed" vertical="bottom" horizontal="center">
+          <ion-fab-button id="open-modal" color="dark" @click="setOpen(true)">
+            <ion-icon :icon="add"></ion-icon>
+          </ion-fab-button>
+        </ion-fab> -->
+
+
+
         <ion-list>
 
           <ion-item>
@@ -45,7 +59,6 @@
 
           <ion-item>
             <ion-label>Velicina</ion-label>
-            <!-- <ion-input v-model="velicina" type="number"></ion-input> -->
             <ion-select v-model="velicina" >
               <ion-select-option value="mala">Mala</ion-select-option>
               <ion-select-option value="srednja">Srednja</ion-select-option>
@@ -62,12 +75,6 @@
               <ion-select-option value="realisticna">Realisticna</ion-select-option>
             </ion-select>
           </ion-item>
-
-          <!-- <ion-item>
-            <ion-label>Postolje</ion-label>
-            <ion-checkbox v-model="postolje"></ion-checkbox>
-          </ion-item> -->
-
          
           <ion-item>
             <ion-label>Broj objekata:</ion-label>
@@ -90,9 +97,30 @@
             <ion-label>Pokretni elementi</ion-label>
             <ion-checkbox v-model="pokretni_elementi"></ion-checkbox>
           </ion-item>
+          
         </ion-list>
 
+        <ion-button expand="block" id="open-modal" color="dark" @click="setOpen(true)">Saradnici</ion-button>
         <ion-button expand="block" @click="submitProject" color="secondary">Submit Project</ion-button>
+        
+        <ion-modal :is-open="isOpenRef" css-class="my-custom-class" @didDismiss="setOpen(false)">
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="start">
+                <ion-button @click="setOpen(false)">Cancel</ion-button>
+              </ion-buttons>
+              <ion-title>Saradnici</ion-title>
+              <ion-buttons slot="end">
+                <ion-button :strong="true" @click="confirmChanges">Confirm</ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <Modal :data="data"></Modal>
+          <ion-content class="ion-padding">
+
+          </ion-content>
+        </ion-modal>
+
       </ion-content>
     </template>
   </base-layout>
@@ -108,10 +136,15 @@
     import { useRouter, RouterLink } from "vue-router";
     import { format } from 'date-fns';
     import { 
+        IonModal,
+        IonHeader,
+        IonToolbar,
+        IonButtons,
+        IonTitle,
+        
         IonList,
         IonDatetime,
         IonDatetimeButton,
-        IonModal,
         IonSelect,
         IonSelectOption,
         IonItem, 
@@ -120,18 +153,26 @@
         IonInput,
         IonButton,
         IonCheckbox,
+        // IonIcon,
+        // IonFab,
+        // IonFabButton,
          } from '@ionic/vue';
 
-    import { ellipse, square, triangle, star } from 'ionicons/icons';
+    import { ellipse, square, triangle, star, add } from 'ionicons/icons';
 
 
     export default{
         name: 'CreateProjectPage',
         components: {
+            IonModal,
+            IonHeader,
+            IonToolbar,
+            IonButtons,
+            IonTitle,
+        
             IonList,
             IonDatetime,
             IonDatetimeButton,
-            IonModal,
             IonSelect,
             IonSelectOption,
             IonItem,
@@ -140,9 +181,21 @@
             IonInput,
             IonButton,
             IonCheckbox,
+            // IonIcon,
+            // IonFab,
+            // IonFabButton,
         },
         setup() {
+    const setOpen = (state) => (isOpenRef.value = state);
+    const isOpenRef = ref(false);
 
+    const confirmChanges = async () => {
+
+      setOpen(false);
+    };
+
+
+    
     const ime_projekta = ref("");
     const pocetak_projekta = ref(null);
     const rok_predaja = ref(null);
@@ -279,6 +332,9 @@
       pokretni_elementi,
       submitProject,
       updateObjekti,
+      add,
+      isOpenRef,
+      setOpen,
     };
   },
 };
