@@ -117,15 +117,13 @@
 
             <ion-list>
   <ion-item v-for="(user, index) in allUsers" :key="index">
-    <ion-checkbox slot="start" v-model="user.selected"></ion-checkbox>
+    <!-- <ion-checkbox slot="start" v-model="user.selected"></ion-checkbox> -->
+    <!-- <ion-checkbox slot="start" v-model="user.selected" @click="toggleUser(user.id, $event.target.checked)"></ion-checkbox> -->
+    <ion-checkbox slot="start" v-model="user.selected" @ionChange="toggleUser(user.id, $event.target.checked)"></ion-checkbox>
+
     <ion-label>{{ user.username }}</ion-label>
   </ion-item>
 </ion-list>
-            <!-- <ion-list>
-              <ion-item v-for="(user, index) in allUsers" :key="index">
-                <ion-label>{{ user.username }}</ion-label>
-              </ion-item>
-            </ion-list> -->
 
           </ion-content>
         </ion-modal>
@@ -137,7 +135,7 @@
   
 <script >
 
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, nextTick } from 'vue';
 import { supabase } from '@/supabase'; // assuming you have a 'supabase.js' file in your project for Supabase configuration
 import { useRouter, RouterLink } from "vue-router";
 import { format } from 'date-fns';
@@ -227,11 +225,17 @@ export default {
 
     const allUsers = ref([]);
     const currentUserID = supabase.auth.getUser().id;
+    
+    const selectedUserIDs = ref([]);
+
+    
 
 
-    const confirmChanges = async () => {
-      setOpen(false);
-    };
+    // const confirmChanges = async () => {
+    //   setOpen(false);
+    // };
+
+
 
 
     const fetchUsers = async () => {
@@ -251,8 +255,41 @@ export default {
     };
 
 
-    fetchUsers();
-    onMounted(fetchUsers);
+
+    const confirmChanges = async () => {
+  // Here, selectedUserIDs.value contains the IDs of the selected users
+  console.log('sa modalaaaa',selectedUserIDs.value);
+  setOpen(false);
+};
+
+
+   fetchUsers();
+onMounted(async () => {
+  const { data: users, error } = await supabase
+    .from('profiles')
+    .select('*')
+    
+  if (error) console.log('Error: ', error)
+  else {
+    allUsers.value = users.map(user => ({ ...user, selected: false }));
+    console.log('USERIIII', allUsers.value);
+  }
+});
+
+
+const toggleUser = (userId, isChecked) => {
+  console.log(`toggleUser called with userId=${userId} and isChecked=${isChecked}`);
+    nextTick(() => {
+        if (isChecked && !selectedUserIDs.value.includes(userId)) {
+            selectedUserIDs.value.push(userId);
+        } else if (!isChecked && selectedUserIDs.value.includes(userId)) {
+            selectedUserIDs.value = selectedUserIDs.value.filter(id => id !== userId);
+        }
+    });
+};
+
+
+
 
     const updateObjekti = () => {
       const count = Number(broj_objekata.value) + 1;  // Increase the number of objects by 1
@@ -361,6 +398,9 @@ export default {
       isOpenRef,
       setOpen,
       allUsers,
+      selectedUserIDs,
+      toggleUser,
+      confirmChanges,
     };
   },
 };
