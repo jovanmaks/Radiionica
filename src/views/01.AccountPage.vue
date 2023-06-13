@@ -68,7 +68,6 @@
 
       </form>
 
-      <!-- <ion-button fill="clear" @click="register" color="dark" >Register Profile</ion-button> -->
 
     </template>
   </base-layout>
@@ -134,6 +133,7 @@ export default {
 
     interface User {
       id: string;
+      email: string;
       // username: string;
       // Add any other properties you expect on the user object
     }
@@ -239,8 +239,6 @@ export default {
 };
 
 
-
-
     async function getCurrentSession() {
 
       try {
@@ -257,7 +255,6 @@ export default {
         console.error(error)
       }
     }
-
 
     async function signOut() {
       const loader = await loadingController.create({});
@@ -282,14 +279,9 @@ export default {
       }
     }
 
-    // Call the getCurrentSession() function and log the result to the console
     const session = ref(getCurrentSession().then(session => {
       console.log('Current session:', session)
     }))
-
-    // const register = () => {
-    //     console.log('register')
-    // };
 
 
     return {
@@ -301,6 +293,5 @@ export default {
   },
 
 };
-
 
 </script>

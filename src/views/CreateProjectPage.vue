@@ -1,8 +1,8 @@
 <template>
-<base-layout page-title="Napravi projekat" page-default-back-link="/tabs">
+  <base-layout page-title="Napravi projekat" page-default-back-link="/tabs">
     <template v-slot:content>
-        
-        <ion-content>
+
+      <ion-content>
 
         <ion-list>
 
@@ -23,7 +23,7 @@
 
           <ion-item>
             <ion-label>Rok za predaju:</ion-label>
-            <ion-datetime-button  datetime="datetime2"></ion-datetime-button>
+            <ion-datetime-button datetime="datetime2"></ion-datetime-button>
             <ion-modal :keep-contents-mounted="true">
               <ion-datetime id="datetime2" v-model="rok_predaja"></ion-datetime>
             </ion-modal>
@@ -46,7 +46,7 @@
 
           <ion-item>
             <ion-label>Velicina</ion-label>
-            <ion-select v-model="velicina" >
+            <ion-select v-model="velicina">
               <ion-select-option value="mala">Mala</ion-select-option>
               <ion-select-option value="srednja">Srednja</ion-select-option>
               <ion-select-option value="velika">Velika</ion-select-option>
@@ -57,19 +57,19 @@
 
           <ion-item>
             <ion-label>Stil</ion-label>
-            <ion-select v-model="kolorit" >
+            <ion-select v-model="kolorit">
               <ion-select-option value="bijela">Bijela</ion-select-option>
               <ion-select-option value="realisticna">Realisticna</ion-select-option>
             </ion-select>
           </ion-item>
-         
+
           <ion-item>
             <ion-label>Broj objekata:</ion-label>
-            <ion-input v-model="broj_objekata" type="number" @ionChange="updateObjekti" ></ion-input>
+            <ion-input v-model="broj_objekata" type="number" @ionChange="updateObjekti"></ion-input>
           </ion-item>
 
 
-          
+
           <ion-item>
             <ion-label>Zastakljenost</ion-label>
             <ion-checkbox v-model="zastakljenost"></ion-checkbox>
@@ -84,20 +84,20 @@
             <ion-label>Pokretni elementi</ion-label>
             <ion-checkbox v-model="pokretni_elementi"></ion-checkbox>
           </ion-item>
-          
+
         </ion-list>
 
         <ion-button expand="block" id="open-modal" color="dark" @click="setOpen(true)">Saradnici</ion-button>
         <ion-button expand="block" @click="submitProject" color="secondary">Submit Project</ion-button>
-        
+
         <ion-modal :is-open="isOpenRef" css-class="my-custom-class" @didDismiss="setOpen(false)">
           <ion-header>
             <ion-toolbar>
               <ion-buttons slot="start">
                 <ion-button @click="setOpen(false)">Cancel</ion-button>
               </ion-buttons>
-              
-        
+
+
               <!-- <ion-title>Saradnici</ion-title> -->
               <ion-buttons slot="end">
                 <ion-button :strong="true" @click="confirmChanges">Confirm</ion-button>
@@ -116,87 +116,89 @@
 
 
             <ion-list>
+  <ion-item v-for="(user, index) in allUsers" :key="index">
+    <ion-checkbox slot="start" v-model="user.selected"></ion-checkbox>
+    <ion-label>{{ user.username }}</ion-label>
+  </ion-item>
+</ion-list>
+            <!-- <ion-list>
               <ion-item v-for="(user, index) in allUsers" :key="index">
-                <ion-label>{{ user.name }}</ion-label>
+                <ion-label>{{ user.username }}</ion-label>
               </ion-item>
-            </ion-list>
+            </ion-list> -->
+
           </ion-content>
         </ion-modal>
 
       </ion-content>
     </template>
   </base-layout>
-  
-  
-
 </template>
   
-  <script >
+<script >
 
-    import { ref,  watch } from 'vue';
-    import { supabase } from '@/supabase'; // assuming you have a 'supabase.js' file in your project for Supabase configuration
-    import { useRouter, RouterLink } from "vue-router";
-    import { format } from 'date-fns';
-    import { 
-        IonSearchbar,
-        IonModal,
-        IonHeader,
-        IonToolbar,
-        IonButtons,
-        // IonTitle,
-        
-        IonList,
-        IonDatetime,
-        IonDatetimeButton,
-        IonSelect,
-        IonSelectOption,
-        IonItem, 
-        IonLabel, 
-        IonContent,
-        IonInput,
-        IonButton,
-        IonCheckbox,
-        // IonIcon,
-        // IonFab,
-        // IonFabButton,
-         } from '@ionic/vue';
+import { ref, watch, onMounted } from 'vue';
+import { supabase } from '@/supabase'; // assuming you have a 'supabase.js' file in your project for Supabase configuration
+import { useRouter, RouterLink } from "vue-router";
+import { format } from 'date-fns';
+import {
+  IonSearchbar,
+  IonModal,
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  // IonTitle,
+  IonList,
+  IonDatetime,
+  IonDatetimeButton,
+  IonSelect,
+  IonSelectOption,
+  IonItem,
+  IonLabel,
+  IonContent,
+  IonInput,
+  IonButton,
+  IonCheckbox,
+  // IonIcon,
+  // IonFab,
+  // IonFabButton,
+} from '@ionic/vue';
 
-    import { ellipse, square, triangle, star, add } from 'ionicons/icons';
+import { ellipse, square, triangle, star, add } from 'ionicons/icons';
 
 
-    export default{
-        name: 'CreateProjectPage',
-        components: {
-            IonSearchbar,
-            IonModal,
-            IonHeader,
-            IonToolbar,
-            IonButtons,
-            // IonTitle,
-        
-            IonList,
-            IonDatetime,
-            IonDatetimeButton,
-            IonSelect,
-            IonSelectOption,
-            IonItem,
-            IonLabel,
-            IonContent,
-            IonInput,
-            IonButton,
-            IonCheckbox,
-            // IonIcon,
-            // IonFab,
-            // IonFabButton,
-        },
-        setup() {
+export default {
+  name: 'CreateProjectPage',
+  components: {
+    IonSearchbar,
+    IonModal,
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    // IonTitle,
+    IonList,
+    IonDatetime,
+    IonDatetimeButton,
+    IonSelect,
+    IonSelectOption,
+    IonItem,
+    IonLabel,
+    IonContent,
+    IonInput,
+    IonButton,
+    IonCheckbox,
+    // IonIcon,
+    // IonFab,
+    // IonFabButton,
+  },
+  setup() {
     const setOpen = (state) => (isOpenRef.value = state);
     const isOpenRef = ref(false);
 
-   
 
 
-    
+
+
     const ime_projekta = ref("");
     const pocetak_projekta = ref(null);
     const rok_predaja = ref(null);
@@ -206,22 +208,22 @@
     const cena = ref(null);
     // const postolje = ref(false);
     const broj_objekata = ref(null);
-    const objekti = ref ([]);
+    const objekti = ref([]);
 
-    const objekti_crtanje = ref ([]);
-    const objekti_programiranje = ref ([]);
-    const objekti_pripremaSjecenje = ref ([]);
-    const objekti_sjecenje = ref ([]);
-    const objekti_pripremaFarbanje = ref ([]);
-    const objekti_farbanje = ref ([]);
-    const objekti_sklapanje = ref ([]);
-    
+    const objekti_crtanje = ref([]);
+    const objekti_programiranje = ref([]);
+    const objekti_pripremaSjecenje = ref([]);
+    const objekti_sjecenje = ref([]);
+    const objekti_pripremaFarbanje = ref([]);
+    const objekti_farbanje = ref([]);
+    const objekti_sklapanje = ref([]);
+
     // const objekti = computed(() => new Array(broj_objekata.value).fill(false)); // added this line
     const kolorit = ref('');
     const zastakljenost = ref(false);
     const rasvjeta = ref(false);
     const pokretni_elementi = ref(false);
-    
+
 
     const allUsers = ref([]);
     const currentUserID = supabase.auth.getUser().id;
@@ -234,71 +236,53 @@
 
     const fetchUsers = async () => {
       const { data: users, error } = await supabase
-      .from('publicusers')
-      .select('*')
+        .from('profiles')
+        .select('*')
       // .neq('id', currentUserID)
-      
+
       allUsers.value = users;
-    console.log('USERIIII', allUsers.value);
+      console.log('USERIIII', allUsers.value);
 
       if (error) console.log('Error: ', error)
-  else {
-    allUsers.value = users;
-    console.log('USERIIII', allUsers.value);
-  }
+      else {
+        allUsers.value = users;
+        console.log('USERIIII', allUsers.value);
+      }
     };
-
-//   const fetchUsers = async () => {
-//   try {
-//     const { data: { users }, error } = await supabase.auth.admin.listUsers({
-//       page: 1,
-//       perPage: 1000
-//     })
-//     if (error) {
-//       console.log('Error: ', error);
-//     console.log('test 1');
-//     } else {
-//       allUsers.value = users;
-//       console.log('USERIIII', allUsers.value);
-//     }
-//   } catch (error) {
-//     console.log('Error: ', error);
-//     console.log('test');
-//   }
-// };
 
 
     fetchUsers();
+    onMounted(fetchUsers);
 
-        const updateObjekti = () => {
-          const count = Number(broj_objekata.value) + 1;  // Increase the number of objects by 1
+    const updateObjekti = () => {
+      const count = Number(broj_objekata.value) + 1;  // Increase the number of objects by 1
 
-          objekti.value = new Array(count).fill(false);
-          
-          objekti_crtanje.value = new Array(count).fill(false);
-          objekti_programiranje.value = new Array(count).fill(false);
-          objekti_pripremaSjecenje.value = new Array(count).fill(false);
-          objekti_sjecenje.value = new Array(count).fill(false);
-          objekti_pripremaFarbanje.value = new Array(count).fill(false);
-          objekti_farbanje.value = new Array(count).fill(false);
-          objekti_sklapanje.value = new Array(count).fill(false);
-          
-        };
+      objekti.value = new Array(count).fill(false);
+
+      objekti_crtanje.value = new Array(count).fill(false);
+      objekti_programiranje.value = new Array(count).fill(false);
+      objekti_pripremaSjecenje.value = new Array(count).fill(false);
+      objekti_sjecenje.value = new Array(count).fill(false);
+      objekti_pripremaFarbanje.value = new Array(count).fill(false);
+      objekti_farbanje.value = new Array(count).fill(false);
+      objekti_sklapanje.value = new Array(count).fill(false);
+
+    };
 
     const submitProject = async () => {
       try {
         const { error } = await supabase.from("Projekti").insert([
           {
             ime_projekta: ime_projekta.value, //radi
-            pocetak_projekta: pocetak_projekta.value ,
-            rok_predaja: rok_predaja.value , 
+            pocetak_projekta: pocetak_projekta.value,
+            rok_predaja: rok_predaja.value,
             investitor: investitor.value, // radi
             lokacija: lokacija.value, //radi
             velicina: velicina.value, //radi
             cena: cena.value, //radi
             broj_objekata: broj_objekata.value,
             objekti: objekti.value,
-            
+
             objekti_crtanje: objekti_crtanje.value,
             objekti_programiranje: objekti_programiranje.value,
             objekti_pripremaSjecenje: objekti_pripremaSjecenje.value,
@@ -376,8 +360,9 @@
       add,
       isOpenRef,
       setOpen,
+      allUsers,
     };
   },
 };
 
-  </script>
+</script>
