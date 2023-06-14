@@ -116,14 +116,15 @@
 
 
             <ion-list>
-  <ion-item v-for="(user, index) in allUsers" :key="index">
-    <!-- <ion-checkbox slot="start" v-model="user.selected"></ion-checkbox> -->
-    <!-- <ion-checkbox slot="start" v-model="user.selected" @click="toggleUser(user.id, $event.target.checked)"></ion-checkbox> -->
-    <ion-checkbox slot="start" v-model="user.selected" @ionChange="toggleUser(user.id, $event.target.checked)"></ion-checkbox>
+              <ion-item v-for="(user, index) in allUsers" :key="index">
+                <!-- <ion-checkbox slot="start" v-model="user.selected"></ion-checkbox> -->
+                <!-- <ion-checkbox slot="start" v-model="user.selected" @click="toggleUser(user.id, $event.target.checked)"></ion-checkbox> -->
+                <ion-checkbox slot="start" v-model="user.selected"
+                  @ionChange="toggleUser(user.id, $event.target.checked)"></ion-checkbox>
 
-    <ion-label>{{ user.username }}</ion-label>
-  </ion-item>
-</ion-list>
+                <ion-label>{{ user.username }}</ion-label>
+              </ion-item>
+            </ion-list>
 
           </ion-content>
         </ion-modal>
@@ -224,18 +225,20 @@ export default {
 
 
     const allUsers = ref([]);
-    const currentUserID = supabase.auth.getUser().id;
-    
+
+
+    // const { data: { user } } =  supabase.auth.getUser();
+    // const currentUserID = session ? session.user.id : null;
+    const session = ref(supabase.auth.getSession())
+    const usernew = ref(supabase.auth.getUser())
+
+// const { data, error } = await supabase.auth.getSession()
+
+    const currentUserID  = ref(null);
+
+
+
     const selectedUserIDs = ref([]);
-
-    
-
-
-    // const confirmChanges = async () => {
-    //   setOpen(false);
-    // };
-
-
 
 
     const fetchUsers = async () => {
@@ -254,39 +257,78 @@ export default {
       }
     };
 
+   
 
 
     const confirmChanges = async () => {
-  // Here, selectedUserIDs.value contains the IDs of the selected users
-  console.log('sa modalaaaa',selectedUserIDs.value);
-  setOpen(false);
-};
+      // Here, selectedUserIDs.value contains the IDs of the selected users
+      console.log('sa modalaaaa', selectedUserIDs.value);
+      setOpen(false);
 
 
-   fetchUsers();
+
+    };
+
+
+    fetchUsers();
+
+//     watch(session, (newSession) => {
+//     if (newSession) {
+//         currentUserID.value = newSession.user.id;
+//         console.log('User ID:', newSession.user.id);
+//     } else {
+//         console.log('No active session');
+//     }
+// }, 
+// { immediate: true });
+
 onMounted(async () => {
-  const { data: users, error } = await supabase
-    .from('profiles')
-    .select('*')
-    
-  if (error) console.log('Error: ', error)
-  else {
+
+  // console.log('session', session.value);
+  // console.log('user', usernew.value);
+  // console.log('user', usernew.value.data.user.id);
+
+  const usernewResolved = await usernew.value;
+    console.log('user', usernewResolved);
+    console.log('user id', usernewResolved.data.user.id);
+    currentUserID.value  = usernewResolved.data.user.id;
+
+
+    //  currentUserID.value  = usernew.value.data.user.id;
+
+
+  try {
+  
+
+
+
+
+    const { data: users, error } = await supabase
+      .from('profiles')
+      .select('*')
+  
+    if (error) throw error;
+
     allUsers.value = users.map(user => ({ ...user, selected: false }));
     console.log('USERIIII', allUsers.value);
+    console.log('trenutniii', currentUserID);
+  } catch (error) {
+    console.log('Error: ', error)
   }
 });
 
 
-const toggleUser = (userId, isChecked) => {
-  console.log(`toggleUser called with userId=${userId} and isChecked=${isChecked}`);
-    nextTick(() => {
+
+    const toggleUser = (userId, isChecked) => {
+      console.log(`toggleUser called with userId=${userId} and isChecked=${isChecked}`);
+      nextTick(() => {
         if (isChecked && !selectedUserIDs.value.includes(userId)) {
-            selectedUserIDs.value.push(userId);
+          selectedUserIDs.value.push(userId);
         } else if (!isChecked && selectedUserIDs.value.includes(userId)) {
-            selectedUserIDs.value = selectedUserIDs.value.filter(id => id !== userId);
+          selectedUserIDs.value = selectedUserIDs.value.filter(id => id !== userId);
         }
-    });
-};
+      });
+    };
 
 
 
@@ -333,6 +375,9 @@ const toggleUser = (userId, isChecked) => {
             zastakljenost: zastakljenost.value,
             rasvjeta: rasvjeta.value,
             pokretni_elementi: pokretni_elementi.value,
+            kreator: currentUserID.value, // add this line to store logged user id
+            saradnici: selectedUserIDs.value // add this line to store multiple user ids
+
           },
         ]);
 
@@ -364,6 +409,7 @@ const toggleUser = (userId, isChecked) => {
         zastakljenost.value = false;
         rasvjeta.value = false;
         pokretni_elementi.value = false;
+        selectedUserIDs.value = []; // clear selectedUserIDs array
       } catch (error) {
         console.error("Error submitting form:", error);
       }
@@ -399,8 +445,10 @@ const toggleUser = (userId, isChecked) => {
       setOpen,
       allUsers,
       selectedUserIDs,
+      currentUserID,
       toggleUser,
       confirmChanges,
+      session,
     };
   },
 };
