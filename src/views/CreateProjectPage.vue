@@ -375,7 +375,7 @@ onMounted(async () => {
             zastakljenost: zastakljenost.value,
             rasvjeta: rasvjeta.value,
             pokretni_elementi: pokretni_elementi.value,
-            kreator: currentUserID.value, // add this line to store logged user id
+            user_id: currentUserID.value, // add this line to store logged user id
             saradnici: selectedUserIDs.value // add this line to store multiple user ids
 
           },
