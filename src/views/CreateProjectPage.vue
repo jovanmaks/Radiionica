@@ -113,7 +113,6 @@
 
             <ion-list>
               <ion-item v-for="(user, index) in allUsers" :key="index">
-                <!-- <ion-checkbox slot="start" v-model="user.selected" @click="toggleUser(user.id, $event.target.checked)"></ion-checkbox> -->
                 <ion-checkbox slot="start" v-model="user.selected"
                   @ionChange="toggleUser(user.id, $event.target.checked)"></ion-checkbox>
 

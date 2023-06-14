@@ -1,8 +1,6 @@
 <template>
-
-  <base-layout page-title="Activity" page-default-back-link="/tabs" >
+  <base-layout page-title="Activity" page-default-back-link="/tabs">
     <template v-slot:content>
-
       <ion-content class="content">
         <!-- <ion-refresher slot="fixed" @ionRefresh="loadData">
             <ion-refresher-content></ion-refresher-content>
@@ -18,112 +16,99 @@
             </ion-card-header>
 
             <ion-card-content>
-                Opis projekta. Treba unijeti ovo polje u tabelu i dodati pri kreiranju projekta.
+              Opis projekta. Treba unijeti ovo polje u tabelu i dodati pri
+              kreiranju projekta.
             </ion-card-content>
-            
 
-
-            <ion-button fill="outline" >
+            <ion-button fill="outline">
               <ion-icon :icon="people"></ion-icon>
             </ion-button>
 
-            <ion-button fill="outline" >
+            <ion-button fill="outline">
               <ion-icon :icon="build"></ion-icon>
             </ion-button>
 
-            <ion-button fill="outline" >
+            <ion-button fill="outline">
               <ion-icon :icon="chatbubble"></ion-icon>
             </ion-button>
 
-
-            
-            <ion-button  id="open-modal" fill="clear" @click="setOpen(true)">
+            <ion-button id="open-modal" fill="clear" @click="shareClicked(item.ime_projekta)">
               <ion-icon :icon="share"></ion-icon>
             </ion-button>
-            
-            
-        
-            
+
             <!-- <ion-button  fill="outline" @click="setOpen(true) ">
               <ion-icon :icon="analytics"></ion-icon>
             </ion-button> -->
-            
+
             <!-- <ion-action-sheet :is-open="isOpen"
               header="Actions"
               :buttons="actionSheetButtons"
               @didDismiss="setOpen(false)">
             </ion-action-sheet> -->
-            
+
             <ion-button fill="clear" @click="removeItem(item.id)">
               <ion-icon :icon="trash"></ion-icon>
             </ion-button>
 
             <ion-item>
-            <ion-label>Status</ion-label>
-            <!-- <ion-input v-model="velicina" type="number"></ion-input> -->
-            <ion-select v-model="velicina" >
-              <ion-select-option value="mala">Ceka odgovor</ion-select-option>
-              <ion-select-option value="srednja">U toku</ion-select-option>
-              <ion-select-option value="velika">Ceka naplatu</ion-select-option>
-              <ion-select-option value="specijalna">Zavrseno</ion-select-option>
-            </ion-select>
-          </ion-item>
+              <ion-label>Status</ion-label>
+              <!-- <ion-input v-model="velicina" type="number"></ion-input> -->
+              <ion-select v-model="velicina">
+                <ion-select-option value="mala">Ceka odgovor</ion-select-option>
+                <ion-select-option value="srednja">U toku</ion-select-option>
+                <ion-select-option value="velika">Ceka naplatu</ion-select-option>
+                <ion-select-option value="specijalna">Zavrseno</ion-select-option>
+              </ion-select>
+            </ion-item>
 
           </ion-card>
         </div>
-
-        <ion-modal :is-open="isOpenRef" css-class="my-custom-class" @didDismiss="setOpen(false)">
-          <ion-header>
-            <ion-toolbar>
-
-              <ion-buttons slot="start">
-                <ion-button @click="setOpen(false)">Cancel</ion-button>
-              </ion-buttons>
-              
-
-              <ion-buttons slot="end">
-                <ion-button :strong="true" @click="confirmChanges">Confirm</ion-button>
-              </ion-buttons>
-
-            </ion-toolbar>
-          </ion-header>
-          <Modal :data="data"></Modal>
-          <ion-content class="ion-padding">
-
-            <ion-item>
-              <ion-searchbar></ion-searchbar>
-            </ion-item>
-
-            <ion-list>
-              <ion-item v-for="(user, index) in allUsers" :key="index">
-                <ion-checkbox slot="start" v-model="user.selected"
-                  @ionChange="toggleUser(user.id, $event.target.checked)"></ion-checkbox>
-                <ion-label>{{ user.username }}</ion-label>
-              </ion-item>
-            </ion-list>
-
-          </ion-content>
-        </ion-modal>
-
         
+            <ion-modal :is-open="isOpenRef" css-class="my-custom-class" @didDismiss="setOpen(false)">
+              <ion-header>
+                <ion-toolbar>
+                  <ion-buttons slot="start">
+                    <ion-button @click="setOpen(false)">Cancel</ion-button>
+                  </ion-buttons>
+
+                  <ion-buttons slot="end">
+                    <ion-button :strong="true" @click="confirmChanges">Confirm</ion-button>
+                  </ion-buttons>
+                </ion-toolbar>
+              </ion-header>
+              <Modal :data="data"></Modal>
+              <ion-content class="ion-padding">
+                <ion-item>
+                  <ion-searchbar></ion-searchbar>
+                </ion-item>
+
+                <ion-list>
+                  <ion-item v-for="(user, index) in allUsers" :key="index">
+                    <ion-checkbox slot="start" v-model="user.selected"
+                      @ionChange="toggleUser(user.id, $event.target.checked)"></ion-checkbox>
+                    <ion-label>{{ user.username }}</ion-label>
+                  </ion-item>
+                </ion-list>
+              </ion-content>
+            </ion-modal>
+
 
       </ion-content>
     </template>
   </base-layout>
-
 </template>
-  
-  <script lang="js">
 
-    import { trash, share, flask, diamond, cube, home, heart, pin, analytics, build, chatbubble,people } from "ionicons/icons"; 
+<script lang="js">
+
+    import { trash, share, flask, diamond, cube, home, heart, pin, analytics, build, chatbubble,people } from "ionicons/icons";
     import { ref, computed, nextTick, onMounted } from 'vue';
-    import { supabase } from '@/supabase'; 
+    import { supabase } from '@/supabase';
 
 
     import {
     // IonSearchbar,
     IonContent,
-    // IonCheckbox,
+    IonCheckbox,
 
     IonIcon,
     IonButtons,
@@ -147,7 +132,7 @@ export default {
   components: {
     // IonSearchbar,
     IonContent,
-    // IonCheckbox,
+    IonCheckbox,
     IonIcon,
     IonButtons,
     IonButton,
@@ -168,27 +153,37 @@ export default {
 
 
   setup() {
-    
+
+    const selectedImeProjekta = ref(null);
+
     const data = ref([]);
      // Add references for the modal and input elements
      const modalRef = ref(null);
     const inputRef = ref(null);
     const usernew = ref(supabase.auth.getUser())
 
-    
+
     const allUsers = ref([]);
     const selectedUserIDs = ref([]);
     const currentUserID  = ref(null);
-      
+
     const setOpen = (state) => {isOpenRef.value = state;};
     const isOpenRef = ref(false);
-    
-    
+
+
+    const saradnici = ref([]);
+
+    const shareClicked = (ime_projekta) => {
+      console.log('IME in shareClicked:', ime_projekta);
+  selectedImeProjekta.value = ime_projekta;
+  setOpen(true);
+};
+
 
     const loadData = async (event = null) => {
       try {
         const { data: fetchedData, error } = await supabase
-          .from('Projekti') 
+          .from('Projekti')
           .select('*');
 
         if (error) {
@@ -196,6 +191,8 @@ export default {
         }
 
         data.value = fetchedData;
+
+
       } catch (error) {
         console.error('Error loading data:', error);
       } finally {
@@ -247,8 +244,8 @@ try {
         console.error("Error deleting item:", error);
       }
     };
-    
-    
+
+
     const fetchUsers = async () => {
       const { data: users, error } = await supabase
         .from('profiles')
@@ -264,31 +261,85 @@ try {
         console.log('USERIIII', allUsers.value);
       }
     };
-    
-    const confirmChanges = async () => {
+
+    // const confirmChanges = async () => {
 
 
-      try {
-        const { error } = await supabase.from("Projekti").insert([
-          {
-            saradnici: selectedUserIDs.value // add this line to store multiple user ids
-          },
-        ]);
 
-        if (error) {
-          throw error;
-        }
-        selectedUserIDs.value = []; // clear selectedUserIDs array
-      } catch (error) {
-        console.error("Error submitting form:", error);
-      }
+
+      // try {
+      //   const { error } = await supabase.from("Projekti").insert([
+      //     {
+      //       saradnici: selectedUserIDs.value // add this line to store multiple user ids
+      //     },
+      //   ]);
+
+      //   if (error) {
+      //     throw error;
+      //   }
+      //   selectedUserIDs.value = []; // clear selectedUserIDs array
+      // } catch (error) {
+      //   console.error("Error submitting form:", error);
+      // }
 
       // Here, selectedUserIDs.value contains the IDs of the selected users
-      console.log('sa modalaaaa', selectedUserIDs.value);
-      setOpen(false);
-    };
+    //   console.log('sa modalaaaa', selectedUserIDs.value);
+    //   setOpen(false);
+    // };
+
+    const confirmChanges = async (ime_projekta) => {
+      
+      ime_projekta = selectedImeProjekta.value;
+      console.log('IME in confirmChanges:', ime_projekta);
+  console.log('selectedImeProjekta.value in confirmChanges:', selectedImeProjekta.value);
+  // TODO: Set the `ime_projekta` variable to the name of the project you're working with
+  // const ime_projekta = /* the name of your project */
+
+  try {
+    // Fetch the project from the database
+    const { data: project, error } = await supabase
+      .from('Projekti')
+      .select('saradnici')
+      .eq('ime_projekta', ime_projekta);
+
+    if (error) throw error;
     
+    // If the project doesn't exist, there's nothing to do
+    if (!project || project.length === 0) return;
+
+    // Ensure saradnici field is an array
+    if (!Array.isArray(project[0].saradnici)) project[0].saradnici = [];
+
+    const existingIDs = project[0].saradnici;
+
+    // Check for each selected ID
+    for (const userID of selectedUserIDs.value) {
+      // If the selected ID is not in the 'saradnici' field, add it
+      if (!existingIDs.includes(userID)) {
+        existingIDs.push(userID);
+      }
+    }
+
+    // Update the 'saradnici' field in the database
+    const { error: updateError } = await supabase
+      .from('Projekti')
+      .update({ saradnici: existingIDs })
+      .eq('ime_projekta', ime_projekta);
+
+    if (updateError) throw updateError;
     
+    console.log('selectedUserIDs.value in confirmChanges:', selectedUserIDs.value);
+    // Clear the selected IDs
+    selectedUserIDs.value = [];
+
+  } catch (error) {
+    console.error("Error updating saradnici:", error);
+  }
+
+  setOpen(false);
+};
+
+
     const toggleUser = (userId, isChecked) => {
       console.log(`toggleUser called with userId=${userId} and isChecked=${isChecked}`);
       nextTick(() => {
@@ -299,33 +350,11 @@ try {
         }
       });
     };
-    
+
     loadData();
     fetchUsers();
 
       const isOpen = ref(false);
-      // const actionSheetButtons = [
-      //   {
-      //     text: 'Delete',
-      //     role: 'destructive',
-      //     data: {
-      //       action: 'delete',
-      //     },
-      //   },
-      //   {
-      //     text: 'Share',
-      //     data: {
-      //       action: 'share',
-      //     },
-      //   },
-      //   {
-      //     text: 'Cancel',
-      //     role: 'cancel',
-      //     data: {
-      //       action: 'cancel',
-      //     },
-      //   },
-      // ];
 
 
 
@@ -349,7 +378,7 @@ try {
         message.value = `Hello, ${ev.detail.data}!`;
       }
     };
-    
+
     return {
       data,
       loadData,
@@ -357,7 +386,7 @@ try {
 
       trash,
       share,
-      home, 
+      home,
       heart,
       pin,
       analytics,
@@ -371,7 +400,7 @@ try {
       modalRef,
       inputRef,
       message,
-      
+
       // actionSheetButtons,
       isOpen,
       isOpenRef,
@@ -381,10 +410,9 @@ try {
       currentUserID,
       toggleUser,
       confirmChanges,
+      selectedImeProjekta,
+  shareClicked,
     };
   },
 };
-
-
-  
-  </script>
+</script>
