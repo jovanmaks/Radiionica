@@ -97,7 +97,6 @@
                 <ion-button @click="setOpen(false)">Cancel</ion-button>
               </ion-buttons>
 
-
               <!-- <ion-title>Saradnici</ion-title> -->
               <ion-buttons slot="end">
                 <ion-button :strong="true" @click="confirmChanges">Confirm</ion-button>
@@ -110,14 +109,10 @@
               <!-- <ion-searchbar  @ionInput="handleInput($event)"></ion-searchbar> -->
               <ion-searchbar></ion-searchbar>
 
-
-
             </ion-item>
-
 
             <ion-list>
               <ion-item v-for="(user, index) in allUsers" :key="index">
-                <!-- <ion-checkbox slot="start" v-model="user.selected"></ion-checkbox> -->
                 <!-- <ion-checkbox slot="start" v-model="user.selected" @click="toggleUser(user.id, $event.target.checked)"></ion-checkbox> -->
                 <ion-checkbox slot="start" v-model="user.selected"
                   @ionChange="toggleUser(user.id, $event.target.checked)"></ion-checkbox>
@@ -264,43 +259,21 @@ export default {
       // Here, selectedUserIDs.value contains the IDs of the selected users
       console.log('sa modalaaaa', selectedUserIDs.value);
       setOpen(false);
-
-
-
     };
 
 
     fetchUsers();
 
-//     watch(session, (newSession) => {
-//     if (newSession) {
-//         currentUserID.value = newSession.user.id;
-//         console.log('User ID:', newSession.user.id);
-//     } else {
-//         console.log('No active session');
-//     }
-// }, 
-// { immediate: true });
 
 onMounted(async () => {
 
-  // console.log('session', session.value);
-  // console.log('user', usernew.value);
-  // console.log('user', usernew.value.data.user.id);
 
   const usernewResolved = await usernew.value;
     console.log('user', usernewResolved);
     console.log('user id', usernewResolved.data.user.id);
     currentUserID.value  = usernewResolved.data.user.id;
 
-
-    //  currentUserID.value  = usernew.value.data.user.id;
-
-
   try {
-  
-
-
 
 
     const { data: users, error } = await supabase

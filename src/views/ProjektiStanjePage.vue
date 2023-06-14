@@ -21,34 +21,8 @@
                 Opis projekta. Treba unijeti ovo polje u tabelu i dodati pri kreiranju projekta.
             </ion-card-content>
             
-            <!-- <ion-button id="open-modal" expand="block" fill="clear">
-              <ion-icon :icon="home-outline"></ion-icon>
-            </ion-button> -->
-            
-            
-            
-            <ion-modal ref="modalRef" @willDismiss="onWillDismiss">
-              <ion-header>
-                <ion-toolbar>
-                  <ion-buttons slot="start">
-                    <ion-button @click="cancel()">Cancel</ion-button>
-                  </ion-buttons>
-                  <ion-title>Welcome</ion-title>
-                  <ion-buttons slot="end">
-                    <ion-button :strong="true" @click="confirm()">Confirm</ion-button>
-                  </ion-buttons>
-                </ion-toolbar>
-              </ion-header>
-              <ion-content class="ion-padding">
-                <ion-item>
-                  <ion-label position="stacked">Enter your name</ion-label>
-                  <ion-input ref="inputRef" type="text" placeholder="Your name"></ion-input>
-                </ion-item>
-              </ion-content>
-            </ion-modal>
 
 
-            <!-- <ion-button fill="clear">Organizacija rada</ion-button> -->
             <ion-button fill="outline" >
               <ion-icon :icon="people"></ion-icon>
             </ion-button>
@@ -63,14 +37,22 @@
 
 
             
-            <ion-button  fill="outline" @click="setOpen(true) ">
-              <ion-icon :icon="analytics"></ion-icon>
+            <ion-button  id="open-modal" fill="clear" @click="setOpen(true)">
+              <ion-icon :icon="share"></ion-icon>
             </ion-button>
-            <ion-action-sheet :is-open="isOpen"
+            
+            
+        
+            
+            <!-- <ion-button  fill="outline" @click="setOpen(true) ">
+              <ion-icon :icon="analytics"></ion-icon>
+            </ion-button> -->
+            
+            <!-- <ion-action-sheet :is-open="isOpen"
               header="Actions"
               :buttons="actionSheetButtons"
               @didDismiss="setOpen(false)">
-            </ion-action-sheet>
+            </ion-action-sheet> -->
             
             <ion-button fill="clear" @click="removeItem(item.id)">
               <ion-icon :icon="trash"></ion-icon>
@@ -87,44 +69,42 @@
             </ion-select>
           </ion-item>
 
-    <!--
-            <ion-segment :scrollable="true" value="heart">
-    <ion-segment-button value="home">
-      <ion-icon :icon="home"></ion-icon>
-    </ion-segment-button>
-    <ion-segment-button value="heart">
-      <ion-icon :icon="heart"></ion-icon>
-    </ion-segment-button>
-       <ion-segment-button value="pin">
-      <ion-icon :icon="pin"></ion-icon>
-    </ion-segment-button>
-    <ion-segment-button value="star">
-      <ion-icon :icon="star"></ion-icon>
-    </ion-segment-button>
-    <ion-segment-button value="call">
-      <ion-icon :icon="call"></ion-icon>
-    </ion-segment-button>
-    <ion-segment-button value="globe">
-      <ion-icon :icon="globe"></ion-icon>
-    </ion-segment-button>
-    <ion-segment-button value="basket">
-      <ion-icon :icon="basket"></ion-icon>
-    </ion-segment-button>
-    <ion-segment-button value="barbell">
-      <ion-icon :icon="barbell"></ion-icon>
-    </ion-segment-button>
-    <ion-segment-button value="trash">
-      <ion-icon :icon="trash"></ion-icon>
-    </ion-segment-button>
-    <ion-segment-button value="person">
-      <ion-icon :icon="person"></ion-icon>
-    </ion-segment-button> 
-  </ion-segment>
-  -->
-
-
           </ion-card>
         </div>
+
+        <ion-modal :is-open="isOpenRef" css-class="my-custom-class" @didDismiss="setOpen(false)">
+          <ion-header>
+            <ion-toolbar>
+
+              <ion-buttons slot="start">
+                <ion-button @click="setOpen(false)">Cancel</ion-button>
+              </ion-buttons>
+              
+
+              <ion-buttons slot="end">
+                <ion-button :strong="true" @click="confirmChanges">Confirm</ion-button>
+              </ion-buttons>
+
+            </ion-toolbar>
+          </ion-header>
+          <Modal :data="data"></Modal>
+          <ion-content class="ion-padding">
+
+            <ion-item>
+              <ion-searchbar></ion-searchbar>
+            </ion-item>
+
+            <ion-list>
+              <ion-item v-for="(user, index) in allUsers" :key="index">
+                <ion-checkbox slot="start" v-model="user.selected"
+                  @ionChange="toggleUser(user.id, $event.target.checked)"></ion-checkbox>
+                <ion-label>{{ user.username }}</ion-label>
+              </ion-item>
+            </ion-list>
+
+          </ion-content>
+        </ion-modal>
+
         
 
       </ion-content>
@@ -135,22 +115,23 @@
   
   <script lang="js">
 
-    import { trash, flask, diamond, cube, home, heart, pin, analytics, build, chatbubble,people } from "ionicons/icons"; 
-    import { ref, computed } from 'vue';
+    import { trash, share, flask, diamond, cube, home, heart, pin, analytics, build, chatbubble,people } from "ionicons/icons"; 
+    import { ref, computed, nextTick, onMounted } from 'vue';
     import { supabase } from '@/supabase'; 
 
 
     import {
-    IonIcon,
+    // IonSearchbar,
     IonContent,
+    // IonCheckbox,
+
+    IonIcon,
     IonButtons,
     IonButton,
     IonModal,
     IonHeader,
     IonToolbar,
-    IonTitle,
     IonItem,
-    IonInput,
     IonLabel,
 
     IonCard,
@@ -159,31 +140,21 @@
     IonCardSubtitle,
     IonCardTitle,
 
-    IonActionSheet,
 
-    // IonSegment,
-    // IonSegmentButton,
-    
-    // IonList,
-    // IonItem,
-    // IonLabel,
-    // IonRefresher,
-    // IonRefresherContent,
-    // IonButton,
   } from "@ionic/vue";
 
 export default {
   components: {
-    IonIcon,
+    // IonSearchbar,
     IonContent,
+    // IonCheckbox,
+    IonIcon,
     IonButtons,
     IonButton,
     IonModal,
     IonHeader,
     IonToolbar,
-    IonTitle,
     IonItem,
-    IonInput,
     IonLabel,
 
     IonCard,
@@ -192,18 +163,7 @@ export default {
     IonCardSubtitle,
     IonCardTitle,
 
-    IonActionSheet,
 
-    // IonSegment,
-    // IonSegmentButton,
-
-    // IonList,
-    // IonItem,
-    // IonLabel,
-    // IonRefresher,
-    // IonRefresherContent,
-    // IonButton,
-    // IonIcon,
   },
 
 
@@ -213,7 +173,16 @@ export default {
      // Add references for the modal and input elements
      const modalRef = ref(null);
     const inputRef = ref(null);
+    const usernew = ref(supabase.auth.getUser())
 
+    
+    const allUsers = ref([]);
+    const selectedUserIDs = ref([]);
+    const currentUserID  = ref(null);
+      
+    const setOpen = (state) => {isOpenRef.value = state;};
+    const isOpenRef = ref(false);
+    
     
 
     const loadData = async (event = null) => {
@@ -236,6 +205,31 @@ export default {
       }
     };
 
+    onMounted(async () => {
+
+
+const usernewResolved = await usernew.value;
+  console.log('user', usernewResolved);
+  console.log('user id', usernewResolved.data.user.id);
+  currentUserID.value  = usernewResolved.data.user.id;
+
+try {
+
+
+  const { data: users, error } = await supabase
+    .from('profiles')
+    .select('*')
+
+  if (error) throw error;
+
+  allUsers.value = users.map(user => ({ ...user, selected: false }));
+  console.log('USERIIII', allUsers.value);
+  console.log('trenutniii', currentUserID);
+} catch (error) {
+  console.log('Error: ', error)
+}
+});
+
 
     const removeItem = async (id) => {
       try {
@@ -254,36 +248,85 @@ export default {
       }
     };
     
-    loadData();
     
+    const fetchUsers = async () => {
+      const { data: users, error } = await supabase
+        .from('profiles')
+        .select('*')
+      // .neq('id', currentUserID)
+
+      allUsers.value = users;
+      console.log('USERIIII', allUsers.value);
+
+      if (error) console.log('Error: ', error)
+      else {
+        allUsers.value = users;
+        console.log('USERIIII', allUsers.value);
+      }
+    };
+    
+    const confirmChanges = async () => {
+
+
+      try {
+        const { error } = await supabase.from("Projekti").insert([
+          {
+            saradnici: selectedUserIDs.value // add this line to store multiple user ids
+          },
+        ]);
+
+        if (error) {
+          throw error;
+        }
+        selectedUserIDs.value = []; // clear selectedUserIDs array
+      } catch (error) {
+        console.error("Error submitting form:", error);
+      }
+
+      // Here, selectedUserIDs.value contains the IDs of the selected users
+      console.log('sa modalaaaa', selectedUserIDs.value);
+      setOpen(false);
+    };
+    
+    
+    const toggleUser = (userId, isChecked) => {
+      console.log(`toggleUser called with userId=${userId} and isChecked=${isChecked}`);
+      nextTick(() => {
+        if (isChecked && !selectedUserIDs.value.includes(userId)) {
+          selectedUserIDs.value.push(userId);
+        } else if (!isChecked && selectedUserIDs.value.includes(userId)) {
+          selectedUserIDs.value = selectedUserIDs.value.filter(id => id !== userId);
+        }
+      });
+    };
+    
+    loadData();
+    fetchUsers();
 
       const isOpen = ref(false);
-      const actionSheetButtons = [
-        {
-          text: 'Delete',
-          role: 'destructive',
-          data: {
-            action: 'delete',
-          },
-        },
-        {
-          text: 'Share',
-          data: {
-            action: 'share',
-          },
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          data: {
-            action: 'cancel',
-          },
-        },
-      ];
+      // const actionSheetButtons = [
+      //   {
+      //     text: 'Delete',
+      //     role: 'destructive',
+      //     data: {
+      //       action: 'delete',
+      //     },
+      //   },
+      //   {
+      //     text: 'Share',
+      //     data: {
+      //       action: 'share',
+      //     },
+      //   },
+      //   {
+      //     text: 'Cancel',
+      //     role: 'cancel',
+      //     data: {
+      //       action: 'cancel',
+      //     },
+      //   },
+      // ];
 
-      const setOpen = (state) => {
-        isOpen.value = state;
-      };
 
 
     const message = ref(
@@ -313,6 +356,7 @@ export default {
       removeItem,
 
       trash,
+      share,
       home, 
       heart,
       pin,
@@ -328,9 +372,15 @@ export default {
       inputRef,
       message,
       
-      actionSheetButtons,
+      // actionSheetButtons,
       isOpen,
+      isOpenRef,
       setOpen,
+      allUsers,
+      selectedUserIDs,
+      currentUserID,
+      toggleUser,
+      confirmChanges,
     };
   },
 };

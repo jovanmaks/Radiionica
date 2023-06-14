@@ -190,32 +190,6 @@
         },
         setup() 
         {
-            
-    //       const currentUserId = ref(null);
-    //       const isShared = ref(false);
-    //       const usernew = ref(supabase.auth.getUser())
-
-    //       onMounted(async () => {
-    //   // Assuming you are managing session and you can get the current user id
-    //   const usernewResolved = await usernew.value;
-    //   currentUserId.value =usernewResolved.data.user.id;
-
-    //   const { data: projekti, error } = await supabase
-    //     .from('Projekti')
-    //     .select('saradnici')
-    //     .eq('id', currentUserId.value);
-
-    //   if (error) {
-    //     console.log('Error: ', error);
-    //   } else if (projekti && projekti.length > 0) {
-    //     // Assuming 'saradnici' is an array of user IDs
-    //     isShared.value = projekti[0].saradnici.includes(currentUserId.value);
-    //     await supabase
-    //       .from('Projekti')
-    //       .update({ isShared: isShared.value })
-    //       .eq('id', currentUserId.value);
-    //   }
-    // });
 
             return{
               library,
@@ -239,7 +213,6 @@
               car,
               checkmarkDone,
               list,
-              // isShared,
             }
         },
     };
