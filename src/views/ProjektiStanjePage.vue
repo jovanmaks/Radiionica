@@ -54,7 +54,6 @@
 
         <!-- Dijeljenje - modal -->
         <ion-modal :is-open="isOpenRef" css-class="my-custom-class" @didDismiss="setOpen(false)">
-
           <ion-header>
             <ion-toolbar>
               <ion-buttons slot="start">
@@ -78,6 +77,7 @@
                 <ion-checkbox slot="start" v-model="user.selected"
                   @ionChange="toggleUser(user.id, $event.target.checked)"></ion-checkbox>
                 <ion-label>{{ user.username }}</ion-label>
+                <!-- Here is the new trash button -->
               </ion-item>
             </ion-list>
           </ion-content>
@@ -88,13 +88,13 @@
         <ion-modal :is-open="isOpenRefSaradnici" css-class="my-custom-class" @didDismiss="setOpenSaradnici(false)">
           <ion-header>
             <ion-toolbar>
-              <ion-buttons slot="start">
-                <ion-button @click="setOpenSaradnici(false)">Cancel</ion-button>
+              <ion-buttons slot="end">
+                <ion-button @click="setOpenSaradnici(false)">Close</ion-button>
               </ion-buttons>
 
-              <!-- <ion-buttons slot="end">
+               <!-- <ion-buttons slot="end">
                 <ion-button :strong="true" @click="confirmChangesSaradnici">Close</ion-button>
-              </ion-buttons> -->
+              </ion-buttons>` -->
             </ion-toolbar>
           </ion-header>
 
@@ -107,6 +107,7 @@
             <ion-list>
               <ion-item v-for="(user, index) in currentProjectUsers" :key="index">
                 <ion-label>{{ user.username }}</ion-label>
+                <ion-icon slot="end" :icon="trash" @click="removeUserFromProject(user.id)"></ion-icon>
               </ion-item>
             </ion-list>
           </ion-content>
@@ -417,6 +418,26 @@ export default {
     loadData();
     fetchUsers();
 
+    const removeUserFromProject = async (userId) => {
+      const currentProject = data.value.find(item => item.ime_projekta === selectedImeProjekta.value);
+      if (!currentProject || !Array.isArray(currentProject.saradnici)) return;
+      currentProject.saradnici = currentProject.saradnici.filter(id => id !== userId);
+
+      try {
+        const { error } = await supabase
+          .from('Projekti')
+          .update({ saradnici: currentProject.saradnici })
+          .eq('ime_projekta', selectedImeProjekta.value);
+
+        if (error) throw error;
+
+        // Reload the data from the database
+        await loadData();
+      } catch (error) {
+        console.error("Error updating saradnici:", error);
+      }
+    };
+
     const currentProjectNotes = computed(() => {
       // Find the current project in the data array
       const currentProject = data.value.find(item => item.ime_projekta === selectedImeProjekta.value);
@@ -513,7 +534,7 @@ export default {
       setOpen, setOpenSaradnici, setOpenBiljeske,
       allUsers, currentProjectUsers, selectedUserIDs, currentUserID, selectedImeProjekta,
       toggleUser, shareClicked, saradniciClicked, biljeskeClicked,
-      newNote, currentProjectNotes, removeNote,
+      newNote, currentProjectNotes, removeNote, removeUserFromProject,
     };
   },
 };
