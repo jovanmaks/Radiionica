@@ -122,22 +122,29 @@
               </ion-buttons>
 
               <ion-buttons slot="end">
-        <ion-button :strong="true" @click="addBiljeska">Add Note</ion-button>
-      </ion-buttons>
-
-              <ion-buttons slot="end">
-                <ion-button :strong="true" @click="confirmChanges">Confirm</ion-button>
+                <ion-button :strong="true" @click="confirmChangesBiljeska">Confirm</ion-button>
               </ion-buttons>
             </ion-toolbar>
           </ion-header>
 
-          <Modal :data="data"></Modal>
           <ion-content class="ion-padding">
+            <Modal :data="data"></Modal>
+
+
+            <!-- Display notes -->
+            <ion-list>
+              <ion-item v-for="(note, index) in currentProjectNotes" :key="index">
+                {{ note }}
+              </ion-item>
+            </ion-list>
+
+            <!-- Input field for notes -->
             <ion-item>
               <ion-input v-model="newNote" placeholder="Enter Note"></ion-input>
-            
-            
             </ion-item>
+
+            <!-- Add Note Button -->
+            <ion-button :strong="true" @click="addBiljeska">Add Note</ion-button>
           </ion-content>
         </ion-modal>
 
@@ -170,6 +177,7 @@ import {
   IonHeader,
   IonToolbar,
   IonItem,
+  IonList,
   IonLabel,
 
   IonCard,
@@ -194,6 +202,7 @@ export default {
     IonHeader,
     IonToolbar,
     IonItem,
+    IonList,
     IonLabel,
 
     IonCard,
@@ -244,6 +253,11 @@ export default {
 
     const biljeskeClicked = (ime_projekta) => {
       selectedImeProjekta.value = ime_projekta;
+
+      console.log(`selectedImeProjekta.value is ${selectedImeProjekta.value}`);
+      console.log('data.value is', data.value);
+      console.log('currentProjectNotes.value is', currentProjectNotes.value);
+
       setOpenBiljeske(true);
     };
 
@@ -371,6 +385,11 @@ export default {
       setOpen(false);
     };
 
+    const confirmChangesBiljeska = async (ime_projekta) => {
+
+      setOpenBiljeske(false);
+
+    };
 
     const toggleUser = (userId, isChecked) => {
       // console.log(`toggleUser called with userId=${userId} and isChecked=${isChecked}`);
@@ -386,6 +405,15 @@ export default {
     loadData();
     fetchUsers();
 
+    const currentProjectNotes = computed(() => {
+      // Find the current project in the data array
+      const currentProject = data.value.find(item => item.ime_projekta === selectedImeProjekta.value);
+      // If the project was not found or the biljeske field is not an array, return an empty array
+      if (!currentProject || !Array.isArray(currentProject.biljeske)) return [];
+      // Return the array of notes
+      return currentProject.biljeske;
+    });
+
     const currentProjectUsers = computed(() => {
       // Find the current project in the data array
       const currentProject = data.value.find(item => item.ime_projekta === selectedImeProjekta.value);
@@ -396,43 +424,50 @@ export default {
     });
 
     const addBiljeska = async () => {
-  if (!newNote.value || !selectedImeProjekta.value) return;
 
-  try {
-    const { data: project, error } = await supabase
-      .from('Projekti')
-      .select('biljeske')
-      .eq('ime_projekta', selectedImeProjekta.value);
+      console.log('biljeska pokrenuta')
 
-    if (error) throw error;
+      if (!newNote.value || !selectedImeProjekta.value) return;
 
-    // If the project doesn't exist, there's nothing to do
-    if (!project || project.length === 0) return;
+      try {
+        const { data: project, error } = await supabase
+          .from('Projekti')
+          .select('biljeske')
+          .eq('ime_projekta', selectedImeProjekta.value);
 
-    // Ensure biljeske field is an array
-    if (!Array.isArray(project[0].biljeske)) project[0].biljeske = [];
 
-    // Add the new note to the array
-    project[0].biljeske.push(newNote.value);
+        console.log('sadrzaj:', newNote.value)
 
-    // Update the 'biljeske' field in the database
-    const { error: updateError } = await supabase
-      .from('Projekti')
-      .update({ biljeske: project[0].biljeske })
-      .eq('ime_projekta', selectedImeProjekta.value);
+        if (error) throw error;
 
-    if (updateError) throw updateError;
+        // If the project doesn't exist, there's nothing to do
+        if (!project || project.length === 0) return;
 
-    // Clear the note input
-    newNote.value = '';
+        // Ensure biljeske field is an array
+        if (!Array.isArray(project[0].biljeske)) project[0].biljeske = [];
 
-    // Close the modal
-    setOpenBiljeske(false);
-    
-  } catch (error) {
-    console.error("Error updating biljeske:", error);
-  }
-};
+        // Add the new note to the array
+        project[0].biljeske.push(newNote.value);
+
+        // Update the 'biljeske' field in the database
+        const { error: updateError } = await supabase
+          .from('Projekti')
+          .update({ biljeske: project[0].biljeske })
+          .eq('ime_projekta', selectedImeProjekta.value);
+
+        if (updateError) throw updateError;
+
+        // Clear the note input
+        newNote.value = '';
+
+        // Close the modal
+        setOpenBiljeske(false);
+
+      } catch (error) {
+        console.error("Error updating biljeske:", error);
+      }
+
+    };
 
 
     const cancel = () => {
@@ -447,11 +482,12 @@ export default {
     return {
       data, loadData, removeItem,
       people, chatbubble, share, trash,
-      cancel, confirm, confirmChanges,
+      cancel, confirm, confirmChanges, confirmChangesBiljeska, addBiljeska,
       modalRef, inputRef, isOpenRef, isOpenRefSaradnici, isOpenRefBiljeske,
       setOpen, setOpenSaradnici, setOpenBiljeske,
       allUsers, currentProjectUsers, selectedUserIDs, currentUserID, selectedImeProjekta,
       toggleUser, shareClicked, saradniciClicked, biljeskeClicked,
+      newNote, currentProjectNotes,
     };
   },
 };
