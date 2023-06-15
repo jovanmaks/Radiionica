@@ -117,34 +117,44 @@
         <ion-modal :is-open="isOpenRefBiljeske" css-class="my-custom-class" @didDismiss="setOpenBiljeske(false)">
           <ion-header>
             <ion-toolbar>
-              <ion-buttons slot="start">
-                <ion-button @click="setOpenBiljeske(false)">Cancel</ion-button>
+              <ion-buttons slot="end">
+                <ion-button @click="setOpenBiljeske(false)">Close</ion-button>
               </ion-buttons>
 
-              <ion-buttons slot="end">
+              <!-- <ion-buttons slot="end">
                 <ion-button :strong="true" @click="confirmChangesBiljeska">Confirm</ion-button>
-              </ion-buttons>
+              </ion-buttons> -->
+
             </ion-toolbar>
           </ion-header>
 
           <ion-content class="ion-padding">
             <Modal :data="data"></Modal>
 
+            <div style="display: flex; flex-direction: column; height: 100%;">
+              <!-- Display notes -->
+              <div style="flex-grow: 1; overflow: auto; max-height: 70vh;">
+                <ion-list>
+                  <ion-item v-for="(note, index) in currentProjectNotes" :key="index">
+                    {{ note }}
+                    <ion-button fill="clear" @click="removeNote(index)" slot="end">
+                      <ion-icon :icon="trash"></ion-icon>
+                    </ion-button>
+                  </ion-item>
+                </ion-list>
+              </div>
 
-            <!-- Display notes -->
-            <ion-list>
-              <ion-item v-for="(note, index) in currentProjectNotes" :key="index">
-                {{ note }}
-              </ion-item>
-            </ion-list>
+              <!-- Input field for notes -->
+              <div class="input-button-container">
+                <ion-item style="flex-grow: 1;">
+                  <ion-input v-model="newNote" placeholder="Enter Note"></ion-input>
+                </ion-item>
 
-            <!-- Input field for notes -->
-            <ion-item>
-              <ion-input v-model="newNote" placeholder="Enter Note"></ion-input>
-            </ion-item>
+                <!-- Add Note Button -->
+                <ion-button :strong="true" @click="addBiljeska" style="margin-left: 5px;">Add Note</ion-button>
+              </div>
+            </div>
 
-            <!-- Add Note Button -->
-            <ion-button :strong="true" @click="addBiljeska">Add Note</ion-button>
           </ion-content>
         </ion-modal>
 
@@ -435,7 +445,6 @@ export default {
           .select('biljeske')
           .eq('ime_projekta', selectedImeProjekta.value);
 
-
         console.log('sadrzaj:', newNote.value)
 
         if (error) throw error;
@@ -449,7 +458,7 @@ export default {
         // Add the new note to the array
         project[0].biljeske.push(newNote.value);
 
-        // Update the 'biljeske' field in the database
+        // Now update the 'biljeske' field in the database
         const { error: updateError } = await supabase
           .from('Projekti')
           .update({ biljeske: project[0].biljeske })
@@ -457,16 +466,31 @@ export default {
 
         if (updateError) throw updateError;
 
-        // Clear the note input
+        // Clear the new note input field
         newNote.value = '';
 
-        // Close the modal
-        setOpenBiljeske(false);
+        // Reload the data from the database
+        await loadData();
 
       } catch (error) {
         console.error("Error updating biljeske:", error);
       }
 
+    };
+
+    const removeNote = async (index) => {
+      const project = data.value.find(item => item.ime_projekta === selectedImeProjekta.value);
+      if (!project || !Array.isArray(project.biljeske)) return;
+      project.biljeske.splice(index, 1);
+      try {
+        const { error } = await supabase
+          .from('Projekti')
+          .update({ biljeske: project.biljeske })
+          .eq('ime_projekta', selectedImeProjekta.value);
+        if (error) throw error;
+      } catch (error) {
+        console.error("Error removing note:", error);
+      }
     };
 
 
@@ -487,12 +511,18 @@ export default {
       setOpen, setOpenSaradnici, setOpenBiljeske,
       allUsers, currentProjectUsers, selectedUserIDs, currentUserID, selectedImeProjekta,
       toggleUser, shareClicked, saradniciClicked, biljeskeClicked,
-      newNote, currentProjectNotes,
+      newNote, currentProjectNotes, removeNote,
     };
   },
 };
 </script>
 
 
-
+<style scoped>
+.input-button-container {
+  position: absolute;
+  bottom: 100px;
+  /* Adjust as needed */
+}
+</style>
 
