@@ -45,6 +45,11 @@
           </ion-item>
 
           <ion-item>
+            <ion-label>Broj objekata:</ion-label>
+            <ion-input v-model="broj_objekata" type="number" @ionChange="updateObjekti"></ion-input>
+          </ion-item>
+
+          <ion-item>
             <ion-label>Velicina</ion-label>
             <ion-select v-model="velicina">
               <ion-select-option value="mala">Mala</ion-select-option>
@@ -54,7 +59,6 @@
             </ion-select>
           </ion-item>
 
-
           <ion-item>
             <ion-label>Stil</ion-label>
             <ion-select v-model="kolorit">
@@ -63,14 +67,10 @@
             </ion-select>
           </ion-item>
 
-          <ion-item>
-            <ion-label>Broj objekata:</ion-label>
-            <ion-input v-model="broj_objekata" type="number" @ionChange="updateObjekti"></ion-input>
-          </ion-item>
 
 
 
-          <ion-item>
+          <!-- <ion-item>
             <ion-label>Zastakljenost</ion-label>
             <ion-checkbox v-model="zastakljenost"></ion-checkbox>
           </ion-item>
@@ -83,7 +83,7 @@
           <ion-item>
             <ion-label>Pokretni elementi</ion-label>
             <ion-checkbox v-model="pokretni_elementi"></ion-checkbox>
-          </ion-item>
+          </ion-item> -->
 
         </ion-list>
 
@@ -226,9 +226,9 @@ export default {
     const session = ref(supabase.auth.getSession())
     const usernew = ref(supabase.auth.getUser())
 
-// const { data, error } = await supabase.auth.getSession()
+    // const { data, error } = await supabase.auth.getSession()
 
-    const currentUserID  = ref(null);
+    const currentUserID = ref(null);
 
 
 
@@ -251,7 +251,7 @@ export default {
       }
     };
 
-   
+
 
 
     const confirmChanges = async () => {
@@ -264,30 +264,30 @@ export default {
     fetchUsers();
 
 
-onMounted(async () => {
+    onMounted(async () => {
 
 
-  const usernewResolved = await usernew.value;
-    console.log('user', usernewResolved);
-    console.log('user id', usernewResolved.data.user.id);
-    currentUserID.value  = usernewResolved.data.user.id;
+      const usernewResolved = await usernew.value;
+      console.log('user', usernewResolved);
+      console.log('user id', usernewResolved.data.user.id);
+      currentUserID.value = usernewResolved.data.user.id;
 
-  try {
+      try {
 
 
-    const { data: users, error } = await supabase
-      .from('profiles')
-      .select('*')
-  
-    if (error) throw error;
+        const { data: users, error } = await supabase
+          .from('profiles')
+          .select('*')
 
-    allUsers.value = users.map(user => ({ ...user, selected: false }));
-    console.log('USERIIII', allUsers.value);
-    console.log('trenutniii', currentUserID);
-  } catch (error) {
-    console.log('Error: ', error)
-  }
-});
+        if (error) throw error;
+
+        allUsers.value = users.map(user => ({ ...user, selected: false }));
+        console.log('USERIIII', allUsers.value);
+        console.log('trenutniii', currentUserID);
+      } catch (error) {
+        console.log('Error: ', error)
+      }
+    });
 
 
 
