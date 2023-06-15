@@ -92,9 +92,9 @@
                 <ion-button @click="setOpenSaradnici(false)">Cancel</ion-button>
               </ion-buttons>
 
-              <ion-buttons slot="end">
-                <ion-button :strong="true" @click="confirmChanges">Confirm</ion-button>
-              </ion-buttons>
+              <!-- <ion-buttons slot="end">
+                <ion-button :strong="true" @click="confirmChangesSaradnici">Close</ion-button>
+              </ion-buttons> -->
             </ion-toolbar>
           </ion-header>
 
@@ -396,9 +396,11 @@ export default {
     };
 
     const confirmChangesBiljeska = async (ime_projekta) => {
-
       setOpenBiljeske(false);
+    };
 
+    const confirmChangesSaradnici = async (ime_projekta) => {
+      setOpenBiljeske(false);
     };
 
     const toggleUser = (userId, isChecked) => {
@@ -506,7 +508,7 @@ export default {
     return {
       data, loadData, removeItem,
       people, chatbubble, share, trash,
-      cancel, confirm, confirmChanges, confirmChangesBiljeska, addBiljeska,
+      cancel, confirm, confirmChanges, confirmChangesBiljeska, confirmChangesSaradnici, addBiljeska,
       modalRef, inputRef, isOpenRef, isOpenRefSaradnici, isOpenRefBiljeske,
       setOpen, setOpenSaradnici, setOpenBiljeske,
       allUsers, currentProjectUsers, selectedUserIDs, currentUserID, selectedImeProjekta,
