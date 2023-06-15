@@ -4,7 +4,7 @@
       <ion-content class="content">
 
         <ion-refresher slot="fixed" @ionRefresh="loadData">
-            <ion-refresher-content></ion-refresher-content>
+          <ion-refresher-content></ion-refresher-content>
         </ion-refresher>
 
         <!--  Kartice-->
@@ -19,12 +19,12 @@
 
 
             <!-- Saradnici -->
-            <ion-button  fill="clear" @click="saradniciClicked(item.ime_projekta)">
+            <ion-button fill="clear" @click="saradniciClicked(item.ime_projekta)">
               <ion-icon :icon="people"></ion-icon>
             </ion-button>
 
             <!-- Komentari -->
-            <ion-button fill="outline">
+            <ion-button fill="clear" @click="biljeskeClicked(item.ime_projekta)">
               <ion-icon :icon="chatbubble"></ion-icon>
             </ion-button>
 
@@ -48,7 +48,7 @@
                 <ion-select-option value="specijalna">Zavrseno</ion-select-option>
               </ion-select>
             </ion-item>
-            
+
           </ion-card>
         </div>
 
@@ -66,7 +66,7 @@
               </ion-buttons>
             </ion-toolbar>
           </ion-header>
-          
+
           <Modal :data="data"></Modal>
           <ion-content class="ion-padding">
             <ion-item>
@@ -84,34 +84,62 @@
         </ion-modal>
 
 
-    <!-- Saradnici - modal -->
-<ion-modal :is-open="isOpenRefSaradnici" css-class="my-custom-class" @didDismiss="setOpenSaradnici(false)">
-  <ion-header>
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-button @click="setOpenSaradnici(false)">Cancel</ion-button>
+        <!-- Saradnici - modal -->
+        <ion-modal :is-open="isOpenRefSaradnici" css-class="my-custom-class" @didDismiss="setOpenSaradnici(false)">
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="start">
+                <ion-button @click="setOpenSaradnici(false)">Cancel</ion-button>
+              </ion-buttons>
+
+              <ion-buttons slot="end">
+                <ion-button :strong="true" @click="confirmChanges">Confirm</ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+
+          <Modal :data="data"></Modal>
+          <ion-content class="ion-padding">
+            <ion-item>
+              <ion-searchbar></ion-searchbar>
+            </ion-item>
+
+            <ion-list>
+              <ion-item v-for="(user, index) in currentProjectUsers" :key="index">
+                <ion-label>{{ user.username }}</ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-content>
+        </ion-modal>
+
+
+        <!-- Biljeske - modal -->
+        <ion-modal :is-open="isOpenRefBiljeske" css-class="my-custom-class" @didDismiss="setOpenBiljeske(false)">
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="start">
+                <ion-button @click="setOpenBiljeske(false)">Cancel</ion-button>
+              </ion-buttons>
+
+              <ion-buttons slot="end">
+        <ion-button :strong="true" @click="addBiljeska">Add Note</ion-button>
       </ion-buttons>
 
-      <ion-buttons slot="end">
-        <ion-button :strong="true" @click="confirmChanges">Confirm</ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
+              <ion-buttons slot="end">
+                <ion-button :strong="true" @click="confirmChanges">Confirm</ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
 
-  <Modal :data="data"></Modal>
-  <ion-content class="ion-padding">
-    <ion-item>
-      <ion-searchbar></ion-searchbar>
-    </ion-item>
-
-    <ion-list>
-      <ion-item v-for="(user, index) in currentProjectUsers" :key="index">
-        <ion-label>{{ user.username }}</ion-label>
-      </ion-item>
-    </ion-list>
-  </ion-content>
-</ion-modal>
-
+          <Modal :data="data"></Modal>
+          <ion-content class="ion-padding">
+            <ion-item>
+              <ion-input v-model="newNote" placeholder="Enter Note"></ion-input>
+            
+            
+            </ion-item>
+          </ion-content>
+        </ion-modal>
 
 
 
@@ -123,7 +151,7 @@
 
 <script lang="js">
 
-import { trash, share,  cube, home, heart, pin, analytics, build, chatbubble, people } from "ionicons/icons";
+import { trash, share, cube, home, heart, pin, analytics, build, chatbubble, people } from "ionicons/icons";
 import { ref, computed, nextTick, onMounted } from 'vue';
 import { supabase } from '@/supabase';
 
@@ -145,6 +173,7 @@ import {
   IonLabel,
 
   IonCard,
+  IonInput,
   // IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
@@ -168,6 +197,7 @@ export default {
     IonLabel,
 
     IonCard,
+    IonInput,
     // IonCardContent,
     IonCardHeader,
     IonCardSubtitle,
@@ -187,11 +217,19 @@ export default {
 
     const isOpenRef = ref(false);
     const isOpenRefSaradnici = ref(false);
+    const isOpenRefBiljeske = ref(false);
 
     const usernew = ref(supabase.auth.getUser())
 
+    const newNote = ref('');
+
+
+
+
+
     const setOpen = (state) => { isOpenRef.value = state; };
     const setOpenSaradnici = (state) => { isOpenRefSaradnici.value = state; };
+    const setOpenBiljeske = (state) => { isOpenRefBiljeske.value = state; };
 
 
     const shareClicked = (ime_projekta) => {
@@ -202,6 +240,11 @@ export default {
     const saradniciClicked = (ime_projekta) => {
       selectedImeProjekta.value = ime_projekta;
       setOpenSaradnici(true);
+    };
+
+    const biljeskeClicked = (ime_projekta) => {
+      selectedImeProjekta.value = ime_projekta;
+      setOpenBiljeske(true);
     };
 
     const loadData = async (event = null) => {
@@ -352,6 +395,44 @@ export default {
       return allUsers.value.filter(user => currentProject.saradnici.includes(user.id));
     });
 
+    const addBiljeska = async () => {
+  if (!newNote.value || !selectedImeProjekta.value) return;
+
+  try {
+    const { data: project, error } = await supabase
+      .from('Projekti')
+      .select('biljeske')
+      .eq('ime_projekta', selectedImeProjekta.value);
+
+    if (error) throw error;
+
+    // If the project doesn't exist, there's nothing to do
+    if (!project || project.length === 0) return;
+
+    // Ensure biljeske field is an array
+    if (!Array.isArray(project[0].biljeske)) project[0].biljeske = [];
+
+    // Add the new note to the array
+    project[0].biljeske.push(newNote.value);
+
+    // Update the 'biljeske' field in the database
+    const { error: updateError } = await supabase
+      .from('Projekti')
+      .update({ biljeske: project[0].biljeske })
+      .eq('ime_projekta', selectedImeProjekta.value);
+
+    if (updateError) throw updateError;
+
+    // Clear the note input
+    newNote.value = '';
+
+    // Close the modal
+    setOpenBiljeske(false);
+    
+  } catch (error) {
+    console.error("Error updating biljeske:", error);
+  }
+};
 
 
     const cancel = () => {
@@ -363,13 +444,14 @@ export default {
       IonModal.dismiss(name, "confirm", modalRef);
     };
 
-    return {  
+    return {
       data, loadData, removeItem,
       people, chatbubble, share, trash,
       cancel, confirm, confirmChanges,
-      modalRef,  inputRef, isOpenRef, isOpenRefSaradnici, setOpen, setOpenSaradnici,
+      modalRef, inputRef, isOpenRef, isOpenRefSaradnici, isOpenRefBiljeske,
+      setOpen, setOpenSaradnici, setOpenBiljeske,
       allUsers, currentProjectUsers, selectedUserIDs, currentUserID, selectedImeProjekta,
-      toggleUser, shareClicked, saradniciClicked,
+      toggleUser, shareClicked, saradniciClicked, biljeskeClicked,
     };
   },
 };
