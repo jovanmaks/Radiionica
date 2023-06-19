@@ -51,7 +51,7 @@
                   </router-link>
 
                 </ion-fab-list>
-                <!-- <ion-fab-list side="end">
+                <ion-fab-list side="end">
                   <ion-fab-button >
                     <ion-icon :icon="cash"></ion-icon>
                   </ion-fab-button>
@@ -65,7 +65,7 @@
                   <ion-fab-button>
                     <ion-icon :icon="checkmarkDone"></ion-icon>
                   </ion-fab-button>
-                </ion-fab-list> -->
+                </ion-fab-list>
               </ion-fab>
 
         <ion-fab slot="fixed" vertical="bottom" horizontal="start" >

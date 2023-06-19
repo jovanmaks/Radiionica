@@ -18,7 +18,10 @@ import { IonList, IonItem, IonLabel,  IonRadio, IonRadioGroup } from '@ionic/vue
 import { supabase } from '@/supabase'; 
 
 // Vuex Store
-const store = createStore({
+
+
+
+export const store = createStore({
   state: {
     selectedProject: localStorage.getItem('selectedProject') || null,
   },
@@ -27,8 +30,18 @@ const store = createStore({
       state.selectedProject = selectedProject;
       localStorage.setItem('selectedProject', selectedProject);
     },
+    resetState(state) {
+      // Reset the state
+      state.selectedProject = null;
+    },
+  },
+  actions: {
+    signOut({commit}) {
+      commit('resetState');
+    }
   },
 });
+
 
 export default defineComponent({
   components: {

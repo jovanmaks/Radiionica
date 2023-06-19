@@ -15,6 +15,8 @@
               <ion-card-subtitle>Investitor: {{ item.investitor }}</ion-card-subtitle>
               <ion-card-subtitle>Lokacija: {{ item.lokacija }}</ion-card-subtitle>
               <ion-card-subtitle>Predaja: {{ item.rok_predaja }}</ion-card-subtitle>
+              <ion-card-subtitle v-if="currentUserEmail === 'jovanmaks92@gmail.com'">Cena: {{ item.cena }}</ion-card-subtitle>
+              <ion-card-subtitle v-if="isSpecialUser">Cena: {{ item.cena }}</ion-card-subtitle>
             </ion-card-header>
 
 
@@ -92,7 +94,7 @@
                 <ion-button @click="setOpenSaradnici(false)">Close</ion-button>
               </ion-buttons>
 
-               <!-- <ion-buttons slot="end">
+              <!-- <ion-buttons slot="end">
                 <ion-button :strong="true" @click="confirmChangesSaradnici">Close</ion-button>
               </ion-buttons>` -->
             </ion-toolbar>
@@ -199,6 +201,10 @@ import {
   IonCardTitle,
 } from "@ionic/vue";
 
+
+
+
+
 export default {
   components: {
     // IonSearchbar,
@@ -224,6 +230,8 @@ export default {
     IonCardTitle,
   },
 
+  
+
   setup() {
 
     const data = ref([]);
@@ -233,6 +241,7 @@ export default {
     const allUsers = ref([]);
     const selectedUserIDs = ref([]);
     const currentUserID = ref(null);
+    const currentUserEmail = ref(null);
     const selectedImeProjekta = ref(null);
 
     const isOpenRef = ref(false);
@@ -240,12 +249,42 @@ export default {
     const isOpenRefBiljeske = ref(false);
 
     const usernew = ref(supabase.auth.getUser())
+    // const userEmail = ref(supabase.auth.getUser()?.email);
+    const userEmail = ref(supabase.auth.getUser());
+
+
+    //     const usernew = ref(supabase.auth.getUser());
+    //   supabase.auth.onAuthStateChange(() => {
+    //   usernew.value = supabase.auth.getUser();
+    // });
+
 
     const newNote = ref('');
 
+    const allowedUsers = ref(["jovanmaks92@gmail.com"]);
 
 
+  
 
+    // const isSpecialUser = computed(() => {
+    //   console.log('email', usernew.value);
+    //   console.log('email 2', usernew.value.email);
+    //   return usernew.value && usernew.value.email === 'jovanmaks92@gmail.com';
+      
+    // });
+
+    const isSpecialUser = computed(() => {
+      return currentUserEmail.value === 'jovanmaks92@gmail.com'
+    });
+
+    // const isSuperUser = 
+
+    const isUserAllowed = (currentUserEmail) => {
+      console.log('userEmail', userEmail);
+      console.log('evo ga email', currentUserEmail.value);
+      console.log('evo ga id', currentUserID.value);
+      return allowedUsers.value.includes(currentUserEmail);
+    };
 
     const setOpen = (state) => { isOpenRef.value = state; };
     const setOpenSaradnici = (state) => { isOpenRefSaradnici.value = state; };
@@ -298,6 +337,9 @@ export default {
     onMounted(async () => {
       const usernewResolved = await usernew.value;
       currentUserID.value = usernewResolved.data.user.id;
+      currentUserEmail.value = usernewResolved.data.user.email;
+      console.log('evo ga email mounted', currentUserEmail.value);
+      console.log('evo ga id mounted', currentUserID.value);
 
       try {
         const { data: users, error } = await supabase
@@ -532,9 +574,9 @@ export default {
       cancel, confirm, confirmChanges, confirmChangesBiljeska, confirmChangesSaradnici, addBiljeska,
       modalRef, inputRef, isOpenRef, isOpenRefSaradnici, isOpenRefBiljeske,
       setOpen, setOpenSaradnici, setOpenBiljeske,
-      allUsers, currentProjectUsers, selectedUserIDs, currentUserID, selectedImeProjekta,
+      allUsers, currentProjectUsers, selectedUserIDs, currentUserID, currentUserEmail, selectedImeProjekta,
       toggleUser, shareClicked, saradniciClicked, biljeskeClicked,
-      newNote, currentProjectNotes, removeNote, removeUserFromProject,
+      newNote, currentProjectNotes, removeNote, removeUserFromProject, usernew, userEmail, isSpecialUser, isUserAllowed,
     };
   },
 };

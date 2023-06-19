@@ -86,6 +86,9 @@ import ExploreContainer from "@/components/ExploreContainer.vue";
 import { trash, close } from "ionicons/icons";
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
 
+import { store } from '@/store'; // Adjust the path according to your project structure
+
+
 export default defineComponent({
   props: ["pageTitle", "pageDefaultBackLink"],
   components: {
@@ -127,28 +130,7 @@ export default defineComponent({
     });
 
 
-    
-    // async function fetchUserMetadata() {
-    //   const { user } = await supabase.auth.getUser();
-    //   console.log('User OVDEEEEEEE:', user); // Log the user object to the console
-    //   Object.keys(selectedLabels.value).forEach((key) => {
-    //     selectedLabels.value[key] = user.user_metadata.selectedLabels[key];
-    //   });
-    // }
-
-//     async function fetchUserMetadata() {
-//   // const user = supabase.auth.user();
-//       const { user } = await supabase.auth.getUser();
-//       console.log('User OVDEEEEEEE:', user); // Log the user object to the console
-//       if (user && user.user_metadata) {
-//         Object.keys(selectedLabels.value).forEach((key) => {
-//         selectedLabels.value[key] = user.user_metadata.selectedLabels[key];
-//       });
-//      } else {
-//     // Handle the case where the user or user_metadata is not defined
-//       console.error("User or user metadata is not defined");
-//       }
-// }
+  
 
 
 async function fetchUserMetadata() {
@@ -182,6 +164,20 @@ async function fetchUserMetadata() {
   try {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
+
+    window.localStorage.clear();
+    store.dispatch('signOut');
+
+
+    const cookies = document.cookie.split(";");
+
+for (let i = 0; i < cookies.length; i++) {
+  const cookie = cookies[i];
+  const eqPos = cookie.indexOf("=");
+  const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+  document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+}
+
 
     // Redirects after successfully logging out
     router.push({ name: "Entrance" });

@@ -189,9 +189,6 @@ export default {
     const isOpenRef = ref(false);
 
 
-
-
-
     const ime_projekta = ref("");
     const pocetak_projekta = ref(null);
     const rok_predaja = ref(null);
@@ -220,7 +217,6 @@ export default {
 
     const allUsers = ref([]);
 
-
     // const { data: { user } } =  supabase.auth.getUser();
     // const currentUserID = session ? session.user.id : null;
     const session = ref(supabase.auth.getSession())
@@ -229,7 +225,6 @@ export default {
     // const { data, error } = await supabase.auth.getSession()
 
     const currentUserID = ref(null);
-
 
 
     const selectedUserIDs = ref([]);
@@ -250,8 +245,6 @@ export default {
         console.log('USERIIII', allUsers.value);
       }
     };
-
-
 
 
     const confirmChanges = async () => {
@@ -290,7 +283,6 @@ export default {
     });
 
 
-
     const toggleUser = (userId, isChecked) => {
       console.log(`toggleUser called with userId=${userId} and isChecked=${isChecked}`);
       nextTick(() => {
@@ -301,8 +293,6 @@ export default {
         }
       });
     };
-
-
 
 
     const updateObjekti = () => {
@@ -319,6 +309,7 @@ export default {
       objekti_sklapanje.value = new Array(count).fill(false);
 
     };
+
 
     const submitProject = async () => {
       try {
@@ -387,6 +378,7 @@ export default {
       }
     };
 
+    
     return {
       ime_projekta,
       pocetak_projekta,
