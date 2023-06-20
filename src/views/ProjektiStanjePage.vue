@@ -10,14 +10,13 @@
         <!--  Kartice-->
         <div v-for="(item, index) in combinedData" :key="index">
           <ion-card>
+
             <ion-card-header>
               <ion-card-title>Projekat: {{ item.ime_projekta }}</ion-card-title>
               <ion-card-subtitle>Investitor: {{ item.investitor }}</ion-card-subtitle>
               <ion-card-subtitle>Lokacija: {{ item.lokacija }}</ion-card-subtitle>
               <ion-card-subtitle>Predaja: {{ item.rok_predaja }}</ion-card-subtitle>
-              <ion-card-subtitle v-if="currentUserEmail === 'jovanmaks92@gmail.com'">Cena: {{ item.cena }}</ion-card-subtitle>
-              <ion-card-subtitle v-if="currentUserEmail === 'jovanmaks92@gmail.com'">Cena: {{ item.cena2 }}</ion-card-subtitle>
-              <ion-card-subtitle v-if="isSpecialUser">Cena: {{ item.cena }}</ion-card-subtitle>
+              <ion-card-subtitle v-if="isSpecialUser" >Cena: {{ item.cijena_projekta }}</ion-card-subtitle>
             </ion-card-header>
 
 
@@ -122,7 +121,7 @@
           <ion-header>
             <ion-toolbar>
               <ion-buttons slot="end">
-                <ion-button @click="setOpenBiljeske(false)">Close</ion-button>
+                <ion-button @click="setOpenBiljeske(false)">Zatvori</ion-button>
               </ion-buttons>
 
               <!-- <ion-buttons slot="end">
@@ -326,7 +325,7 @@ export default {
         }
 
         data.value = fetchedData;
-        combineDatasets();
+        // combineDatasets();
 
 
 
@@ -351,12 +350,10 @@ export default {
         }
 
         sendata.value = fetchedData;
-        combineDatasets();
-      console.log('dataaaaaaaaaaaaaa', sendata.value);
-
 
       } catch (error) {
-        console.error('Error loading data:', error);
+        console.error('Error loading sensitive data:', error);
+        sendata.value = [];  // Set to empty when an error occurs
       } finally {
         if (event) {
           event.target.complete();
@@ -364,9 +361,20 @@ export default {
       }
     };
 
+    // const combineDatasets = () => {
+    //   combinedData.value = [...data.value, ...sendata.value];
+    // };
+
     const combineDatasets = () => {
-      combinedData.value = [...data.value, ...sendata.value];
+      combinedData.value = data.value.map(item => {
+        const sensitiveItem = sendata.value.find(sItem => sItem.projekti_id === item.id);
+        return {
+          ...item,
+          cijena_projekta: sensitiveItem ? sensitiveItem.cijena_projekta : null
+        }
+      });
     };
+
 
 
     onMounted(async () => {
@@ -387,9 +395,11 @@ export default {
 
         allUsers.value = users.map(user => ({ ...user, selected: false }));
         // loadData();
+        // console.log('dataaaaaa', data.value);
         // loadSensitive();
         await Promise.all([loadData(), loadSensitive()]);
-      console.log('ajdeeeee', combinedData.value);
+        combineDatasets();
+        console.log('ajdeeeee', combinedData.value);
       } catch (error) {
         console.log('Error: ', error)
       }

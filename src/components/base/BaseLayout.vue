@@ -30,9 +30,12 @@
         <ion-button slot="start" fill="solid" tab="pocetna" href="/home">
           <ion-icon :icon="home"></ion-icon>
         </ion-button>
-        <center>
-          <ion-button fill="solid" @click="takePhoto">
+        <!-- <ion-button fill="solid" @click="takePhoto">
             <ion-icon :icon="camera"></ion-icon>
+          </ion-button> -->
+        <center>
+          <ion-button id="open-modal" @click="setOpen(true)">
+            <ion-icon :icon="notifications"></ion-icon>
           </ion-button>
         </center>
         <ion-button slot="end" fill="solid" tab="account" href="/account">
@@ -40,12 +43,46 @@
         </ion-button>
       </ion-toolbar>
     </ion-footer>
+
+    <ion-modal :is-open="isOpenRef" css-class="my-custom-class" @didDismiss="setOpen(false)">
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button @click="setOpen(false)">Otkazi</ion-button>
+          </ion-buttons>
+          <!-- <ion-title>Notifikacija</ion-title> -->
+          <ion-buttons slot="end">
+            <ion-button :strong="true" @click="confirmChanges">Potvrdi</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <Modal :data="data"></Modal>
+      <ion-content class="ion-padding">
+
+        <div class="input-button-container">
+          <ion-item style="flex-grow: 1;">
+            <ion-input v-model="newNote" placeholder="Enter Note"></ion-input>
+          </ion-item>
+
+          <!-- Add Note Button -->
+          <!-- <ion-button :strong="true" @click="addBiljeska" style="margin-left: 5px;">Add Note</ion-button> -->
+        </div>
+
+      </ion-content>
+
+    </ion-modal>
+
+
+
   </ion-page>
 </template>
 
 <script>
 import {
+  IonInput,
+  IonItem,
   IonPage,
+  IonModal,
   toastController,
   loadingController,
   IonHeader,
@@ -63,6 +100,7 @@ import {
 
 import {
   ellipse,
+  notifications,
   square,
   triangle,
   star,
@@ -92,7 +130,10 @@ import { store } from '@/store'; // Adjust the path according to your project st
 export default defineComponent({
   props: ["pageTitle", "pageDefaultBackLink"],
   components: {
+    IonInput,
     IonPage,
+    IonItem,
+    IonModal,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -129,25 +170,50 @@ export default defineComponent({
       Alati: false,
     });
 
+    const isOpenRef = ref(false);
+    const setOpen = (state) => (isOpenRef.value = state);
+    const newNote = ref('');
 
-  
 
 
-async function fetchUserMetadata() {
-  const { user } = await supabase.auth.getUser();
-  console.log('User OVDEEEEEEE:', user);
 
-  if (user && user.user_metadata) {
-    Object.keys(selectedLabels.value).forEach((key) => {
-      if(user.user_metadata.selectedLabels[key]){
-        selectedLabels.value[key] = user.user_metadata.selectedLabels[key];
+    async function fetchUserMetadata() {
+      const { user } = await supabase.auth.getUser();
+      console.log('User OVDEEEEEEE:', user);
+
+      if (user && user.user_metadata) {
+        Object.keys(selectedLabels.value).forEach((key) => {
+          if (user.user_metadata.selectedLabels[key]) {
+            selectedLabels.value[key] = user.user_metadata.selectedLabels[key];
+          }
+        });
+      } else {
+        console.error("User or user metadata is not defined");
       }
-    });
-  } else {
-    console.error("User or user metadata is not defined");
-  }
-}
+    }
 
+    const addNote = async () => {
+      try {
+        console.log('newNote:', newNote.value); // Add this line to log the value of newNote
+        const { error } = await supabase
+          .from('notes')
+          .insert([
+            { homescreen: newNote.value }, //  homescreen Assuming 'homescreen' is the column you want to insert into
+          ]);
+        if (error) throw error;
+
+        console.log('Note added successfully');
+        newNote.value = ''; // Clear the input after successful insertion
+      } catch (error) {
+        console.error('Error inserting note:', error);
+      }
+    };
+
+    const confirmChanges = async () => {
+      console.log('confirmChanges called, newNote:', newNote.value);
+      addNote();
+
+    };
 
 
     onMounted(() => {
@@ -158,38 +224,39 @@ async function fetchUserMetadata() {
 
     const signOut = async () => {
       console.log("Logout button clicked");
-  const loader = await loadingController.create({});
-  const toast = await toastController.create({ duration: 5000 });
-  await loader.present();
-  try {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
+      const loader = await loadingController.create({});
+      const toast = await toastController.create({ duration: 5000 });
+      await loader.present();
+      try {
+        const { error } = await supabase.auth.signOut();
+        if (error) throw error;
 
-    window.localStorage.clear();
-    // store.dispatch('signOut'); 
-
-
-    const cookies = document.cookie.split(";");
-
-for (let i = 0; i < cookies.length; i++) {
-  const cookie = cookies[i];
-  const eqPos = cookie.indexOf("=");
-  const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-  document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
-}
+        window.localStorage.clear();
+        // store.dispatch('signOut'); 
 
 
-    // Redirects after successfully logging out
-    router.push({ name: "Entrance" });
-  } catch (error) {
-    toast.message = error.message;
-    await toast.present();
-  } finally {
-    await loader.dismiss();
-  }
-};
+        const cookies = document.cookie.split(";");
+
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i];
+          const eqPos = cookie.indexOf("=");
+          const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+          document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+        }
+
+
+        // Redirects after successfully logging out
+        router.push({ name: "Entrance" });
+      } catch (error) {
+        toast.message = error.message;
+        await toast.present();
+      } finally {
+        await loader.dismiss();
+      }
+    };
 
     return {
+      notifications,
       signOut,
       takePhoto,
       photos,
@@ -202,6 +269,10 @@ for (let i = 0; i < cookies.length; i++) {
       hammer,
       server,
       easel,
+      isOpenRef,
+      setOpen,
+      confirmChanges,
+      newNote,
     };
   },
 });
@@ -215,6 +286,22 @@ ion-col {
   text-align: center;
 }
 </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

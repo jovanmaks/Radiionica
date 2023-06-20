@@ -10,10 +10,16 @@
           <h2 v-if="selectedProject">Projekat: {{ selectedProject }}</h2>
         </div>
 
+        <div style="display: flex; justify-content: center;">
+          <ion-button>
+            <ion-icon :icon="notifications"></ion-icon>
+          </ion-button>
+        </div>
 
         <div>
           <canvas id="myChart" ref="chartRef"></canvas>
         </div>
+
 
         <ion-fab slot="fixed" vertical="bottom" horizontal="center">
           <ion-fab-button id="open-modal" color="dark" @click="setOpen(true)">
@@ -22,16 +28,17 @@
         </ion-fab>
 
 
+
         <ion-modal :is-open="isOpenRef" css-class="my-custom-class" @didDismiss="setOpen(false)">
           <!-- <ion-button @click="setOpen(false)">Close</ion-button> -->
           <ion-header>
             <ion-toolbar>
               <ion-buttons slot="start">
-                <ion-button @click="setOpen(false)">Cancel</ion-button>
+                <ion-button @click="setOpen(false)">Otkazi</ion-button>
               </ion-buttons>
-              <ion-title>Sekcija</ion-title>
+              <!-- <ion-title>Sekcija</ion-title> -->
               <ion-buttons slot="end">
-                <ion-button :strong="true" @click="confirmChanges">Confirm</ion-button>
+                <ion-button :strong="true" @click="confirmChanges">Potvrdi</ion-button>
               </ion-buttons>
             </ion-toolbar>
           </ion-header>
@@ -79,6 +86,7 @@ import {
   IonButton,
   IonToolbar,
   IonHeader,
+  // IonToggle,
 
   // IonInput,
   IonItem,
@@ -99,7 +107,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 Chart.register(ChartDataLabels);
 Chart.register(...registerables);
 
-import { print, qrCode, checkmarkDone, cloudUpload, share, add } from "ionicons/icons";
+import { print, qrCode, checkmarkDone, cloudUpload, share, add, notifications } from "ionicons/icons";
 
 
 
@@ -116,6 +124,7 @@ export default {
     IonToolbar,
     IonHeader,
     IonItem,
+    // IonToggle.
     // IonInput,
     IonLabel,
     IonButtons,
@@ -242,7 +251,7 @@ export default {
     };
 
 
-    return { add, chartRef, isOpenRef, setOpen, data, modalSections, updateStatus, confirmChanges, selectedProject };
+    return { add, notifications, chartRef, isOpenRef, setOpen, data, modalSections, updateStatus, confirmChanges, selectedProject };
 
   }
 };
