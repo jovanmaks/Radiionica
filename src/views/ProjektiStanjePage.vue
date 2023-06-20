@@ -8,7 +8,7 @@
         </ion-refresher>
 
         <!--  Kartice-->
-        <div v-for="(item, index) in data" :key="index">
+        <div v-for="(item, index) in combinedData" :key="index">
           <ion-card>
             <ion-card-header>
               <ion-card-title>Projekat: {{ item.ime_projekta }}</ion-card-title>
@@ -16,6 +16,7 @@
               <ion-card-subtitle>Lokacija: {{ item.lokacija }}</ion-card-subtitle>
               <ion-card-subtitle>Predaja: {{ item.rok_predaja }}</ion-card-subtitle>
               <ion-card-subtitle v-if="currentUserEmail === 'jovanmaks92@gmail.com'">Cena: {{ item.cena }}</ion-card-subtitle>
+              <ion-card-subtitle v-if="currentUserEmail === 'jovanmaks92@gmail.com'">Cena: {{ item.cena2 }}</ion-card-subtitle>
               <ion-card-subtitle v-if="isSpecialUser">Cena: {{ item.cena }}</ion-card-subtitle>
             </ion-card-header>
 
@@ -230,11 +231,14 @@ export default {
     IonCardTitle,
   },
 
-  
+
 
   setup() {
 
     const data = ref([]);
+    const sendata = ref([]);
+    const combinedData = ref([]);
+
     const modalRef = ref(null);
     const inputRef = ref(null);
 
@@ -264,13 +268,13 @@ export default {
     const allowedUsers = ref(["jovanmaks92@gmail.com"]);
 
 
-  
+
 
     // const isSpecialUser = computed(() => {
     //   console.log('email', usernew.value);
     //   console.log('email 2', usernew.value.email);
     //   return usernew.value && usernew.value.email === 'jovanmaks92@gmail.com';
-      
+
     // });
 
     const isSpecialUser = computed(() => {
@@ -322,6 +326,8 @@ export default {
         }
 
         data.value = fetchedData;
+        combineDatasets();
+
 
 
       } catch (error) {
@@ -334,10 +340,41 @@ export default {
     };
 
 
+    const loadSensitive = async (event = null) => {
+      try {
+        const { data: fetchedData, error } = await supabase
+          .from('sensitiveData')
+          .select('*');
+
+        if (error) {
+          throw error;
+        }
+
+        sendata.value = fetchedData;
+        combineDatasets();
+      console.log('dataaaaaaaaaaaaaa', sendata.value);
+
+
+      } catch (error) {
+        console.error('Error loading data:', error);
+      } finally {
+        if (event) {
+          event.target.complete();
+        }
+      }
+    };
+
+    const combineDatasets = () => {
+      combinedData.value = [...data.value, ...sendata.value];
+    };
+
+
     onMounted(async () => {
       const usernewResolved = await usernew.value;
       currentUserID.value = usernewResolved.data.user.id;
       currentUserEmail.value = usernewResolved.data.user.email;
+
+
       console.log('evo ga email mounted', currentUserEmail.value);
       console.log('evo ga id mounted', currentUserID.value);
 
@@ -349,6 +386,10 @@ export default {
         if (error) throw error;
 
         allUsers.value = users.map(user => ({ ...user, selected: false }));
+        // loadData();
+        // loadSensitive();
+        await Promise.all([loadData(), loadSensitive()]);
+      console.log('ajdeeeee', combinedData.value);
       } catch (error) {
         console.log('Error: ', error)
       }
@@ -576,7 +617,7 @@ export default {
       setOpen, setOpenSaradnici, setOpenBiljeske,
       allUsers, currentProjectUsers, selectedUserIDs, currentUserID, currentUserEmail, selectedImeProjekta,
       toggleUser, shareClicked, saradniciClicked, biljeskeClicked,
-      newNote, currentProjectNotes, removeNote, removeUserFromProject, usernew, userEmail, isSpecialUser, isUserAllowed,
+      newNote, currentProjectNotes, removeNote, removeUserFromProject, usernew, userEmail, isSpecialUser, isUserAllowed, combinedData, sendata
     };
   },
 };

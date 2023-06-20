@@ -313,7 +313,7 @@ export default {
 
     const submitProject = async () => {
       try {
-        const { error } = await supabase.from("Projekti").insert([
+        const { data: projectData, error: error1 } = await supabase.from("Projekti").insert([
           {
             ime_projekta: ime_projekta.value, //radi
             pocetak_projekta: pocetak_projekta.value,
@@ -321,7 +321,7 @@ export default {
             investitor: investitor.value, // radi
             lokacija: lokacija.value, //radi
             velicina: velicina.value, //radi
-            cena: cena.value, //radi
+            // cena: cena.value, //radi
             broj_objekata: broj_objekata.value,
             objekti: objekti.value,
 
@@ -339,10 +339,29 @@ export default {
             rasvjeta: rasvjeta.value,
             pokretni_elementi: pokretni_elementi.value,
             user_id: currentUserID.value, // add this line to store logged user id
-            saradnici: selectedUserIDs.value // add this line to store multiple user ids
+            saradnici: selectedUserIDs.value, // add this line to store multiple user ids
+
 
           },
+        ], { returning: "minimal" })
+          .select();
+
+
+        const projectId = projectData[0].id;
+        // const test  = data;
+        // console.log('test', test);
+
+
+
+        const { error: error2 } = await supabase.from("sensitiveData").insert([
+          {
+            projekti_id: projectId, // this is assuming your foreign key in the sensitiveData table is named 'projekti_id'
+            cijena_projekta: cena.value,
+          },
         ]);
+
+        const error = error1 || error2; // Consider either error as an error.
+
 
 
         if (error) {
@@ -378,7 +397,7 @@ export default {
       }
     };
 
-    
+
     return {
       ime_projekta,
       pocetak_projekta,

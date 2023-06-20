@@ -166,7 +166,7 @@ async function fetchUserMetadata() {
     if (error) throw error;
 
     window.localStorage.clear();
-    store.dispatch('signOut');
+    // store.dispatch('signOut'); 
 
 
     const cookies = document.cookie.split(";");
