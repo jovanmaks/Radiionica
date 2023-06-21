@@ -58,22 +58,16 @@
       </ion-header>
       <Modal :data="data"></Modal>
       <ion-content class="ion-padding">
-
         <div class="input-button-container">
-          <ion-item style="flex-grow: 1;">
+          <ion-item style="flex-grow: 1">
             <ion-input v-model="newNote" placeholder="Enter Note"></ion-input>
           </ion-item>
 
           <!-- Add Note Button -->
           <!-- <ion-button :strong="true" @click="addBiljeska" style="margin-left: 5px;">Add Note</ion-button> -->
         </div>
-
       </ion-content>
-
     </ion-modal>
-
-
-
   </ion-page>
 </template>
 
@@ -124,8 +118,7 @@ import ExploreContainer from "@/components/ExploreContainer.vue";
 import { trash, close } from "ionicons/icons";
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
 
-import { store } from '@/store'; // Adjust the path according to your project structure
-
+import { store } from "@/store"; // Adjust the path according to your project structure
 
 export default defineComponent({
   props: ["pageTitle", "pageDefaultBackLink"],
@@ -146,6 +139,8 @@ export default defineComponent({
     IonGrid,
     IonRow,
   },
+
+
 
   setup() {
     const router = useRouter();
@@ -172,55 +167,81 @@ export default defineComponent({
 
     const isOpenRef = ref(false);
     const setOpen = (state) => (isOpenRef.value = state);
-    const newNote = ref('');
+    const newNote = ref("");
+    const user = ref(supabase.auth.getUser());
+    const usernew = ref(supabase.auth.getUser())
+    // const usernewResolved= ref(null);
 
+    // async function fetchUserMetadata() {
+    //   const { user } = await supabase.auth.getUser();
+    //   console.log("User OVDEEEEEEE:", user);
 
+    //   if (user && user.user_metadata) {
+    //     Object.keys(selectedLabels.value).forEach((key) => {
+    //       if (user.user_metadata.selectedLabels[key]) {
+    //         selectedLabels.value[key] = user.user_metadata.selectedLabels[key];
+    //       }
+    //     });
+    //   } else {
+    //     console.error("User or user metadata is not defined");
+    //   }
+    // }
 
+    // const usernew = ref(supabase.auth.getUser());
 
-    async function fetchUserMetadata() {
-      const { user } = await supabase.auth.getUser();
-      console.log('User OVDEEEEEEE:', user);
-
-      if (user && user.user_metadata) {
-        Object.keys(selectedLabels.value).forEach((key) => {
-          if (user.user_metadata.selectedLabels[key]) {
-            selectedLabels.value[key] = user.user_metadata.selectedLabels[key];
-          }
-        });
-      } else {
-        console.error("User or user metadata is not defined");
-      }
-    }
 
     const addNote = async () => {
-      try {
-        console.log('newNote:', newNote.value); // Add this line to log the value of newNote
-        const { error } = await supabase
-          .from('notes')
-          .insert([
-            { homescreen: newNote.value }, //  homescreen Assuming 'homescreen' is the column you want to insert into
-          ]);
-        if (error) throw error;
+  try {
+    console.log("newNote:", newNote.value); 
+    // console.log("user:", user.value);  // Add this line
 
-        console.log('Note added successfully');
-        newNote.value = ''; // Clear the input after successful insertion
-      } catch (error) {
-        console.error('Error inserting note:', error);
-      }
-    };
+      // user.value = supabase.auth.getUser();
+      
+      const usernewResolved = await usernew.value;
+      // currentUserID.value = usernewResolved.data.user.id;
+      console.log('user je', usernewResolved.value);
+
+    // Here, you should use user.value directly:
+    if (newNote.value.trim() === "" || !user.value) {
+      console.log("Note value is empty or user is not logged in. Skipping insertion.");
+      return;
+    }
+
+    const { error } = await supabase.from("notes").insert([
+      { 
+        homescreen: newNote.value,
+        user_id: usernewResolved.data.user.id, 
+        kreator: usernewResolved.data.user.email,
+      },
+    ]);
+
+    if (error) throw error;
+
+    console.log("Note added successfully");
+    newNote.value = ""; // Clear the input after successful insertion
+  } catch (error) {
+    console.error("Error inserting note:", error);
+  }
+};
 
     const confirmChanges = async () => {
-      console.log('confirmChanges called, newNote:', newNote.value);
+      // console.log('confirmChanges called, newNote:', newNote.value);
       addNote();
-
+      setOpen(false);
     };
 
-
     onMounted(() => {
-      fetchUserMetadata();
+      // fetchUserMetadata();
+      // usernewResolved = await usernew.value;
+
+      // supabase.auth.getUser().then((user) => {
+      //   user.value = user;
+      // }).catch((error) => {
+      //   console.error('Error getting user:', error);
+      // });
+
       const urlParams = new URLSearchParams(window.location.search);
     });
-
 
     const signOut = async () => {
       console.log("Logout button clicked");
@@ -232,8 +253,7 @@ export default defineComponent({
         if (error) throw error;
 
         window.localStorage.clear();
-        // store.dispatch('signOut'); 
-
+        // store.dispatch('signOut');
 
         const cookies = document.cookie.split(";");
 
@@ -241,9 +261,9 @@ export default defineComponent({
           const cookie = cookies[i];
           const eqPos = cookie.indexOf("=");
           const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-          document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+          document.cookie =
+            name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
         }
-
 
         // Redirects after successfully logging out
         router.push({ name: "Entrance" });
@@ -273,8 +293,13 @@ export default defineComponent({
       setOpen,
       confirmChanges,
       newNote,
+      user,
+      usernew,
+      // usernewResolved,
     };
   },
+
+
 });
 </script>
 
@@ -290,89 +315,3 @@ ion-col {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <!-- <div style="display: flex; justify-content: space-between;">
-          <div v-if="selectedLabels.Ponuda && routeName === 'Welcome' " class="ion-text-left">
-            <ion-button color="dark" size="large" type="submit" fill="solid">Ponuda</ion-button>
-          </div>
-
-          <div v-if="selectedLabels.Crtanje && routeName === 'Welcome' " class="ion-text-right">
-            <ion-button color="dark" size="large" type="submit" fill="solid" :router-link="{ path:'/crtanje'}" >Crtanje</ion-button>
-          </div>
-
-          <div v-if="selectedLabels.Programiranje && routeName === 'Welcome' " class="ion-text-center">
-            <ion-button color="dark" size="large" type="submit" fill="solid">Programiranje</ion-button>
-          </div>
-        </div>
-          
-        <div style="display: flex; justify-content: space-between;">
-          <div v-if="selectedLabels.PripremaZaSjecenje && routeName === 'Welcome' " class="ion-text-left">
-            <ion-button color="dark" size="large" type="submit" fill="solid">Prip(sjecenje)</ion-button>
-          </div>
-
-          <div v-if="selectedLabels.Sjecenje && routeName === 'Welcome' " class="ion-text-right">
-            <ion-button color="dark" size="large" type="submit" fill="solid">Sjecenje</ion-button>
-          </div>
-        </div>
-          
-        <div style="display: flex; justify-content: space-between;">
-          <div v-if="selectedLabels.PripremaZaFarbanje && routeName === 'Welcome' " class="ion-text-center">
-            <ion-button color="dark" size="large" type="submit" fill="solid">Prip(farbanje)</ion-button>
-          </div>
-
-          <div v-if="selectedLabels.Farbanje && routeName === 'Welcome' " class="ion-text-center">
-            <ion-button color="dark" size="large" type="submit" fill="solid">Farbanje</ion-button>
-          </div>
-        </div>
-
-        <div style="display: flex; justify-content: space-between;">
-          <div v-if="selectedLabels.Sklapanje && routeName === 'Welcome' " class="ion-text-center">
-            <ion-button color="dark" size="large" type="submit" fill="solid">Sklapanje</ion-button>
-          </div>
-
-          <div v-if="selectedLabels.Predaja && routeName === 'Welcome' " class="ion-text-center">
-            <ion-button color="dark" size="large" type="submit" fill="solid">Predaja</ion-button>
-          </div>
-        </div>
-        
-        <div style="display: flex; justify-content: space-between;">
-          <div v-if="selectedLabels.Transport && routeName === 'Welcome' " class="ion-text-center">
-            <ion-button color="dark" size="large" type="submit" fill="solid">Transport</ion-button>
-          </div>
-
-          <div v-if="selectedLabels.Fotografisanje && routeName === 'Welcome' " class="ion-text-center">
-            <ion-button color="dark" size="large" type="submit" fill="solid">Fotografisanje</ion-button>
-          </div>
-        </div>
-
-        
-        <div style="display: flex; justify-content: space-between;">
-          <div v-if="selectedLabels.Nabavka && routeName === 'Welcome' " class="ion-text-left">
-            <ion-button color="dark" size="large" type="submit" fill="solid">Nabavka</ion-button>
-          </div>
-
-          <div v-if="selectedLabels.Alati && routeName === 'Welcome' " class="ion-text-right">
-            <ion-button color="dark" size="large" type="submit" fill="solid">Alati</ion-button>
-          </div>
-
-          <div v-if="selectedLabels.Magacin && routeName === 'Welcome' " class="ion-text-center">
-            <ion-button color="dark" size="large" type="submit" fill="solid" :router-link="{ path:'/magacin'}">
-              Magacin
-            </ion-button>
-          </div>
-        </div> -->

@@ -34,6 +34,10 @@ import PripremaFarbanjePage from '../views/maketa/05.PripremaFarbanjePage.vue';
 import FarbanjePage from '../views/maketa/06.FarbanjePage.vue';
 import SklapanjePage from '../views/maketa/07.SklapanjePage.vue';
 
+import ArhivaPage from '../views/04.Obrada/01.ArhivaPage.vue';
+
+
+
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -165,6 +169,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/sklapanje',
     name: 'Sklapanje',
     component: SklapanjePage,
+  }, 
+  {
+    path: '/arhiva',
+    name: 'Arhiva',
+    component: ArhivaPage,
   }, 
 ]
 

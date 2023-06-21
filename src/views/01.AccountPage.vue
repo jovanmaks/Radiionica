@@ -212,31 +212,31 @@ export default {
 
 
     const updateProfile = async () => {
-  const { data: { user } } = await supabase.auth.getUser() as { data: { user: User } };
-  const loader = await loadingController.create({});
-  const toast = await toastController.create({ duration: 5000 });
+      const { data: { user } } = await supabase.auth.getUser() as { data: { user: User } };
+      const loader = await loadingController.create({});
+      const toast = await toastController.create({ duration: 5000 });
 
-  try {
-    await loader.present();
+      try {
+        await loader.present();
 
-    const updates = {
-      id: user.id,  // Only include the id in the updates object
-      username: user.email, // Set the username to the user's email
-      updated_at: new Date(),
+        const updates = {
+          id: user.id,  // Only include the id in the updates object
+          username: user.email, // Set the username to the user's email
+          updated_at: new Date(),
+        };
+
+        console.log('id sa updata', user.id);
+
+        const { error } = await supabase.from('profiles').upsert(updates, {});
+
+        if (error) throw error;
+      } catch (error: any) {
+        toast.message = error.message;
+        await toast.present();
+      } finally {
+        await loader.dismiss();
+      }
     };
-
-    console.log('id sa updata', user.id);
-
-    const { error } = await supabase.from('profiles').upsert(updates, {});
-
-    if (error) throw error;
-  } catch (error: any) {
-    toast.message = error.message;
-    await toast.present();
-  } finally {
-    await loader.dismiss();
-  }
-};
 
 
     async function getCurrentSession() {
