@@ -1,6 +1,6 @@
 
 <template>
-  <base-layout page-title="Programiranje" page-default-back-link="/tabs">
+  <base-layout page-title="Програмирање" page-default-back-link="/tabs">
     <template v-slot:content>
 
 

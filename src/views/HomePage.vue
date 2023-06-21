@@ -1,5 +1,5 @@
 <template>
-  <base-layout page-title="Home" page-default-back-link="/admin">
+  <base-layout page-title="" page-default-back-link="/admin">
     <template v-slot:content>
 
       <ion-refresher slot="fixed" @ionRefresh="doRefresh">
@@ -34,7 +34,7 @@
 
       <div v-if="!isDataLoaded">Loading...</div>
 
-      <ion-fab slot="fixed" vertical="top" horizontal="start">
+      <ion-fab slot="fixed" vertical="top" horizontal="end">
         <ion-fab-button size="small" color="dark">
           <ion-icon :icon="hammer"></ion-icon>
         </ion-fab-button>
@@ -81,7 +81,7 @@
             </ion-fab-button>
           </router-link>
         </ion-fab-list>
-        <ion-fab-list side="end">
+        <!-- <ion-fab-list side="end">
           <ion-fab-button>
             <ion-icon :icon="cash"></ion-icon>
           </ion-fab-button>
@@ -95,7 +95,7 @@
           <ion-fab-button>
             <ion-icon :icon="checkmarkDone"></ion-icon>
           </ion-fab-button>
-        </ion-fab-list>
+        </ion-fab-list> -->
       </ion-fab>
 
       <ion-fab slot="fixed" vertical="bottom" horizontal="start">
@@ -103,9 +103,9 @@
           <ion-icon :icon="easel"></ion-icon>
         </ion-fab-button>
         <ion-fab-list side="top">
-          <ion-fab-button>
+          <!-- <ion-fab-button>
             <ion-icon :icon="add"></ion-icon>
-          </ion-fab-button>
+          </ion-fab-button> -->
           <router-link to="/select">
             <ion-fab-button size="small">
               <ion-icon :icon="list"></ion-icon>
@@ -147,12 +147,12 @@
               <ion-icon :icon="folder"></ion-icon>
             </ion-fab-button>
           </router-link>
-          <ion-fab-button>
+          <!-- <ion-fab-button>
             <ion-icon :icon="construct"></ion-icon>
           </ion-fab-button>
           <ion-fab-button>
             <ion-icon :icon="cart"></ion-icon>
-          </ion-fab-button>
+          </ion-fab-button> -->
         </ion-fab-list>
       </ion-fab>
     </template>

@@ -1,5 +1,5 @@
 <template>
-  <base-layout page-title="Arhiva" page-default-back-link="/admin">
+  <base-layout page-title="Архива" page-default-back-link="/admin">
     <template v-slot:content>
 
       <ion-refresher slot="fixed" @ionRefresh="doRefresh">

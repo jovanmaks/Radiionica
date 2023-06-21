@@ -9,7 +9,7 @@
         <ion-buttons slot="end">
           <slot name="actions-end"></slot>
           <ion-button fill="clear" @click="signOut">Log Out</ion-button>
-          <ion-menu-button auto-hide="false" tab="meny" href="/meny"></ion-menu-button>
+          <!-- <ion-menu-button auto-hide="false" tab="meny" href="/meny"></ion-menu-button> -->
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
@@ -86,7 +86,7 @@ import {
   IonBackButton,
   IonButton,
   IonButtons,
-  IonMenuButton,
+  // IonMenuButton,
   IonCol,
   IonGrid,
   IonRow,
@@ -134,7 +134,7 @@ export default defineComponent({
     IonBackButton,
     IonButton,
     IonButtons,
-    IonMenuButton,
+    // IonMenuButton,
     IonCol,
     IonGrid,
     IonRow,

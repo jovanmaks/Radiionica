@@ -1,5 +1,5 @@
 <template>
-  <base-layout page-title="Napravi projekat" page-default-back-link="/tabs">
+  <base-layout page-title="Нови пројекат" page-default-back-link="/tabs">
     <template v-slot:content>
 
       <ion-content>

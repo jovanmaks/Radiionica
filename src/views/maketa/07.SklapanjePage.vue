@@ -1,6 +1,6 @@
 
 <template>
-  <base-layout page-title="Sklapanje" page-default-back-link="/tabs">
+  <base-layout page-title="Склапање" page-default-back-link="/tabs">
     <template v-slot:content>
 
 

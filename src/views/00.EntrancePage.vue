@@ -2,7 +2,7 @@
     <ion-page>
       <ion-header>
           <ion-toolbar>
-            <ion-title>Entrance</ion-title>
+            <ion-title></ion-title>
           </ion-toolbar>
         </ion-header>
   

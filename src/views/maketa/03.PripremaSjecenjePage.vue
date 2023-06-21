@@ -1,6 +1,6 @@
 
 <template>
-  <base-layout page-title="Priprema za sjecenje" page-default-back-link="/tabs">
+  <base-layout page-title="Припрема за ЦНЦ" page-default-back-link="/tabs">
     <template v-slot:content>
 
 

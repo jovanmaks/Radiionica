@@ -1,5 +1,5 @@
 <template>
-  <base-layout page-title="Unos" page-default-back-link="/tabs">
+  <base-layout page-title="Унос" page-default-back-link="/tabs">
     <template v-slot:content>
       <ion-content>
         <ion-list>

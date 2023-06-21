@@ -1,6 +1,6 @@
 
 <template>
-  <base-layout page-title="pripFarbanje" page-default-back-link="/tabs">
+  <base-layout page-title="Чишћење" page-default-back-link="/tabs">
     <template v-slot:content>
 
 

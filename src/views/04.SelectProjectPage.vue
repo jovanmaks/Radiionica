@@ -1,5 +1,5 @@
 <template>
-  <base-layout page-title="SelectProject" page-default-back-link="/tabs">
+  <base-layout page-title="Одабери пројекат" page-default-back-link="/tabs">
     <template v-slot:content>
       <ion-radio-group v-model="selectedProject">
         <ion-item v-for="(project, index) in projects" :key="index">

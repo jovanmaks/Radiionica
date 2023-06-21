@@ -3,7 +3,7 @@
 
       <ion-header>
         <ion-toolbar>
-          <ion-title>Register</ion-title>
+          <ion-title></ion-title>
         </ion-toolbar>
       </ion-header>
 
@@ -48,10 +48,10 @@
             </ion-item>
 
 
-            <ion-item v-for="item in items" :key="item.id">
+            <!-- <ion-item v-for="item in items" :key="item.id">
               <ion-checkbox slot="start" v-model="item.checked"></ion-checkbox>
               <ion-label>{{ item.label }}</ion-label>
-            </ion-item>
+            </ion-item> -->
 
 
             <div class="ion-text-center">
@@ -89,7 +89,7 @@ import { useRouter } from "vue-router";
     IonLabel,
     IonInput,
     IonButton,
-    IonCheckbox,
+    // IonCheckbox,
     toastController,
     loadingController,
   } from '@ionic/vue';
@@ -106,7 +106,7 @@ export default defineComponent({
       IonLabel,
       IonInput,
       IonButton,
-      IonCheckbox,
+      // IonCheckbox,
     },
 
       setup(){
