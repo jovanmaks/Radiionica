@@ -6,23 +6,16 @@
         <ion-refresher-content></ion-refresher-content>
       </ion-refresher>
 
-      <!-- <ion-card class="my-card" v-for="note in notes" :key="note.id" :color="selectedColor"> -->
       <ion-card class="my-card" v-for="note in notes" :key="note.id" :color="computeCardColor(note)">
         <div v-if="!note.isHomescreenArchived">
           <ion-card-header>
             <ion-card-subtitle> {{ note.homescreen }}</ion-card-subtitle>
           </ion-card-header>
           <ion-card-content>{{ note.kreator }}
-
           </ion-card-content>
           <ion-button fill="clear" @click="archiveNote(note.id)">
             <ion-icon :icon="archive"></ion-icon>
           </ion-button>
-          <!-- <ion-button fill="clear" @click="setOpen(true)">
-            <ion-action-sheet :is-open="isOpen" header="Prioriteti" :buttons="actionSheetButtons"
-              @didDismiss="setOpen(false)"></ion-action-sheet>
-            <ion-icon :icon="alertCircle"></ion-icon>
-          </ion-button> -->
           <ion-button fill="clear" @click="setOpen(true, note)">
             <ion-action-sheet :is-open="isOpen" header="Prioriteti" :buttons="actionSheetButtons(note)"
               @didDismiss="setOpen(false)"></ion-action-sheet>
@@ -264,18 +257,18 @@ export default {
     // };
 
     const fetchNotes = async () => {
-  const { data, error } = await supabase
-    .from('notes')
-    .select('homescreen, kreator, id, isHomescreenArchived, levelOne, levelTwo, levelThree');
+      const { data, error } = await supabase
+        .from('notes')
+        .select('homescreen, kreator, id, isHomescreenArchived, levelOne, levelTwo, levelThree');
 
-  if (error) {
-    console.error(error);
-    return;
-  }
-  notes.value = data;
-  isDataLoaded.value = true;
-  console.log(data);
-};
+      if (error) {
+        console.error(error);
+        return;
+      }
+      notes.value = data;
+      isDataLoaded.value = true;
+      console.log(data);
+    };
 
     onMounted(fetchNotes);
 
@@ -306,40 +299,28 @@ export default {
       {
         text: 'Hitno',
         handler: () => {
-          console.log('Clicked: Hitno');
-          console.log(note);
-          console.log(note.id);
-
-          // note.levelOne = true;
-          // note.levelTwo = false;
-          // note.levelThree = false;
           updateNotePriority(note.id, true, false, false);
-          // updateNotePriority(note.id, note.levelOne, note.levelTwo, note.levelThree);
-          // fetchNotes(); // you might need to refresh notes to see the changes
         },
       },
       {
         text: 'Prioritetno',
         handler: () => {
-          console.log('Clicked: Prioritetno');
-          // note.levelOne = false;
-          // note.levelTwo = true;
-          // note.levelThree = false;
           updateNotePriority(note.id, false, true, false);
-          // fetchNotes(); // you might need to refresh notes to see the changes
         },
       },
       {
         text: 'Normalno',
         handler: () => {
-          console.log('Clicked: Normalno');
-          // note.levelOne = false;
-          // note.levelTwo = false;
-          // note.levelThree = true;
           updateNotePriority(note.id, false, false, true);
-          // fetchNotes(); // you might need to refresh notes to see the changes
         },
       },
+      {
+          text: 'Cancel',
+          role: 'cancel',
+          data: {
+            action: 'cancel',
+          },
+        },
     ];
 
     const computeCardColor = (note) => {
@@ -349,46 +330,29 @@ export default {
       return ''; // default color if no level is set
     };
 
-//     const updateNotePriority = async (noteId, levelOne, levelTwo, levelThree) => {
-//   const { data, error } = await supabase
-//     .from('notes')
-//     .update({
-//       levelOne: levelOne,
-//       levelTwo: levelTwo,
-//       levelThree: levelThree
-//     })
-//     .eq('id', noteId);
 
-//   if (error) {
-//     console.error(error);
-//   } else {
-//     console.log(`Note ${noteId} priority updated successfully`);
-//     await fetchNotes(); // Fetch notes again to update the UI
-//   }
-// };
+    const updateNotePriority = async (noteId, levelOne, levelTwo, levelThree) => {
+      const { data, error } = await supabase
+        .from('notes')
+        .update({
+          levelOne: levelOne,
+          levelTwo: levelTwo,
+          levelThree: levelThree
+        })
+        .eq('id', noteId);
 
-const updateNotePriority = async (noteId, levelOne, levelTwo, levelThree) => {
-  const { data, error } = await supabase
-    .from('notes')
-    .update({
-      levelOne: levelOne,
-      levelTwo: levelTwo,
-      levelThree: levelThree
-    })
-    .eq('id', noteId);
-
-  if (error) {
-    console.error(error);
-  } else {
-    console.log(`Note ${noteId} priority updated successfully`);
-    const note = notes.value.find(n => n.id === noteId);
-    if (note) {
-      note.levelOne = levelOne;
-      note.levelTwo = levelTwo;
-      note.levelThree = levelThree;
-    }
-  }
-};
+      if (error) {
+        console.error(error);
+      } else {
+        console.log(`Note ${noteId} priority updated successfully`);
+        const note = notes.value.find(n => n.id === noteId);
+        if (note) {
+          note.levelOne = levelOne;
+          note.levelTwo = levelTwo;
+          note.levelThree = levelThree;
+        }
+      }
+    };
 
 
 
