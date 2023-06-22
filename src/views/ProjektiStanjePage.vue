@@ -8,8 +8,8 @@
         </ion-refresher>
 
         <!--  Kartice-->
-        <div v-for="(item, index) in combinedData" :key="index" :color="computeCardColor(item)">
-          <ion-card>
+        <div v-for="(item, index) in combinedData" :key="index" >
+          <ion-card :color="computeCardColor(item)">
 
             <ion-card-header>
               <ion-card-title>Projekat: {{ item.ime_projekta }}</ion-card-title>
@@ -284,19 +284,19 @@ export default {
         handler: () => {
           console.log('Hitno clicked note', item);
           console.log('Hitno clicked id', item.id);
-          // updateNotePriority(note.id, true, false, false);
+          updateNotePriority(item.id, true, false, false);
         },
       },
       {
         text: 'Важно',
         handler: () => {
-          // updateNotePriority(note.id, false, true, false);
+          updateNotePriority(item.id, false, true, false);
         },
       },
       {
         text: 'Регуларно',
         handler: () => {
-          // updateNotePriority(note.id, false, false, true);
+          updateNotePriority(item.id, false, false, true);
         },
       },
       {
@@ -307,6 +307,31 @@ export default {
         },
       },
     ];
+
+    const projekti = ref([]);
+
+    const updateNotePriority = async (itemId, levelOne, levelTwo, levelThree) => {
+      const { data, error } = await supabase
+        .from('Projekti')
+        .update({
+          levelOne: levelOne,
+          levelTwo: levelTwo,
+          levelThree: levelThree
+        })
+        .eq('id', itemId);
+
+      if (error) {
+        console.error(error);
+      } else {
+        console.log(`Note ${itemId} priority updated successfully`);
+        const item = projekti.value.find(n => n.id === itemId);
+        if (item) {
+          item.levelOne = levelOne;
+          item.levelTwo = levelTwo;
+          item.levelThree = levelThree;
+        }
+      }
+    };
 
 
     // const isSpecialUser = computed(() => {
@@ -409,6 +434,9 @@ export default {
       return ''; // default color if no level is set
     };
 
+
+
+
     const combineDatasets = () => {
       combinedData.value = data.value.map(item => {
         const sensitiveItem = sendata.value.find(sItem => sItem.projekti_id === item.id);
@@ -420,6 +448,21 @@ export default {
     };
 
 
+    const fetchNotes = async () => {
+      const { data, error } = await supabase
+        .from('Projekti')
+        .select('id, levelOne, levelTwo, levelThree')
+        // .order('id');
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+      projekti.value = data;
+      // isDataLoaded.value = true;
+      console.log(data);
+    };
+    
 
     onMounted(async () => {
       const usernewResolved = await usernew.value;
@@ -438,6 +481,10 @@ export default {
         if (error) throw error;
 
         allUsers.value = users.map(user => ({ ...user, selected: false }));
+        
+       
+        fetchNotes(); 
+
         // loadData();
         // console.log('dataaaaaa', data.value);
         // loadSensitive();
