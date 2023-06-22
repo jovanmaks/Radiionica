@@ -263,8 +263,8 @@ export default {
     const fetchNotes = async () => {
       const { data, error } = await supabase
         .from('notes')
-        .select('homescreen, kreator, id, isHomescreenArchived, levelOne, levelTwo, levelThree');
-        // .orderBy('id');
+        .select('homescreen, kreator, id, isHomescreenArchived, levelOne, levelTwo, levelThree')
+        .order('id');
 
       if (error) {
         console.error(error);
