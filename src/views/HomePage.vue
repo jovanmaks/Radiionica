@@ -13,12 +13,12 @@
           </ion-card-header>
           <ion-card-content>{{ note.kreator }}
           </ion-card-content>
-          <ion-button fill="clear" @click="archiveNote(note.id)">
+          <ion-button class="archive-button" fill="clear" @click="archiveNote(note.id)">
             <ion-icon :icon="archive"></ion-icon>
           </ion-button>
-          <ion-button fill="clear" @click="setOpen(true, note)">
+          <ion-button class="alert-button" fill="clear" @click="setOpen(true, note)">
             <ion-action-sheet :is-open="isOpen" header="Приоритети" :buttons="actionSheetButtonsRef"
-    @didDismiss="setOpen(false)"></ion-action-sheet>
+              @didDismiss="setOpen(false)"></ion-action-sheet>
 
             <ion-icon :icon="alertCircle"></ion-icon>
           </ion-button>
@@ -264,6 +264,7 @@ export default {
       const { data, error } = await supabase
         .from('notes')
         .select('homescreen, kreator, id, isHomescreenArchived, levelOne, levelTwo, levelThree');
+        // .orderBy('id');
 
       if (error) {
         console.error(error);
@@ -297,10 +298,10 @@ export default {
 
 
     const setOpen = (state, note = null) => {
-  console.log('setOpen', state, note);
-  actionSheetButtonsRef.value = actionSheetButtons(note);
-  isOpen.value = state;
-};
+      console.log('setOpen', state, note);
+      actionSheetButtonsRef.value = actionSheetButtons(note);
+      isOpen.value = state;
+    };
 
 
     const actionSheetButtons = (note) => [
@@ -325,12 +326,12 @@ export default {
         },
       },
       {
-          text: 'Откажи',
-          role: 'cancel',
-          data: {
-            action: 'cancel',
-          },
+        text: 'Откажи',
+        role: 'cancel',
+        data: {
+          action: 'cancel',
         },
+      },
     ];
 
     const computeCardColor = (note) => {
@@ -400,13 +401,10 @@ export default {
   },
 };
 </script>
+<style>
+.archive-button {
+  margin-left: 50px;
+}
 
-<!-- <style scoped>
-.my-card {
-  margin-top: 1vh;
-  margin-bottom: 0;
-}
-.my-card:first-child {
-  margin-top: 10vh;
-}
-</style> -->
+
+</style>

@@ -8,7 +8,10 @@
         <ion-title>{{ pageTitle }}</ion-title>
         <ion-buttons slot="end">
           <slot name="actions-end"></slot>
-          <ion-button fill="clear" @click="signOut">Log Out</ion-button>
+          <ion-button fill="clear" @click="signOut">
+            <ion-icon :icon="logOut"></ion-icon>
+          </ion-button>
+          
           <!-- <ion-menu-button auto-hide="false" tab="meny" href="/meny"></ion-menu-button> -->
         </ion-buttons>
       </ion-toolbar>
@@ -105,6 +108,7 @@ import {
   hammer,
   server,
   easel,
+  logOut,
 } from "ionicons/icons";
 
 import { Browser } from "@capacitor/browser";
@@ -295,6 +299,7 @@ export default defineComponent({
       newNote,
       user,
       usernew,
+      logOut,
       // usernewResolved,
     };
   },
