@@ -8,7 +8,7 @@
         </ion-refresher>
 
         <!--  Kartice-->
-        <div v-for="(item, index) in combinedData" :key="index">
+        <div v-for="(item, index) in combinedData" :key="index" :color="computeCardColor(item)">
           <ion-card>
 
             <ion-card-header>
@@ -41,7 +41,7 @@
             </ion-button>
 
             <!-- Prioriteti -->
-          <ion-button class="alert-button" fill="clear" @click="setOpenPrioriteti(true, note)">
+          <ion-button class="alert-button" fill="clear" @click="setOpenPrioriteti(true, item)">
             <ion-action-sheet :is-open="isOpenPrioriteti" header="Приоритети" :buttons="actionSheetButtonsRef"
               @didDismiss="setOpenPrioriteti(false)"></ion-action-sheet>
             <ion-icon :icon="alertCircle"></ion-icon>
@@ -266,9 +266,9 @@ export default {
     // const userEmail = ref(supabase.auth.getUser()?.email);
     const userEmail = ref(supabase.auth.getUser());
 
-    const setOpenPrioriteti = (state, note = null) => {
-      console.log('setOpen', state, note);
-      actionSheetButtonsRef.value = actionSheetButtons(note);
+    const setOpenPrioriteti = (state, item = null) => {
+      console.log('setOpen', state, item);
+      actionSheetButtonsRef.value = actionSheetButtons(item);
       isOpenPrioriteti.value = state;
     };
 
@@ -278,12 +278,12 @@ export default {
 
     const allowedUsers = ref(["jovanmaks92@gmail.com"]);
 
-    const actionSheetButtons = (note) => [
+    const actionSheetButtons = (item) => [
       {
         text: 'Хитно',
         handler: () => {
-          console.log('Hitno clicked note', note);
-          console.log('Hitno clicked id', note.id);
+          console.log('Hitno clicked note', item);
+          console.log('Hitno clicked id', item.id);
           // updateNotePriority(note.id, true, false, false);
         },
       },
@@ -379,6 +379,7 @@ export default {
     };
 
 
+
     const loadSensitive = async (event = null) => {
       try {
         const { data: fetchedData, error } = await supabase
@@ -401,9 +402,12 @@ export default {
       }
     };
 
-    // const combineDatasets = () => {
-    //   combinedData.value = [...data.value, ...sendata.value];
-    // };
+     const computeCardColor = (item) => {
+      if (item.levelOne) return 'danger';
+      if (item.levelTwo) return 'warning';
+      if (item.levelThree) return 'success';
+      return ''; // default color if no level is set
+    };
 
     const combineDatasets = () => {
       combinedData.value = data.value.map(item => {
@@ -664,7 +668,7 @@ export default {
       people, chatbubble, share, trash,alertCircle,actionSheetButtons, actionSheetButtonsRef,
       cancel, confirm, confirmChanges, confirmChangesBiljeska, confirmChangesSaradnici, addBiljeska,
       modalRef, inputRef, isOpenRef, isOpenRefSaradnici, isOpenRefBiljeske, isOpenPrioriteti,
-      setOpen, setOpenSaradnici, setOpenBiljeske,
+      setOpen, setOpenSaradnici, setOpenBiljeske, computeCardColor,
       allUsers, currentProjectUsers, selectedUserIDs, currentUserID, currentUserEmail, selectedImeProjekta,
       toggleUser, shareClicked, saradniciClicked, biljeskeClicked,
       newNote, currentProjectNotes, removeNote, removeUserFromProject, usernew, userEmail, isSpecialUser, isUserAllowed, combinedData, sendata
