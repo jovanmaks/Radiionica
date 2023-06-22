@@ -17,8 +17,9 @@
             <ion-icon :icon="archive"></ion-icon>
           </ion-button>
           <ion-button fill="clear" @click="setOpen(true, note)">
-            <ion-action-sheet :is-open="isOpen" header="Prioriteti" :buttons="actionSheetButtons(note)"
-              @didDismiss="setOpen(false)"></ion-action-sheet>
+            <ion-action-sheet :is-open="isOpen" header="Приоритети" :buttons="actionSheetButtonsRef"
+    @didDismiss="setOpen(false)"></ion-action-sheet>
+
             <ion-icon :icon="alertCircle"></ion-icon>
           </ion-button>
 
@@ -239,6 +240,9 @@ export default {
     const isOpen = ref(false);
     const selectedColor = ref(''); // default color can be empty or any valid ionic color
 
+    const actionSheetButtonsRef = ref([]);
+
+
     const changeColor = (color) => {
       selectedColor.value = color;
     };
@@ -290,32 +294,38 @@ export default {
       }
     }
 
+
+
     const setOpen = (state, note = null) => {
-      actionSheetButtons(note);
-      isOpen.value = state;
-    };
+  console.log('setOpen', state, note);
+  actionSheetButtonsRef.value = actionSheetButtons(note);
+  isOpen.value = state;
+};
+
 
     const actionSheetButtons = (note) => [
       {
-        text: 'Hitno',
+        text: 'Хитно',
         handler: () => {
+          console.log('Hitno clicked note', note);
+          console.log('Hitno clicked id', note.id);
           updateNotePriority(note.id, true, false, false);
         },
       },
       {
-        text: 'Prioritetno',
+        text: 'Важно',
         handler: () => {
           updateNotePriority(note.id, false, true, false);
         },
       },
       {
-        text: 'Normalno',
+        text: 'Регуларно',
         handler: () => {
           updateNotePriority(note.id, false, false, true);
         },
       },
       {
-          text: 'Cancel',
+          text: 'Откажи',
           role: 'cancel',
           data: {
             action: 'cancel',
@@ -385,6 +395,7 @@ export default {
       changeColor, // Add this line
       selectedColor, // And this line
       computeCardColor,
+      actionSheetButtonsRef,
     }
   },
 };
