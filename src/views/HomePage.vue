@@ -23,8 +23,6 @@
           </ion-button>
 
           <ion-button class="edit-button" fill="clear" @click="setOpenEdit(true, note)">
-            <!-- <ion-alert :is-open="isOpenEdit" header="Уреди" :buttons="alertButtonsEditRef"
-              @didDismiss="setOpenEdit(false)"></ion-alert> -->
             <ion-icon :icon="documentText"></ion-icon>
           </ion-button>
 

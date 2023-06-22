@@ -53,11 +53,11 @@
       <ion-header>
         <ion-toolbar>
           <ion-buttons slot="start">
-            <ion-button @click="setOpen(false)">Otkazi</ion-button>
+            <ion-button @click="setOpen(false)">Потврди</ion-button>
           </ion-buttons>
           <!-- <ion-title>Notifikacija</ion-title> -->
           <ion-buttons slot="end">
-            <ion-button :strong="true" @click="confirmChanges">Potvrdi</ion-button>
+            <ion-button :strong="true" @click="confirmChanges">Откажи</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>

@@ -40,6 +40,13 @@
               <ion-icon :icon="trash"></ion-icon>
             </ion-button>
 
+            <!-- Prioriteti -->
+          <ion-button class="alert-button" fill="clear" @click="setOpenPrioriteti(true, note)">
+            <ion-action-sheet :is-open="isOpenPrioriteti" header="Приоритети" :buttons="actionSheetButtonsRef"
+              @didDismiss="setOpenPrioriteti(false)"></ion-action-sheet>
+            <ion-icon :icon="alertCircle"></ion-icon>
+          </ion-button>
+
             <!-- Status -->
             <ion-item>
               <ion-label>Status</ion-label>
@@ -171,13 +178,14 @@
 
 <script lang="js">
 
-import { trash, share, cube, home, heart, pin, analytics, build, chatbubble, people } from "ionicons/icons";
+import { trash, share, cube, home, heart, pin, analytics, build, chatbubble, people,alertCircle } from "ionicons/icons";
 import { ref, computed, nextTick, onMounted } from 'vue';
 import { supabase } from '@/supabase';
 
 
 import {
   // IonSearchbar,
+  IonActionSheet,
   IonRefresher,
   IonRefresherContent,
   IonContent,
@@ -208,6 +216,7 @@ import {
 export default {
   components: {
     // IonSearchbar,
+    IonActionSheet,
     IonRefresher,
     IonRefresherContent,
     IonContent,
@@ -248,25 +257,56 @@ export default {
     const selectedImeProjekta = ref(null);
 
     const isOpenRef = ref(false);
+    const isOpenPrioriteti = ref(false);
     const isOpenRefSaradnici = ref(false);
     const isOpenRefBiljeske = ref(false);
 
+    const actionSheetButtonsRef = ref([]);
     const usernew = ref(supabase.auth.getUser())
     // const userEmail = ref(supabase.auth.getUser()?.email);
     const userEmail = ref(supabase.auth.getUser());
 
+    const setOpenPrioriteti = (state, note = null) => {
+      console.log('setOpen', state, note);
+      actionSheetButtonsRef.value = actionSheetButtons(note);
+      isOpenPrioriteti.value = state;
+    };
 
-    //     const usernew = ref(supabase.auth.getUser());
-    //   supabase.auth.onAuthStateChange(() => {
-    //   usernew.value = supabase.auth.getUser();
-    // });
 
 
     const newNote = ref('');
 
     const allowedUsers = ref(["jovanmaks92@gmail.com"]);
 
-
+    const actionSheetButtons = (note) => [
+      {
+        text: 'Хитно',
+        handler: () => {
+          console.log('Hitno clicked note', note);
+          console.log('Hitno clicked id', note.id);
+          // updateNotePriority(note.id, true, false, false);
+        },
+      },
+      {
+        text: 'Важно',
+        handler: () => {
+          // updateNotePriority(note.id, false, true, false);
+        },
+      },
+      {
+        text: 'Регуларно',
+        handler: () => {
+          // updateNotePriority(note.id, false, false, true);
+        },
+      },
+      {
+        text: 'Откажи',
+        role: 'cancel',
+        data: {
+          action: 'cancel',
+        },
+      },
+    ];
 
 
     // const isSpecialUser = computed(() => {
@@ -620,10 +660,10 @@ export default {
     };
 
     return {
-      data, loadData, removeItem,
-      people, chatbubble, share, trash,
+      data, loadData, removeItem, setOpenPrioriteti,
+      people, chatbubble, share, trash,alertCircle,actionSheetButtons, actionSheetButtonsRef,
       cancel, confirm, confirmChanges, confirmChangesBiljeska, confirmChangesSaradnici, addBiljeska,
-      modalRef, inputRef, isOpenRef, isOpenRefSaradnici, isOpenRefBiljeske,
+      modalRef, inputRef, isOpenRef, isOpenRefSaradnici, isOpenRefBiljeske, isOpenPrioriteti,
       setOpen, setOpenSaradnici, setOpenBiljeske,
       allUsers, currentProjectUsers, selectedUserIDs, currentUserID, currentUserEmail, selectedImeProjekta,
       toggleUser, shareClicked, saradniciClicked, biljeskeClicked,
