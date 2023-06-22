@@ -110,6 +110,11 @@
               <ion-icon :icon="archive"></ion-icon>
             </ion-fab-button>
           </router-link>
+          <ion-fab-button size="small" @click="setOpenFilter(true, note)">
+            <ion-icon :icon="funnel"></ion-icon>
+            <ion-action-sheet :is-open="isOpenFilter" header="Сортирај по:" :buttons="actionSheetButtonsFilterRef"
+              @didDismiss="setOpenFilter(false)"></ion-action-sheet>
+          </ion-fab-button>
         </ion-fab-list>
       </ion-fab>
 
@@ -149,6 +154,9 @@
           </ion-fab-button> -->
         </ion-fab-list>
       </ion-fab>
+
+
+
     </template>
   </base-layout>
 </template>
@@ -210,6 +218,7 @@ import {
   car,
   checkmarkDone,
   list,
+  funnel,
 } from 'ionicons/icons';
 
 
@@ -228,8 +237,6 @@ export default {
     IonCardContent,
     IonRefresher,
     IonRefresherContent,
-    // RouterLink
-    // IonList, IonTitle,IonItem, IonTabBar,IonMenu, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet
   },
   setup() {
     // const emails = ref([]);
@@ -238,9 +245,11 @@ export default {
     const notes = ref([]);
     const isDataLoaded = ref(false);
     const isOpen = ref(false);
+    const isOpenFilter = ref(false);
     const selectedColor = ref(''); // default color can be empty or any valid ionic color
 
     const actionSheetButtonsRef = ref([]);
+    const actionSheetButtonsFilterRef = ref([]);
 
 
     const changeColor = (color) => {
@@ -304,6 +313,13 @@ export default {
     };
 
 
+    const setOpenFilter = (state, note = null) => {
+      console.log('filter oppened', state, note);
+      actionSheetButtonsFilterRef.value = actionSheetButtonsFilter(note);
+      isOpenFilter.value = state;
+    };
+
+
     const actionSheetButtons = (note) => [
       {
         text: 'Хитно',
@@ -333,6 +349,28 @@ export default {
         },
       },
     ];
+
+    const actionSheetButtonsFilter = (note) => [
+      {
+        text: 'Приоритету',
+      },
+      {
+        text: 'Датуму',
+      },
+      {
+        text: 'Креатору',
+      },
+      {
+        text: 'Откажи',
+        role: 'cancel',
+        data: {
+          action: 'cancel',
+        },
+      },
+    ];
+
+
+
 
     const computeCardColor = (note) => {
       if (note.levelOne) return 'danger';
@@ -390,13 +428,18 @@ export default {
       isDataLoaded,
       doRefresh,
       archiveNote,
-      actionSheetButtons,
       isOpen,
+      isOpenFilter,
       setOpen,
+      setOpenFilter,
       changeColor, // Add this line
       selectedColor, // And this line
       computeCardColor,
+      actionSheetButtons,
+      actionSheetButtonsFilter,
       actionSheetButtonsRef,
+      actionSheetButtonsFilterRef,
+      funnel,
     }
   },
 };
@@ -405,6 +448,4 @@ export default {
 .archive-button {
   margin-left: 50px;
 }
-
-
 </style>
