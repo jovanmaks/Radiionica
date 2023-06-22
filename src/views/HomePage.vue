@@ -164,61 +164,17 @@
 <script lang="js">
 
 import {
-  IonList,
-  IonActionSheet,
-  IonTitle,
-  IonItem,
-  IonTabBar,
-  IonMenu,
-  IonTabButton,
-  IonTabs,
-  IonLabel,
-  IonIcon,
-  IonPage,
-  IonRouterOutlet,
-  IonFab,
-  IonFabButton,
-  IonFabList,
-  IonCard,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardContent,
-  IonRefresher,
-  IonRefresherContent,
+  IonActionSheet, IonIcon, IonFab, IonFabButton, IonFabList, IonCard, IonCardHeader,
+  IonCardSubtitle, IonCardContent, IonRefresher, IonRefresherContent,
 } from '@ionic/vue';
 
 import { onMounted, ref } from 'vue';
 import { supabase } from '@/supabase';
 
 import {
-  ellipse,
-  alertCircle,
-  square,
-  triangle,
-  star,
-  library,
-  hammer,
-  server,
-  easel,
-  add,
-  archive,
-  build,
-  construct,
-  folder,
-  cash,
-  brush,
-  desktop,
-  layers,
-  cut,
-  extensionPuzzle,
-  colorFill,
-  create,
-  cart,
-  camera,
-  car,
-  checkmarkDone,
-  list,
-  funnel,
+  ellipse, alertCircle, square, triangle, star, library, hammer, server, easel,
+  add, archive, build, construct, folder, cash, brush, desktop, layers, cut,
+  extensionPuzzle, colorFill, create, cart, camera, car, checkmarkDone, list, funnel,
 } from 'ionicons/icons';
 
 
@@ -226,21 +182,11 @@ import {
 export default {
   name: 'HomePage',
   components: {
-    IonActionSheet,
-    IonFab,
-    IonFabButton,
-    IonFabList,
-    IonIcon,
-    IonCard,
-    IonCardHeader,
-    IonCardSubtitle,
-    IonCardContent,
-    IonRefresher,
-    IonRefresherContent,
+    IonActionSheet, IonFab, IonFabButton, IonFabList, IonIcon, IonCard, IonCardHeader,
+    IonCardSubtitle, IonCardContent, IonRefresher, IonRefresherContent,
   },
+
   setup() {
-    // const emails = ref([]);
-    // const currentUser = ref(null);
 
     const notes = ref([]);
     const isDataLoaded = ref(false);
@@ -251,23 +197,10 @@ export default {
     const actionSheetButtonsRef = ref([]);
     const actionSheetButtonsFilterRef = ref([]);
 
-
     const changeColor = (color) => {
       selectedColor.value = color;
     };
 
-
-    // const fetchNotes = async () => {
-    //   const { data, error } = await supabase.from('notes').select('homescreen, kreator, id, isHomescreenArchived');
-
-    //   if (error) {
-    //     console.error(error);
-    //     return;
-    //   }
-    //   notes.value = data;
-    //   isDataLoaded.value = true;
-    //   console.log(data);
-    // };
 
     const fetchNotes = async () => {
       const { data, error } = await supabase
@@ -303,7 +236,6 @@ export default {
         console.log(`Note ${noteId} archived successfully`)
       }
     }
-
 
 
     const setOpen = (state, note = null) => {
@@ -350,15 +282,49 @@ export default {
       },
     ];
 
+
+    const sortNotes = (compareFunction) => {
+      notes.value.sort(compareFunction);
+    };
+
+    const sortByPriority = () => {
+      sortNotes((a, b) => {
+        if (a.levelOne !== b.levelOne) {
+          return b.levelOne - a.levelOne;
+        } else if (a.levelTwo !== b.levelTwo) {
+          return b.levelTwo - a.levelTwo;
+        } else {
+          return b.levelThree - a.levelThree;
+        }
+      });
+    };
+
+    const sortById = () => {
+      sortNotes((a, b) => a.id - b.id);
+    };
+
+    const sortByCreator = () => {
+      sortNotes((a, b) => a.kreator.localeCompare(b.kreator));
+    };
+
     const actionSheetButtonsFilter = (note) => [
       {
         text: 'Приоритету',
+        handler: () => {
+          sortByPriority();
+        },
       },
       {
         text: 'Датуму',
+        handler: () => {
+          sortById();
+        },
       },
       {
         text: 'Креатору',
+        handler: () => {
+          sortByCreator();
+        },
       },
       {
         text: 'Откажи',
@@ -368,10 +334,6 @@ export default {
         },
       },
     ];
-
-
-
-
     const computeCardColor = (note) => {
       if (note.levelOne) return 'danger';
       if (note.levelTwo) return 'warning';
@@ -404,42 +366,15 @@ export default {
     };
 
 
-
     return {
-      library, hammer, server, easel, add, archive, alertCircle,
-      build,
-      construct,
-      folder,
-      cash,
-      brush,
-      desktop,
-      layers,
-      cut,
-      colorFill,
-      extensionPuzzle,
-      create,
-      cart,
-      camera,
-      car,
-      checkmarkDone,
-      list,
-      notes,
-      // emails,
-      isDataLoaded,
-      doRefresh,
-      archiveNote,
-      isOpen,
-      isOpenFilter,
-      setOpen,
-      setOpenFilter,
-      changeColor, // Add this line
-      selectedColor, // And this line
-      computeCardColor,
-      actionSheetButtons,
-      actionSheetButtonsFilter,
-      actionSheetButtonsRef,
-      actionSheetButtonsFilterRef,
-      funnel,
+      library, hammer, server, easel, add, archive, alertCircle, build, construct, folder, cash, funnel,
+      brush, desktop, layers, cut, colorFill, extensionPuzzle, create, cart, camera, car,
+      checkmarkDone, list, notes, isDataLoaded, doRefresh, archiveNote, isOpen, isOpenFilter,
+      setOpen, setOpenFilter, changeColor, selectedColor, computeCardColor,
+      actionSheetButtons, actionSheetButtonsFilter, actionSheetButtonsRef, actionSheetButtonsFilterRef,
+      sortByPriority,
+      sortById,
+      sortByCreator,
     }
   },
 };
