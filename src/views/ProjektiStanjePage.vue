@@ -13,11 +13,11 @@
             <!-- <ion-card :color="computeCardColor()(item)"> -->
 
             <ion-card-header>
-              <ion-card-title>Projekat: {{ item.ime_projekta }}</ion-card-title>
-              <ion-card-subtitle>Investitor: {{ item.investitor }}</ion-card-subtitle>
-              <ion-card-subtitle>Lokacija: {{ item.lokacija }}</ion-card-subtitle>
-              <ion-card-subtitle>Predaja: {{ item.rok_predaja }}</ion-card-subtitle>
-              <ion-card-subtitle v-if="isSpecialUser" >Cena: {{ item.cijena_projekta }}</ion-card-subtitle>
+              <ion-card-title>Пројекат: {{ item.ime_projekta }}</ion-card-title>
+              <ion-card-subtitle>Инвеститор: {{ item.investitor }}</ion-card-subtitle>
+              <ion-card-subtitle>Локација: {{ item.lokacija }}</ion-card-subtitle>
+              <ion-card-subtitle>Предаја: {{ item.rok_predaja }}</ion-card-subtitle>
+              <ion-card-subtitle v-if="isSpecialUser" >Цијена: {{ item.cijena_projekta }}</ion-card-subtitle>
             </ion-card-header>
 
 
@@ -49,7 +49,7 @@
           </ion-button>
 
             <!-- Status -->
-            <ion-item>
+            <!-- <ion-item>
               <ion-label>Status</ion-label>
               <ion-select v-model="velicina">
                 <ion-select-option value="mala">Ceka odgovor</ion-select-option>
@@ -57,7 +57,7 @@
                 <ion-select-option value="velika">Ceka naplatu</ion-select-option>
                 <ion-select-option value="specijalna">Zavrseno</ion-select-option>
               </ion-select>
-            </ion-item>
+            </ion-item> -->
 
           </ion-card>
         </div>
@@ -67,11 +67,16 @@
           <ion-header>
             <ion-toolbar>
               <ion-buttons slot="start">
-                <ion-button @click="setOpen(false)">Cancel</ion-button>
+                <ion-button @click="setOpen(false)">
+                  <ion-icon slot="icon-only" :icon="close"></ion-icon>
+                </ion-button>
               </ion-buttons>
 
               <ion-buttons slot="end">
-                <ion-button :strong="true" @click="confirmChanges">Confirm</ion-button>
+                <ion-button :strong="true" @click="confirmChanges">
+                  <!-- Confirm -->
+                  <ion-icon slot="icon-only" :icon="checkmark"></ion-icon>
+                </ion-button>
               </ion-buttons>
             </ion-toolbar>
           </ion-header>
@@ -99,7 +104,10 @@
           <ion-header>
             <ion-toolbar>
               <ion-buttons slot="end">
-                <ion-button @click="setOpenSaradnici(false)">Close</ion-button>
+                <ion-button @click="setOpenSaradnici(false)">
+                  <!-- Close -->
+                  <ion-icon slot="icon-only" :icon="close"></ion-icon>
+                </ion-button>
               </ion-buttons>
 
               <!-- <ion-buttons slot="end">
@@ -129,7 +137,10 @@
           <ion-header>
             <ion-toolbar>
               <ion-buttons slot="end">
-                <ion-button @click="setOpenBiljeske(false)">Zatvori</ion-button>
+                <ion-button @click="setOpenBiljeske(false)">
+                  <!-- Zatvori -->
+                  <ion-icon slot="icon-only" :icon="close"></ion-icon>
+                </ion-button>
               </ion-buttons>
 
               <!-- <ion-buttons slot="end">
@@ -158,11 +169,11 @@
               <!-- Input field for notes -->
               <div class="input-button-container">
                 <ion-item style="flex-grow: 1;">
-                  <ion-input v-model="newNote" placeholder="Enter Note"></ion-input>
+                  <ion-input v-model="newNote" placeholder="Билјљешка"></ion-input>
                 </ion-item>
 
                 <!-- Add Note Button -->
-                <ion-button :strong="true" @click="addBiljeska" style="margin-left: 5px;">Add Note</ion-button>
+                <ion-button :strong="true" @click="addBiljeska" style="margin-left: 5px;">Додај</ion-button>
               </div>
             </div>
 
@@ -179,7 +190,7 @@
 
 <script lang="js">
 
-import { trash, share, cube, home, heart, pin, analytics, build, chatbubble, people,alertCircle } from "ionicons/icons";
+import { trash, share, cube, home, heart, pin, analytics, build, chatbubble, people,alertCircle, close, checkmark } from "ionicons/icons";
 import { ref, computed, nextTick, onMounted } from 'vue';
 import { supabase } from '@/supabase';
 
@@ -741,7 +752,7 @@ export default {
     };
 
     return {
-      data, loadData, removeItem, setOpenPrioriteti,
+      data, loadData, removeItem, setOpenPrioriteti,close, checkmark,
       people, chatbubble, share, trash,alertCircle,actionSheetButtons, actionSheetButtonsRef,
       cancel, confirm, confirmChanges, confirmChangesBiljeska, confirmChangesSaradnici, addBiljeska,
       modalRef, inputRef, isOpenRef, isOpenRefSaradnici, isOpenRefBiljeske, isOpenPrioriteti,

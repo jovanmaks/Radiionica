@@ -3,9 +3,10 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button :default-href="pageDefaultBackLink"></ion-back-button>
-          <!-- <ion-back-button :default-href="/"></ion-back-button> -->
-          <!-- <ion-back-button></ion-back-button> -->
+          <!-- <ion-back-button :default-href="pageDefaultBackLink"></ion-back-button> -->
+          <ion-button @click="$router.back()">
+            <ion-icon :icon="arrowBack"></ion-icon>
+          </ion-button>
         </ion-buttons>
         <ion-title>{{ pageTitle }}</ion-title>
         <ion-buttons slot="end">
@@ -13,7 +14,7 @@
           <ion-button fill="clear" @click="signOut">
             <ion-icon :icon="logOut"></ion-icon>
           </ion-button>
-          
+
           <!-- <ion-menu-button auto-hide="false" tab="meny" href="/meny"></ion-menu-button> -->
         </ion-buttons>
       </ion-toolbar>
@@ -32,18 +33,25 @@
 
     <ion-footer>
       <ion-toolbar>
-        <ion-button slot="start" fill="solid" tab="pocetna" href="/home">
+        <ion-button slot="start" fill="solid" tab="pocetna" @click="navigateTo('/home')" color="medium">
           <ion-icon :icon="home"></ion-icon>
         </ion-button>
+        <!-- <ion-button slot="start" fill="solid" tab="pocetna" href="/home" color="medium">
+          <ion-icon :icon="home"></ion-icon>
+        </ion-button> -->
         <!-- <ion-button fill="solid" @click="takePhoto">
             <ion-icon :icon="camera"></ion-icon>
           </ion-button> -->
         <center>
-          <ion-button id="open-modal" @click="setOpen(true)">
+          <ion-button id="open-modal" @click="setOpen(true)" color="medium">
+            <ion-badge slot="end">{{ noteCount }}</ion-badge>
             <ion-icon :icon="notifications"></ion-icon>
           </ion-button>
         </center>
-        <ion-button slot="end" fill="solid" tab="account" href="/account">
+        <!-- <ion-button slot="end" fill="solid" tab="account" href="/account" color="medium">
+          <ion-icon :icon="person"></ion-icon>
+        </ion-button> -->
+        <ion-button slot="end" fill="solid" tab="account" @click="navigateTo('/account')" color="medium">
           <ion-icon :icon="person"></ion-icon>
         </ion-button>
       </ion-toolbar>
@@ -55,7 +63,7 @@
           <ion-buttons slot="start">
             <ion-button @click="setOpen(false)">
               <ion-icon :icon="close"></ion-icon>
-             </ion-button>
+            </ion-button>
           </ion-buttons>
           <!-- <ion-title>Notifikacija</ion-title> -->
           <ion-buttons slot="end">
@@ -83,6 +91,7 @@
 <script>
 import {
   IonInput,
+  IonBadge,
   IonItem,
   IonPage,
   IonModal,
@@ -92,7 +101,7 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
-  IonBackButton,
+  // IonBackButton,
   IonButton,
   IonButtons,
   // IonMenuButton,
@@ -118,12 +127,13 @@ import {
   checkmark,
   close,
   trash,
+  arrowBack,
 } from "ionicons/icons";
 
 import { Browser } from "@capacitor/browser";
 import { isPlatform } from "@ionic/vue";
 
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, ref, onMounted, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { supabase } from "@/supabase";
 import ExploreContainer from "@/components/ExploreContainer.vue";
@@ -136,6 +146,7 @@ export default defineComponent({
   props: ["pageTitle", "pageDefaultBackLink"],
   components: {
     IonInput,
+    IonBadge,
     IonPage,
     IonItem,
     IonModal,
@@ -143,7 +154,7 @@ export default defineComponent({
     IonToolbar,
     IonTitle,
     IonContent,
-    IonBackButton,
+    // IonBackButton,
     IonButton,
     IonButtons,
     // IonMenuButton,
@@ -157,6 +168,8 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const routeName = router.currentRoute.value.name;
+    const noteCount = ref(0);
+
 
     const { photos, takePhoto } = usePhotoGallery();
 
@@ -182,128 +195,65 @@ export default defineComponent({
     const newNote = ref("");
     const user = ref(supabase.auth.getUser());
     const usernew = ref(supabase.auth.getUser())
-  
+
+    const navigateTo = (route) => {
+      setTimeout(() => {
+        router.push(route);
+      }, 0);
+    };
+
     const addNote = async () => {
-  try {
-    console.log("newNote:", newNote.value); 
-    // console.log("user:", user.value);  // Add this line
+      try {
+        console.log("newNote:", newNote.value);
+        // console.log("user:", user.value);  // Add this line
 
-      // user.value = supabase.auth.getUser();
-      
-      const usernewResolved = await usernew.value;
-      // currentUserID.value = usernewResolved.data.user.id;
-      // console.log('user je', usernewResolved.davalue);
-      console.log('user je', usernewResolved.data.user.id);
+        // user.value = supabase.auth.getUser();
 
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('username')
-      .eq('id', usernewResolved.data.user.id)  // use user.value.id directly
-      .single();
+        const usernewResolved = await usernew.value;
+        // currentUserID.value = usernewResolved.data.user.id;
+        // console.log('user je', usernewResolved.davalue);
+        console.log('user je', usernewResolved.data.user.id);
 
-
-    // Here, you should use user.value directly:
-    if (newNote.value.trim() === "" || !user.value) {
-      console.log("Note value is empty or user is not logged in. Skipping insertion.");
-      return;
-    }
-
-    const { error } = await supabase.from("notes").insert([
-      { 
-        homescreen: newNote.value,
-        user_id: usernewResolved.data.user.id, 
-        kreator: profile.username,
-      },
-    ]);
-
-    if (error) throw error;
-
-    console.log("Note added successfully");
-    newNote.value = ""; // Clear the input after successful insertion
-  } catch (error) {
-    console.error("Error inserting note:", error);
-  }
-};
-
-//     const addNote = async () => {
-//   try {
-//     console.log("newNote:", newNote.value); 
-//     console.log("user:", user.value);  // Add this line
-
-//       // user.value = supabase.auth.getUser();
-      
-//       const usernewResolved = await usernew.value;
-//       // currentUserID.value = usernewResolved.data.user.id;
-//       console.log('user je', usernewResolved.value);
-
-//       const { data: profile } = await this.$supabase
-//       .from('profiles')
-//       .select('username')
-//       .eq('id', usernewResolved.data.user.id)
-//       .single();
-  
-
-//     // Here, you should use user.value directly:
-//     if (newNote.value.trim() === "" || !user.value) {
-//       console.log("Note value is empty or user is not logged in. Skipping insertion.");
-//       return;
-//     }
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('username')
+          .eq('id', usernewResolved.data.user.id)  // use user.value.id directly
+          .single();
 
 
+        // Here, you should use user.value directly:
+        if (newNote.value.trim() === "" || !user.value) {
+          console.log("Note value is empty or user is not logged in. Skipping insertion.");
+          return;
+        }
+
+        const { error } = await supabase.from("notes").insert([
+          {
+            homescreen: newNote.value,
+            user_id: usernewResolved.data.user.id,
+            kreator: profile.username,
+          },
+        ]);
+
+        if (error) throw error;
+
+        console.log("Note added successfully");
+        newNote.value = ""; // Clear the input after successful insertion
+      } catch (error) {
+        console.error("Error inserting note:", error);
+      }
+    };
 
 
-//     const { error } = await supabase.from("notes").insert([
-//       { 
-//         homescreen: newNote.value,
-//         user_id: usernewResolved.data.user.id, 
-//         kreator: profile.username,
-//       },
-//     ]);
+    watchEffect(async () => {
+      const { data, error } = await supabase.from("notes").select("*");
+      if (error) {
+        console.error("Error fetching notes:", error);
+      } else {
+        noteCount.value = data.length;
+      }
+    });
 
-//     if (error) throw error;
-
-//     console.log("Note added successfully");
-//     newNote.value = ""; // Clear the input after successful insertion
-//   } catch (error) {
-//     console.error("Error inserting note:", error);
-//   }
-// };
-
-
-// const addNote = async () => {
-//   try {
-//     console.log("newNote:", newNote.value); 
-//     console.log("user:", user.value);
-
-//     if (newNote.value.trim() === "" || !user.value) {
-//       console.log("Note value is empty or user is not logged in. Skipping insertion.");
-//       return;
-//     }
-
-//     const { data: profile } = await supabase
-//       .from('profiles')
-//       .select('username')
-//       .eq('user_id', user.value.id)  // use user.value.id directly
-//       // .single();
-
-//       console.log("No profile found for user id:", user.value.id);
-
-//     const { error } = await supabase.from("notes").insert([
-//       { 
-//         homescreen: newNote.value,
-//         user_id: user.value.id,  // use user.value.id directly
-//         kreator: profile.username,
-//       },
-//     ]);
-
-//     if (error) throw error;
-
-//     console.log("Note added successfully");
-//     newNote.value = ""; // Clear the input after successful insertion
-//   } catch (error) {
-//     console.error("Error inserting note:", error);
-//   }
-// };
 
 
     const confirmChanges = async () => {
@@ -312,17 +262,13 @@ export default defineComponent({
       setOpen(false);
     };
 
-    onMounted(() => {
-      // fetchUserMetadata();
-      // usernewResolved = await usernew.value;
-
-      // supabase.auth.getUser().then((user) => {
-      //   user.value = user;
-      // }).catch((error) => {
-      //   console.error('Error getting user:', error);
-      // });
-
-      const urlParams = new URLSearchParams(window.location.search);
+    onMounted(async () => {
+      const { data, error } = await supabase.from("notes").select("*");
+      if (error) {
+        console.error("Error fetching notes:", error);
+      } else {
+        noteCount.value = data.length;
+      }
     });
 
     const signOut = async () => {
@@ -347,6 +293,8 @@ export default defineComponent({
             name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
         }
 
+        // user.value = null;
+        // usernew.value = null;
         // Redirects after successfully logging out
         router.push({ name: "Entrance" });
       } catch (error) {
@@ -380,6 +328,9 @@ export default defineComponent({
       logOut,
       checkmark,
       close,
+      noteCount,
+      arrowBack,
+      navigateTo,
       // usernewResolved,
     };
   },

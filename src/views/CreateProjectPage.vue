@@ -7,13 +7,13 @@
         <ion-list>
 
           <ion-item>
-            <ion-label>Ime projekta:</ion-label>
+            <ion-label>Име пројекта:</ion-label>
             <ion-input v-model="ime_projekta" type="text"></ion-input>
           </ion-item>
 
           <ion-item>
 
-            <ion-label>Pocetak projekta:</ion-label>
+            <ion-label>Почетак пројекта:</ion-label>
             <ion-datetime-button datetime="datetime"></ion-datetime-button>
             <ion-modal :keep-contents-mounted="true">
               <ion-datetime id="datetime" v-model="pocetak_projekta"></ion-datetime>
@@ -22,7 +22,7 @@
           </ion-item>
 
           <ion-item>
-            <ion-label>Rok za predaju:</ion-label>
+            <ion-label>Рок за предају:</ion-label>
             <ion-datetime-button datetime="datetime2"></ion-datetime-button>
             <ion-modal :keep-contents-mounted="true">
               <ion-datetime id="datetime2" v-model="rok_predaja"></ion-datetime>
@@ -30,40 +30,40 @@
           </ion-item>
 
           <ion-item>
-            <ion-label>Investitor:</ion-label>
+            <ion-label>Инвеститор:</ion-label>
             <ion-input v-model="investitor" type="text"></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label>Lokacija:</ion-label>
+            <ion-label>Локација:</ion-label>
             <ion-input v-model="lokacija" type="text"></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label>Cena:</ion-label>
+            <ion-label>Цијена:</ion-label>
             <ion-input v-model="cena" type="number"></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label>Broj objekata:</ion-label>
+            <ion-label>Број објеката:</ion-label>
             <ion-input v-model="broj_objekata" type="number" @ionChange="updateObjekti"></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label>Velicina</ion-label>
+            <ion-label>Величина</ion-label>
             <ion-select v-model="velicina">
-              <ion-select-option value="mala">Mala</ion-select-option>
-              <ion-select-option value="srednja">Srednja</ion-select-option>
-              <ion-select-option value="velika">Velika</ion-select-option>
-              <ion-select-option value="specijalna">Specijalna</ion-select-option>
+              <ion-select-option value="mala">Мала</ion-select-option>
+              <ion-select-option value="srednja">Средња</ion-select-option>
+              <ion-select-option value="velika">Велика</ion-select-option>
+              <ion-select-option value="specijalna">Специјална</ion-select-option>
             </ion-select>
           </ion-item>
 
           <ion-item>
-            <ion-label>Stil</ion-label>
+            <ion-label>Стил</ion-label>
             <ion-select v-model="kolorit">
-              <ion-select-option value="bijela">Bijela</ion-select-option>
-              <ion-select-option value="realisticna">Realisticna</ion-select-option>
+              <ion-select-option value="bijela">Бијела</ion-select-option>
+              <ion-select-option value="realisticna">Реалистична</ion-select-option>
             </ion-select>
           </ion-item>
 
@@ -87,19 +87,25 @@
 
         </ion-list>
 
-        <ion-button expand="block" id="open-modal" color="dark" @click="setOpen(true)">Saradnici</ion-button>
-        <ion-button expand="block" @click="submitProject" color="secondary">Submit Project</ion-button>
+        <ion-button expand="block" id="open-modal" color="dark" @click="setOpen(true)">Сарадници</ion-button>
+        <ion-button expand="block" @click="submitProject" color="secondary">Сачувај</ion-button>
 
         <ion-modal :is-open="isOpenRef" css-class="my-custom-class" @didDismiss="setOpen(false)">
           <ion-header>
             <ion-toolbar>
               <ion-buttons slot="start">
-                <ion-button @click="setOpen(false)">Cancel</ion-button>
+                <ion-button @click="setOpen(false)">
+                  <ion-icon slot="icon-only" name="close"></ion-icon>
+                  <!-- Cancel -->
+                </ion-button>
               </ion-buttons>
 
               <!-- <ion-title>Saradnici</ion-title> -->
               <ion-buttons slot="end">
-                <ion-button :strong="true" @click="confirmChanges">Confirm</ion-button>
+                <ion-button :strong="true" @click="confirmChanges">
+                  <!-- Confirm -->
+                  <ion-icon slot="end" :icon="checkmark"></ion-icon>
+                </ion-button>
               </ion-buttons>
             </ion-toolbar>
           </ion-header>
@@ -157,7 +163,7 @@ import {
   // IonFabButton,
 } from '@ionic/vue';
 
-import { ellipse, square, triangle, star, add } from 'ionicons/icons';
+import { ellipse, square, triangle, star, add, close, checkmark } from 'ionicons/icons';
 
 
 export default {
@@ -408,6 +414,8 @@ export default {
       cena,
       broj_objekata,
       objekti,
+      close,
+      checkmark,
 
       objekti_crtanje,
       objekti_programiranje,

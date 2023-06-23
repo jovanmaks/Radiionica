@@ -4,42 +4,42 @@
       <ion-content>
         <ion-list>
           <ion-item>
-            <ion-label>Materijal</ion-label>
+            <ion-label>Материјал</ion-label>
             <ion-select v-model="materijal">
-              <ion-select-option value="polistirol">Polistirol</ion-select-option>
-              <ion-select-option value="poliuretan">Poliuretan</ion-select-option>
-              <ion-select-option value="drvo">Drvo</ion-select-option>
-              <ion-select-option value="medijapan">Medijapan</ion-select-option>
-              <ion-select-option value="iverica">Iverica</ion-select-option>
+              <ion-select-option value="polistirol">Полистирол</ion-select-option>
+              <ion-select-option value="poliuretan">Полиуретан</ion-select-option>
+              <ion-select-option value="drvo">Дрво</ion-select-option>
+              <ion-select-option value="medijapan">Медијапан</ion-select-option>
+              <ion-select-option value="iverica">Иверица</ion-select-option>
             </ion-select>
           </ion-item>
 
           <ion-item>
-            <ion-label>Oblik</ion-label>
+            <ion-label>Облик</ion-label>
             <ion-select v-model="oblik">
-              <ion-select-option value="plocasti">Plocasti</ion-select-option>
-              <ion-select-option value="kubicni">Kubicni</ion-select-option>
+              <ion-select-option value="plocasti">Плочасти</ion-select-option>
+              <ion-select-option value="kubicni">Кубични</ion-select-option>
             </ion-select>
           </ion-item>
 
           <ion-item>
-            <ion-label position="floating">Širina</ion-label>
+            <ion-label position="floating">Ширина</ion-label>
             <ion-input v-model="sirina" type="number"></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label position="floating">Dužina</ion-label>
+            <ion-label position="floating">Дужина</ion-label>
             <ion-input v-model="duzina" type="number"></ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label position="floating">Debljina</ion-label>
+            <ion-label position="floating">Дебљина</ion-label>
             <ion-input v-model="debljina" type="number"></ion-input>
           </ion-item>
         </ion-list>
 
           <ion-item>
-            <ion-label position="floating">Biljeska</ion-label>
+            <ion-label position="floating">Биљешка</ion-label>
             <ion-input v-model="biljeska" type="string"></ion-input>
           </ion-item>
 

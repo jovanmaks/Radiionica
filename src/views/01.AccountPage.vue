@@ -63,7 +63,7 @@
         </ion-list>
 
 
-        <ion-button fill="clear" type="submit">Update Profile</ion-button>
+        <ion-button fill="solid" type="submit" color="dark">Сачувај</ion-button>
 
       </form>
 

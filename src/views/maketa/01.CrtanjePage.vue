@@ -7,7 +7,7 @@
       <ion-content class="ion-padding">
 
         <div style="text-align:center">
-          <h2 v-if="selectedProject">Projekat: {{ selectedProject }}</h2>
+          <h2 v-if="selectedProject">Пројекат: {{ selectedProject }}</h2>
         </div>
 
         <div style="display: flex; justify-content: center;">
@@ -34,11 +34,17 @@
           <ion-header>
             <ion-toolbar>
               <ion-buttons slot="start">
-                <ion-button @click="setOpen(false)">Otkazi</ion-button>
+                <ion-button @click="setOpen(false)">
+                  <ion-icon :icon="close"></ion-icon>
+                  <!-- Otkazi -->
+                </ion-button>
               </ion-buttons>
               <!-- <ion-title>Sekcija</ion-title> -->
               <ion-buttons slot="end">
-                <ion-button :strong="true" @click="confirmChanges">Potvrdi</ion-button>
+                <ion-button :strong="true" @click="confirmChanges">
+                  <!-- Potvrdi -->
+                  <ion-icon :icon="checkmark"></ion-icon>
+                </ion-button>
               </ion-buttons>
             </ion-toolbar>
           </ion-header>
@@ -52,7 +58,7 @@
                   <ion-label>{{ index + 1 }}</ion-label>
                 </ion-segment-button>
                 <ion-segment-button value="done" @click="updateStatus(index, 'done')">
-                  <ion-label>Done</ion-label>
+                  <ion-label>Завршено</ion-label>
                 </ion-segment-button>
               </ion-segment>
             </ion-item>
@@ -107,7 +113,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 Chart.register(ChartDataLabels);
 Chart.register(...registerables);
 
-import { print, qrCode, checkmarkDone, cloudUpload, share, add, notifications } from "ionicons/icons";
+import { print, qrCode, checkmarkDone, cloudUpload, share, add, notifications, close,checkmark } from "ionicons/icons";
 
 
 
@@ -198,7 +204,7 @@ export default {
       myChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-          labels: Array(chartSize.value).fill().map((_, i) => i === chartSize.value - 1 ? "Postolje" : `Objekat ${i + 1}`),
+          labels: Array(chartSize.value).fill().map((_, i) => i === chartSize.value - 1 ? "Постоље" : `Објекат ${i + 1}`),
           datasets: [{
             label: '# of Votes',
             data: Array(chartSize.value).fill(1),
@@ -251,7 +257,8 @@ export default {
     };
 
 
-    return { add, notifications, chartRef, isOpenRef, setOpen, data, modalSections, updateStatus, confirmChanges, selectedProject };
+    return { close, checkmark, add, notifications, chartRef, isOpenRef, setOpen,
+       data, modalSections, updateStatus, confirmChanges, selectedProject };
 
   }
 };
