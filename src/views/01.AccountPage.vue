@@ -8,59 +8,58 @@
         <ion-list>
           <ion-item>
             <ion-label>
-              <h3>Korisnik</h3>
-              <p>{{ profile.username }}</p>
+              <ion-input v-model="profile.username" placeholder="Корисник"></ion-input>
             </ion-label>
           </ion-item>
 
           <ion-item>
             <ion-label>
-              <h3>Ime i prezime:</h3>
-              <p>{{ profile.full_name }} </p>
+              <ion-input v-model="profile.full_name" placeholder="Име и презиме:"></ion-input>
             </ion-label>
           </ion-item>
 
           <ion-item>
             <ion-label>
-              <h3>email:</h3>
+              <!-- <ion-input v-model="profile.email" placeholder="Имејл:"></ion-input> -->
+              <h3>Имејл:</h3>
               <p>{{ profile.email }} </p>
             </ion-label>
           </ion-item>
 
           <ion-item>
             <ion-label>
-              <h3>Websajt:</h3>
-              <p>{{ profile.website }} </p>
+            <ion-input v-model="profile.website" placeholder="Вебсајт"></ion-input>
             </ion-label>
           </ion-item>
 
-          <ion-item>
+          <!-- <ion-item>
             <ion-label>
               <h3>Satnica:</h3>
               <p>{{ profile.hour_price }} </p>
             </ion-label>
-          </ion-item>
+          </ion-item> -->
 
-          <ion-item>
+          <!-- <ion-item>
             <ion-label>
               <h3>Zaduzenja:</h3>
               <p>{{ profile.user_roles }} </p>
             </ion-label>
-          </ion-item>
+          </ion-item> -->
 
-          <ion-item>
+          <!-- <ion-item>
             <ion-label>
               <h3>Aktivni projekti:</h3>
               <p>{{ profile.working_projects }} </p>
             </ion-label>
-          </ion-item>
+          </ion-item> -->
 
-          <ion-item>
+          <!-- <ion-item>
             <ion-label>
               <h3>Predhodni projekt:</h3>
               <p>{{ profile.past_projects }} </p>
             </ion-label>
-          </ion-item>
+          </ion-item> -->
+
         </ion-list>
 
 
@@ -89,6 +88,7 @@ import {
 import {
   // IonContent,
   IonList,
+  IonInput,
   IonTitle,
   IonItem,
   IonTabBar,
@@ -112,6 +112,7 @@ export default {
     IonList,
     // IonTitle,
     IonItem,
+    IonInput,
     // IonTabBar,
     // IonMenu,
     // IonTabButton,
@@ -150,6 +151,7 @@ export default {
       // avatar_url: '',
     });
 
+    const korisnik = ref('');
 
     async function getProfile() {
       const {
@@ -221,10 +223,17 @@ export default {
 
         const updates = {
           id: user.id,  // Only include the id in the updates object
-          username: user.email, // Set the username to the user's email
+          username: profile.value.username, // use the updated username
+          full_name: profile.value.full_name,
+          // email: profile.value.email,
+          email: user.email,
+          website: profile.value.website,
+          user_roles: profile.value.user_roles,
+          hour_price: profile.value.hour_price,
+          working_projects: profile.value.working_projects,
+          past_projects: profile.value.past_projects,
           updated_at: new Date(),
         };
-
         console.log('id sa updata', user.id);
 
         const { error } = await supabase.from('profiles').upsert(updates, {});
@@ -288,7 +297,7 @@ export default {
       signOut,
       profile,
       session,
-      updateProfile
+      updateProfile,
     };
   },
 

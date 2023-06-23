@@ -53,11 +53,15 @@
       <ion-header>
         <ion-toolbar>
           <ion-buttons slot="start">
-            <ion-button @click="setOpen(false)">Потврди</ion-button>
+            <ion-button @click="setOpen(false)">
+              <ion-icon :icon="close"></ion-icon>
+             </ion-button>
           </ion-buttons>
           <!-- <ion-title>Notifikacija</ion-title> -->
           <ion-buttons slot="end">
-            <ion-button :strong="true" @click="confirmChanges">Откажи</ion-button>
+            <ion-button :strong="true" @click="confirmChanges">
+              <ion-icon :icon="checkmark"></ion-icon>
+            </ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
@@ -65,7 +69,7 @@
       <ion-content class="ion-padding">
         <div class="input-button-container">
           <ion-item style="flex-grow: 1">
-            <ion-input v-model="newNote" placeholder="Enter Note"></ion-input>
+            <ion-input v-model="newNote" placeholder="Унеси биљешку"></ion-input>
           </ion-item>
 
           <!-- Add Note Button -->
@@ -111,6 +115,9 @@ import {
   server,
   easel,
   logOut,
+  checkmark,
+  close,
+  trash,
 } from "ionicons/icons";
 
 import { Browser } from "@capacitor/browser";
@@ -121,7 +128,6 @@ import { useRouter } from "vue-router";
 import { supabase } from "@/supabase";
 import ExploreContainer from "@/components/ExploreContainer.vue";
 
-import { trash, close } from "ionicons/icons";
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
 
 import { store } from "@/store"; // Adjust the path according to your project structure
@@ -176,26 +182,7 @@ export default defineComponent({
     const newNote = ref("");
     const user = ref(supabase.auth.getUser());
     const usernew = ref(supabase.auth.getUser())
-    // const usernewResolved= ref(null);
-
-    // async function fetchUserMetadata() {
-    //   const { user } = await supabase.auth.getUser();
-    //   console.log("User OVDEEEEEEE:", user);
-
-    //   if (user && user.user_metadata) {
-    //     Object.keys(selectedLabels.value).forEach((key) => {
-    //       if (user.user_metadata.selectedLabels[key]) {
-    //         selectedLabels.value[key] = user.user_metadata.selectedLabels[key];
-    //       }
-    //     });
-    //   } else {
-    //     console.error("User or user metadata is not defined");
-    //   }
-    // }
-
-    // const usernew = ref(supabase.auth.getUser());
-
-
+  
     const addNote = async () => {
   try {
     console.log("newNote:", newNote.value); 
@@ -205,7 +192,15 @@ export default defineComponent({
       
       const usernewResolved = await usernew.value;
       // currentUserID.value = usernewResolved.data.user.id;
-      console.log('user je', usernewResolved.value);
+      // console.log('user je', usernewResolved.davalue);
+      console.log('user je', usernewResolved.data.user.id);
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('username')
+      .eq('id', usernewResolved.data.user.id)  // use user.value.id directly
+      .single();
+
 
     // Here, you should use user.value directly:
     if (newNote.value.trim() === "" || !user.value) {
@@ -217,7 +212,7 @@ export default defineComponent({
       { 
         homescreen: newNote.value,
         user_id: usernewResolved.data.user.id, 
-        kreator: usernewResolved.data.user.email,
+        kreator: profile.username,
       },
     ]);
 
@@ -229,6 +224,87 @@ export default defineComponent({
     console.error("Error inserting note:", error);
   }
 };
+
+//     const addNote = async () => {
+//   try {
+//     console.log("newNote:", newNote.value); 
+//     console.log("user:", user.value);  // Add this line
+
+//       // user.value = supabase.auth.getUser();
+      
+//       const usernewResolved = await usernew.value;
+//       // currentUserID.value = usernewResolved.data.user.id;
+//       console.log('user je', usernewResolved.value);
+
+//       const { data: profile } = await this.$supabase
+//       .from('profiles')
+//       .select('username')
+//       .eq('id', usernewResolved.data.user.id)
+//       .single();
+  
+
+//     // Here, you should use user.value directly:
+//     if (newNote.value.trim() === "" || !user.value) {
+//       console.log("Note value is empty or user is not logged in. Skipping insertion.");
+//       return;
+//     }
+
+
+
+
+//     const { error } = await supabase.from("notes").insert([
+//       { 
+//         homescreen: newNote.value,
+//         user_id: usernewResolved.data.user.id, 
+//         kreator: profile.username,
+//       },
+//     ]);
+
+//     if (error) throw error;
+
+//     console.log("Note added successfully");
+//     newNote.value = ""; // Clear the input after successful insertion
+//   } catch (error) {
+//     console.error("Error inserting note:", error);
+//   }
+// };
+
+
+// const addNote = async () => {
+//   try {
+//     console.log("newNote:", newNote.value); 
+//     console.log("user:", user.value);
+
+//     if (newNote.value.trim() === "" || !user.value) {
+//       console.log("Note value is empty or user is not logged in. Skipping insertion.");
+//       return;
+//     }
+
+//     const { data: profile } = await supabase
+//       .from('profiles')
+//       .select('username')
+//       .eq('user_id', user.value.id)  // use user.value.id directly
+//       // .single();
+
+//       console.log("No profile found for user id:", user.value.id);
+
+//     const { error } = await supabase.from("notes").insert([
+//       { 
+//         homescreen: newNote.value,
+//         user_id: user.value.id,  // use user.value.id directly
+//         kreator: profile.username,
+//       },
+//     ]);
+
+//     if (error) throw error;
+
+//     console.log("Note added successfully");
+//     newNote.value = ""; // Clear the input after successful insertion
+//   } catch (error) {
+//     console.error("Error inserting note:", error);
+//   }
+// };
+
 
     const confirmChanges = async () => {
       // console.log('confirmChanges called, newNote:', newNote.value);
@@ -302,6 +378,8 @@ export default defineComponent({
       user,
       usernew,
       logOut,
+      checkmark,
+      close,
       // usernewResolved,
     };
   },

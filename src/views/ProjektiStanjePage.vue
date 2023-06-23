@@ -10,6 +10,7 @@
         <!--  Kartice-->
         <div v-for="(item, index) in combinedData" :key="index" >
           <ion-card :color="computeCardColor(item)">
+            <!-- <ion-card :color="computeCardColor()(item)"> -->
 
             <ion-card-header>
               <ion-card-title>Projekat: {{ item.ime_projekta }}</ion-card-title>
@@ -310,28 +311,55 @@ export default {
 
     const projekti = ref([]);
 
-    const updateNotePriority = async (itemId, levelOne, levelTwo, levelThree) => {
-      const { data, error } = await supabase
-        .from('Projekti')
-        .update({
-          levelOne: levelOne,
-          levelTwo: levelTwo,
-          levelThree: levelThree
-        })
-        .eq('id', itemId);
+    // const updateNotePriority = async (itemId, levelOne, levelTwo, levelThree) => {
+    //   const { data, error } = await supabase
+    //     .from('Projekti')
+    //     .update({
+    //       levelOne: levelOne,
+    //       levelTwo: levelTwo,
+    //       levelThree: levelThree
+    //     })
+    //     .eq('id', itemId);
 
-      if (error) {
-        console.error(error);
-      } else {
-        console.log(`Note ${itemId} priority updated successfully`);
-        const item = projekti.value.find(n => n.id === itemId);
-        if (item) {
-          item.levelOne = levelOne;
-          item.levelTwo = levelTwo;
-          item.levelThree = levelThree;
-        }
-      }
-    };
+    //   if (error) {
+    //     console.error(error);
+    //   } else {
+    //     console.log(`Note ${itemId} priority updated successfully`);
+    //     const item = projekti.value.find(n => n.id === itemId);
+    //     if (item) {
+    //       item.levelOne = levelOne;
+    //       item.levelTwo = levelTwo;
+    //       item.levelThree = levelThree;
+    //     //  console.log('sve po redu', item); 
+    //     }
+
+    //   }
+    // };
+    
+    const updateNotePriority = async (itemId, levelOne, levelTwo, levelThree) => {
+  const { data, error } = await supabase
+    .from('Projekti')
+    .update({
+      levelOne: levelOne,
+      levelTwo: levelTwo,
+      levelThree: levelThree
+    })
+    .eq('id', itemId);
+
+  if (error) {
+    console.error(error);
+  } else {
+    console.log(`Note ${itemId} priority updated successfully`);
+    const item = projekti.value.find(n => n.id === itemId);
+    if (item) {
+      item.levelOne = levelOne;
+      item.levelTwo = levelTwo;
+      item.levelThree = levelThree;
+    }
+    await loadData();  // Reload the data here
+  }
+};
+
 
 
     // const isSpecialUser = computed(() => {
@@ -428,11 +456,13 @@ export default {
     };
 
      const computeCardColor = (item) => {
+      console.log('computeCardColor', item);
       if (item.levelOne) return 'danger';
       if (item.levelTwo) return 'warning';
       if (item.levelThree) return 'success';
       return ''; // default color if no level is set
     };
+
 
 
 

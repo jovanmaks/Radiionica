@@ -35,11 +35,17 @@
         <ion-header>
           <ion-toolbar>
             <ion-buttons slot="start">
-              <ion-button @click="setOpenEdit(false)">Откажи</ion-button>
+              <ion-button @click="setOpenEdit(false)">
+                <!-- Откажи -->
+                <ion-icon :icon="close"></ion-icon>
+              </ion-button>
             </ion-buttons>
             <!-- <ion-title>Notifikacija</ion-title> -->
             <ion-buttons slot="end">
-              <ion-button :strong="true" @click="confirmChanges">Потврди</ion-button>
+              <ion-button :strong="true" @click="confirmChanges">
+                <!-- Потврди -->
+                <ion-icon :icon="checkmark"></ion-icon>
+              </ion-button>
             </ion-buttons>
           </ion-toolbar>
         </ion-header>
@@ -207,7 +213,7 @@ import {
   ellipse, alertCircle, square, triangle, star, library, hammer, server, easel,
   add, archive, build, construct, folder, cash, brush, desktop, layers, cut,
   extensionPuzzle, colorFill, create, cart, camera, car, checkmarkDone, list, funnel,
-  documentText,
+  documentText, checkmark, close ,
 } from 'ionicons/icons';
 
 
@@ -442,7 +448,7 @@ export default {
 
     return {
       library, hammer, server, easel, add, archive, alertCircle, build, construct, folder, cash, funnel,
-      brush, desktop, layers, cut, colorFill, extensionPuzzle, create, cart, camera, car,
+      brush, desktop, layers, cut, colorFill, extensionPuzzle, create, cart, camera, car, checkmark, close,
       checkmarkDone, list, notes, isDataLoaded, doRefresh, archiveNote, isOpen, isOpenFilter, isOpenEdit,
       setOpen, setOpenFilter, setOpenEdit, changeColor, selectedColor, computeCardColor,
       actionSheetButtons, actionSheetButtonsFilter,
