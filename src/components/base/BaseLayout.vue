@@ -7,22 +7,16 @@
       <slot name="actions-end" slot="actions-end"></slot>
     </app-header>
 
-    <app-footer :noteCount="noteCount" @setOpen="setOpen"></app-footer>
-
- <!-- <CustomModal v-model:isOpen="isOpenRef" :data="data" v-model:newNote="newNote" /> -->
-
 
     <ion-content>
       <slot name="content"></slot>
-      <ion-grid>
-        <ion-row>
-          <ion-col size="6" :key="photo" v-for="photo in photos">
-            <ion-img :src="photo.webviewPath"></ion-img>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
     </ion-content>
-  
+
+
+
+    <app-footer :noteCount="noteCount" @setOpen="setOpen"></app-footer>
+
+    <!-- <CustomModal v-model:isOpen="isOpenRef" :data="data" v-model:newNote="newNote" /> -->
 
 
     <ion-modal :is-open="isOpenRef" css-class="my-custom-class" @didDismiss="setOpen(false)">
@@ -50,7 +44,6 @@
         </div>
       </ion-content>
     </ion-modal>
-    
 
 
   </ion-page>
@@ -75,46 +68,28 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
-  // IonBackButton,
   IonButton,
   IonButtons,
+  // IonBackButton,
   // IonMenuButton,
-  IonCol,
-  IonGrid,
-  IonRow,
+  // IonCol,
+  // IonGrid,
+  // IonRow,
 } from "@ionic/vue";
 
-import {
-  ellipse,
-  notifications,
-  square,
-  triangle,
-  star,
-  camera,
-  person,
-  home,
-  library,
-  hammer,
-  server,
-  easel,
-  logOut,
-  checkmark,
-  close,
-  trash,
-  arrowBack,
-} from "ionicons/icons";
+import { checkmark, close } from "ionicons/icons";
 
 import { Browser } from "@capacitor/browser";
 import { isPlatform } from "@ionic/vue";
-
 import { defineComponent, ref, onMounted, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { supabase } from "@/supabase";
 import ExploreContainer from "@/components/ExploreContainer.vue";
 
-import { usePhotoGallery } from "@/composables/usePhotoGallery";
 
 import { store } from "@/store"; // Adjust the path according to your project structure
+import { useStore } from "vuex";
+
 
 export default defineComponent({
   props: ["pageTitle", "pageDefaultBackLink"],
@@ -122,50 +97,36 @@ export default defineComponent({
     AppHeader,
     AppFooter,
     // CustomModal,
+
     IonInput,
-    // IonBadge,
     IonPage,
     IonItem,
     IonModal,
     IonHeader,
     IonToolbar,
-    // IonTitle,
     IonContent,
-    // IonBackButton,
     IonButton,
     IonButtons,
+
+    // IonBadge,
+    // IonTitle,
+    // IonBackButton,
     // IonMenuButton,
-    IonCol,
-    IonGrid,
-    IonRow,
+    // IonCol,
+    // IonGrid,
+    // IonRow,
   },
 
 
 
   setup() {
+    const store = useStore();
+
+
     const router = useRouter();
     const routeName = router.currentRoute.value.name;
     const noteCount = ref(0);
 
-
-    const { photos, takePhoto } = usePhotoGallery();
-
-    const selectedLabels = ref({
-      Ponuda: false,
-      Crtanje: false,
-      Programiranje: false,
-      PripremaZaSjecenje: false,
-      Sjecenje: false,
-      PripremaZaFarbanje: false,
-      Farbanje: false,
-      Sklapanje: false,
-      Predaja: false,
-      Transport: false,
-      Fotografisanje: false,
-      Nabavka: false,
-      Magacin: false,
-      Alati: false,
-    });
 
     const isOpenRef = ref(false);
     const setOpen = (state) => (isOpenRef.value = state);
@@ -239,74 +200,34 @@ export default defineComponent({
       setOpen(false);
     };
 
-    onMounted(async () => {
-      const { data, error } = await supabase.from("notes").select("*");
-      if (error) {
-        console.error("Error fetching notes:", error);
-      } else {
-        noteCount.value = data.length;
-      }
-    });
+
+
+
 
     const signOut = async () => {
-      console.log("Logout button clicked");
-      const loader = await loadingController.create({});
-      const toast = await toastController.create({ duration: 5000 });
-      await loader.present();
-      try {
-        const { error } = await supabase.auth.signOut();
-        if (error) throw error;
-
-        window.localStorage.clear();
-        // store.dispatch('signOut');
-
-        const cookies = document.cookie.split(";");
-
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i];
-          const eqPos = cookie.indexOf("=");
-          const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-          document.cookie =
-            name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
-        }
-
-        // user.value = null;
-        // usernew.value = null;
-        // Redirects after successfully logging out
-        router.push({ name: "Entrance" });
-      } catch (error) {
-        toast.message = error.message;
-        await toast.present();
-      } finally {
-        await loader.dismiss();
-      }
+      store.dispatch('signOut')
+        .then(() => {
+          router.push({ name: "Entrance" });
+        })
+        .catch((error) => {
+          // handle the error as you see fit
+          console.error("Error signing out:", error);
+        });
     };
 
+
     return {
-      notifications,
       signOut,
-      takePhoto,
-      photos,
-      selectedLabels,
       routeName,
-      person,
-      camera,
-      home,
-      library,
-      hammer,
-      server,
-      easel,
       isOpenRef,
       setOpen,
       confirmChanges,
       newNote,
       user,
       usernew,
-      logOut,
       checkmark,
       close,
       noteCount,
-      arrowBack,
       navigateTo,
       // usernewResolved,
     };
