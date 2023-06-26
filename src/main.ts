@@ -1,5 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+// import Vuex from 'vuex';
+  import store from './store/store';
+
 import router from './router';
 
 import { IonicVue } from '@ionic/vue';
@@ -20,6 +23,7 @@ import '@ionic/vue/css/text-transformation.css';
 import '@ionic/vue/css/flex-utils.css';
 import '@ionic/vue/css/display.css';
 
+
 /* Theme variables */
 import './theme/variables.css';
 import BaseLayout from './components/base/BaseLayout.vue'
@@ -30,9 +34,9 @@ import { defineCustomElements } from '@ionic/pwa-elements/loader';
 // Call the element loader after the platform has been bootstrapped
 defineCustomElements(window);
 
-const app = createApp(App)
-  .use(IonicVue)
-  .use(router);
+const app = createApp(App);
+  app.use(IonicVue);
+  app.use(router);
   
   app.directive('auth', {
     beforeMount(el, binding) {
@@ -46,6 +50,9 @@ const app = createApp(App)
 
 
   app.component('base-layout', BaseLayout); 
+
+  // app.use(Vuex);
+  app.use(store);
 
   router.isReady().then(() => {
   app.mount('#app');

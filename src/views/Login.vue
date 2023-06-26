@@ -96,8 +96,10 @@ export default defineComponent({
           email: email.value,
           password: password.value,
         });
+        console.log('nebitnio1')
         if (error) throw error;
 
+        console.log('nebitnio2')
         const {
           data: { user },
         } = await supabase.auth.getUser()
@@ -105,13 +107,14 @@ export default defineComponent({
         // console.log('meta')
         // console.log(user.user_metadata.role)
 
+        console.log('nebitnio3')
 
         // console.log('labele',user.user_metadata.selectedLabels.Alati);
         // console.log('labele2',user.user_metadata.selectedLabels.Ponuda);
         // console.log('labele3',user.user_metadata.selectedLabels.Crtanje);
         // console.log('labele4',user.user_metadata.selectedLabels.Magacin);
-
         router.push({ name: "Home" });
+        console.log('nebitnio4')
       } catch (error) {
         errorMsg.value = error.message;
         setTimeout(() => {

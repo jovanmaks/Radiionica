@@ -8,7 +8,7 @@
         </ion-refresher>
 
         <!--  Kartice-->
-        <div v-for="(item, index) in combinedData" :key="index" >
+        <div v-for="(item, index) in combinedData" :key="index">
           <ion-card :color="computeCardColor(item)">
             <!-- <ion-card :color="computeCardColor()(item)"> -->
 
@@ -17,7 +17,8 @@
               <ion-card-subtitle>Инвеститор: {{ item.investitor }}</ion-card-subtitle>
               <ion-card-subtitle>Локација: {{ item.lokacija }}</ion-card-subtitle>
               <ion-card-subtitle>Предаја: {{ item.rok_predaja }}</ion-card-subtitle>
-              <ion-card-subtitle v-if="isSpecialUser" >Цијена: {{ item.cijena_projekta }}</ion-card-subtitle>
+              <!-- <ion-card-subtitle v-if="isSpecialUser">Цијена: {{ item.cijena_projekta }}</ion-card-subtitle> -->
+              <ion-card-subtitle> Cena: {{ item.cijena_projekta }}</ion-card-subtitle>
             </ion-card-header>
 
 
@@ -42,11 +43,11 @@
             </ion-button>
 
             <!-- Prioriteti -->
-          <ion-button class="alert-button" fill="clear" @click="setOpenPrioriteti(true, item)">
-            <ion-action-sheet :is-open="isOpenPrioriteti" header="Приоритети" :buttons="actionSheetButtonsRef"
-              @didDismiss="setOpenPrioriteti(false)"></ion-action-sheet>
-            <ion-icon :icon="alertCircle"></ion-icon>
-          </ion-button>
+            <ion-button class="alert-button" fill="clear" @click="setOpenPrioriteti(true, item)">
+              <ion-action-sheet :is-open="isOpenPrioriteti" header="Приоритети" :buttons="actionSheetButtonsRef"
+                @didDismiss="setOpenPrioriteti(false)"></ion-action-sheet>
+              <ion-icon :icon="alertCircle"></ion-icon>
+            </ion-button>
 
             <!-- Status -->
             <!-- <ion-item>
@@ -190,9 +191,11 @@
 
 <script lang="js">
 
-import { trash, share, cube, home, heart, pin, analytics, build, chatbubble, people,alertCircle, close, checkmark } from "ionicons/icons";
-import { ref, computed, nextTick, onMounted } from 'vue';
+import { trash, share, cube, home, heart, pin, analytics, build, chatbubble, people, alertCircle, close, checkmark } from "ionicons/icons";
+import { ref, computed, nextTick, onMounted, watch } from 'vue';
 import { supabase } from '@/supabase';
+
+import { useRouter, useRoute } from "vue-router";
 
 
 import {
@@ -274,7 +277,8 @@ export default {
     const isOpenRefBiljeske = ref(false);
 
     const actionSheetButtonsRef = ref([]);
-    const usernew = ref(supabase.auth.getUser())
+    // const usernew = ref(supabase.auth.getUser())
+    const usernew = ref(null);
     // const userEmail = ref(supabase.auth.getUser()?.email);
     const userEmail = ref(supabase.auth.getUser());
 
@@ -284,7 +288,7 @@ export default {
       isOpenPrioriteti.value = state;
     };
 
-
+    const route = useRoute();
 
     const newNote = ref('');
 
@@ -346,30 +350,30 @@ export default {
 
     //   }
     // };
-    
-    const updateNotePriority = async (itemId, levelOne, levelTwo, levelThree) => {
-  const { data, error } = await supabase
-    .from('Projekti')
-    .update({
-      levelOne: levelOne,
-      levelTwo: levelTwo,
-      levelThree: levelThree
-    })
-    .eq('id', itemId);
 
-  if (error) {
-    console.error(error);
-  } else {
-    console.log(`Note ${itemId} priority updated successfully`);
-    const item = projekti.value.find(n => n.id === itemId);
-    if (item) {
-      item.levelOne = levelOne;
-      item.levelTwo = levelTwo;
-      item.levelThree = levelThree;
-    }
-    await loadData();  // Reload the data here
-  }
-};
+    const updateNotePriority = async (itemId, levelOne, levelTwo, levelThree) => {
+      const { data, error } = await supabase
+        .from('Projekti')
+        .update({
+          levelOne: levelOne,
+          levelTwo: levelTwo,
+          levelThree: levelThree
+        })
+        .eq('id', itemId);
+
+      if (error) {
+        console.error(error);
+      } else {
+        console.log(`Note ${itemId} priority updated successfully`);
+        const item = projekti.value.find(n => n.id === itemId);
+        if (item) {
+          item.levelOne = levelOne;
+          item.levelTwo = levelTwo;
+          item.levelThree = levelThree;
+        }
+        await loadData();  // Reload the data here
+      }
+    };
 
 
 
@@ -466,14 +470,13 @@ export default {
       }
     };
 
-     const computeCardColor = (item) => {
+    const computeCardColor = (item) => {
       console.log('computeCardColor', item);
       if (item.levelOne) return 'danger';
       if (item.levelTwo) return 'warning';
       if (item.levelThree) return 'success';
       return ''; // default color if no level is set
     };
-
 
 
 
@@ -489,11 +492,13 @@ export default {
     };
 
 
+
+
     const fetchNotes = async () => {
       const { data, error } = await supabase
         .from('Projekti')
         .select('id, levelOne, levelTwo, levelThree')
-        // .order('id');
+      // .order('id');
 
       if (error) {
         console.error(error);
@@ -503,16 +508,21 @@ export default {
       // isDataLoaded.value = true;
       console.log(data);
     };
-    
+
+
+
 
     onMounted(async () => {
-      const usernewResolved = await usernew.value;
-      currentUserID.value = usernewResolved.data.user.id;
-      currentUserEmail.value = usernewResolved.data.user.email;
 
+      usernew.value = supabase.auth.getUser()
+      console.log('evo ga usernew za projekte', usernew.value);
+      // const usernewResolved = await usernew.value;
+      // currentUserID.value = usernewResolved.data.user.id;
+      // currentUserEmail.value = usernewResolved.data.user.email;
 
-      console.log('evo ga email mounted', currentUserEmail.value);
-      console.log('evo ga id mounted', currentUserID.value);
+      // console.log('evo ga email mounted', currentUserEmail.value);
+      // console.log('evo ga id mounted', currentUserID.value);
+
 
       try {
         const { data: users, error } = await supabase
@@ -522,13 +532,13 @@ export default {
         if (error) throw error;
 
         allUsers.value = users.map(user => ({ ...user, selected: false }));
-        
-       
-        fetchNotes(); 
+
+        fetchNotes();
 
         // loadData();
         // console.log('dataaaaaa', data.value);
         // loadSensitive();
+
         await Promise.all([loadData(), loadSensitive()]);
         combineDatasets();
         console.log('ajdeeeee', combinedData.value);
@@ -536,6 +546,30 @@ export default {
         console.log('Error: ', error)
       }
     });
+
+    const router = useRouter();
+    const navigateTo = (route) => {
+      setTimeout(() => {
+        router.push(route);
+      }, 0);
+    };
+    
+      watch(
+      () => route.fullPath,
+      async () => {
+        usernew.value = supabase.auth.getUser();
+        const { data, error } = await supabase.from("sensitiveData").select("*");
+        if (error) {
+          console.error("Error fetching notes:", error);
+        } else {
+          sendata.value = data;
+          // noteCount.value = data.length;
+        }
+
+        console.log("sa mounteda", usernew.value);
+      }
+    );
+
 
 
     const removeItem = async (id) => {
@@ -752,8 +786,8 @@ export default {
     };
 
     return {
-      data, loadData, removeItem, setOpenPrioriteti,close, checkmark,
-      people, chatbubble, share, trash,alertCircle,actionSheetButtons, actionSheetButtonsRef,
+      data, loadData, removeItem, setOpenPrioriteti, close, checkmark,
+      people, chatbubble, share, trash, alertCircle, actionSheetButtons, actionSheetButtonsRef,
       cancel, confirm, confirmChanges, confirmChangesBiljeska, confirmChangesSaradnici, addBiljeska,
       modalRef, inputRef, isOpenRef, isOpenRefSaradnici, isOpenRefBiljeske, isOpenPrioriteti,
       setOpen, setOpenSaradnici, setOpenBiljeske, computeCardColor,

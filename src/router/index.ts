@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
 
-import EntrancePage from '../views/00.EntrancePage.vue'
+import EntrancePage from '../views/01.AutenticationAndAutorization/00.EntrancePage.vue'
 import AccountPage from '../views/01.AccountPage.vue'
 import MagacinPage_2 from '../views/02.MagacinPage.vue'
 

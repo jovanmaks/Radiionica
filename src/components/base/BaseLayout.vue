@@ -1,24 +1,16 @@
+
+
 <template>
   <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <!-- <ion-back-button :default-href="pageDefaultBackLink"></ion-back-button> -->
-          <ion-button @click="$router.back()">
-            <ion-icon :icon="arrowBack"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-        <ion-title>{{ pageTitle }}</ion-title>
-        <ion-buttons slot="end">
-          <slot name="actions-end"></slot>
-          <ion-button fill="clear" @click="signOut">
-            <ion-icon :icon="logOut"></ion-icon>
-          </ion-button>
 
-          <!-- <ion-menu-button auto-hide="false" tab="meny" href="/meny"></ion-menu-button> -->
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
+    <app-header :title="pageTitle" @back="$router.back()" @signOut="signOut">
+      <slot name="actions-end" slot="actions-end"></slot>
+    </app-header>
+
+    <app-footer :noteCount="noteCount" @setOpen="setOpen"></app-footer>
+
+ <!-- <CustomModal v-model:isOpen="isOpenRef" :data="data" v-model:newNote="newNote" /> -->
+
 
     <ion-content>
       <slot name="content"></slot>
@@ -30,32 +22,8 @@
         </ion-row>
       </ion-grid>
     </ion-content>
+  
 
-    <ion-footer>
-      <ion-toolbar>
-        <ion-button slot="start" fill="solid" tab="pocetna" @click="navigateTo('/home')" color="medium">
-          <ion-icon :icon="home"></ion-icon>
-        </ion-button>
-        <!-- <ion-button slot="start" fill="solid" tab="pocetna" href="/home" color="medium">
-          <ion-icon :icon="home"></ion-icon>
-        </ion-button> -->
-        <!-- <ion-button fill="solid" @click="takePhoto">
-            <ion-icon :icon="camera"></ion-icon>
-          </ion-button> -->
-        <center>
-          <ion-button id="open-modal" @click="setOpen(true)" color="medium">
-            <ion-badge slot="end">{{ noteCount }}</ion-badge>
-            <ion-icon :icon="notifications"></ion-icon>
-          </ion-button>
-        </center>
-        <!-- <ion-button slot="end" fill="solid" tab="account" href="/account" color="medium">
-          <ion-icon :icon="person"></ion-icon>
-        </ion-button> -->
-        <ion-button slot="end" fill="solid" tab="account" @click="navigateTo('/account')" color="medium">
-          <ion-icon :icon="person"></ion-icon>
-        </ion-button>
-      </ion-toolbar>
-    </ion-footer>
 
     <ion-modal :is-open="isOpenRef" css-class="my-custom-class" @didDismiss="setOpen(false)">
       <ion-header>
@@ -65,7 +33,6 @@
               <ion-icon :icon="close"></ion-icon>
             </ion-button>
           </ion-buttons>
-          <!-- <ion-title>Notifikacija</ion-title> -->
           <ion-buttons slot="end">
             <ion-button :strong="true" @click="confirmChanges">
               <ion-icon :icon="checkmark"></ion-icon>
@@ -80,15 +47,22 @@
             <ion-input v-model="newNote" placeholder="Унеси биљешку"></ion-input>
           </ion-item>
 
-          <!-- Add Note Button -->
-          <!-- <ion-button :strong="true" @click="addBiljeska" style="margin-left: 5px;">Add Note</ion-button> -->
         </div>
       </ion-content>
     </ion-modal>
+    
+
+
   </ion-page>
 </template>
 
 <script>
+
+import AppHeader from "./HeaderLayout.vue";
+import AppFooter from "./FooterLayout.vue";
+import CustomModal from "../reusable/addingTasks.vue";
+
+
 import {
   IonInput,
   IonBadge,
@@ -145,14 +119,17 @@ import { store } from "@/store"; // Adjust the path according to your project st
 export default defineComponent({
   props: ["pageTitle", "pageDefaultBackLink"],
   components: {
+    AppHeader,
+    AppFooter,
+    // CustomModal,
     IonInput,
-    IonBadge,
+    // IonBadge,
     IonPage,
     IonItem,
     IonModal,
     IonHeader,
     IonToolbar,
-    IonTitle,
+    // IonTitle,
     IonContent,
     // IonBackButton,
     IonButton,
@@ -347,7 +324,5 @@ ion-col {
   text-align: center;
 }
 </style>
-
-
 
 

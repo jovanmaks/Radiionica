@@ -264,7 +264,17 @@ export default {
       console.log(data);
     };
 
-    onMounted(fetchNotes);
+    const fetchLoggedInUser = async () => {
+      const user = supabase.auth.getUser();
+      console.log(user);  // prints the currently logged in user
+    };
+
+    onMounted(async () => {
+        await fetchLoggedInUser();
+        await fetchNotes();
+    });
+
+    // onMounted(fetchNotes);
 
     const doRefresh = async (event) => {
       await fetchNotes();
