@@ -75,7 +75,7 @@
 <script lang="ts">
 
 import { useRouter } from "vue-router";
-import { store } from '@/store';
+import  store  from '@/store';
 import { supabase } from '@/supabase';
 import { User } from '@supabase/supabase-js';
 

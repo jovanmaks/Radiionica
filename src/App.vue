@@ -10,7 +10,8 @@
 import { IonApp, IonRouterOutlet,useIonRouter } from '@ionic/vue';
 import { defineComponent, ref } from 'vue'
 
-import { store } from './store'
+// import { store } from './store'
+import store from './store';
 import { supabase } from './supabase'
 import { Session } from 'inspector';
 
@@ -32,10 +33,10 @@ import { Session } from 'inspector';
 
       supabase.auth.onAuthStateChange((_, session) => {
   if (session?.user) {
-    store.user = session.user;
+    store.commit('user/setUser', session.user); 
     router.replace('/entrance');
   } else {
-    store.user = {};
+    store.commit('user/setUser', {});
   }
 });
 
