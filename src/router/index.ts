@@ -5,31 +5,17 @@ import EntrancePage from '../views/01.AutenticationAndAutorization/00.EntrancePa
 import LoginPage from '../views/01.AutenticationAndAutorization/02.LoginPage.vue';
 import RegisterPage from '../views/01.AutenticationAndAutorization/01.RegisterPage.vue';
 
+import MagacinStanjePage from '../views/02.Inventar/MagacinStanjePage.vue';
+import MagacinUnesiPage from '../views/02.Inventar/MagacinUnesiPage.vue';
 
+import ProjektiPage from '../views/03.Projekat/ProjektiPage.vue';
+import ProjektiStanjePage from '../views/03.Projekat/ProjektiStanjePage.vue';
+import CreateProjectPage from '../views/03.Projekat/CreateProjectPage.vue';
 
-import AccountPage from '../views/01.AccountPage.vue'
-import MagacinPage_2 from '../views/02.MagacinPage.vue'
+import SelektovanjeProjektaPage from '../views/04.Obrada/04.SelectProjectPage.vue';
+import ArhivaPage from '../views/04.Obrada/01.ArhivaPage.vue';
 
-import HomePage from '../views/HomePage.vue'
-
-
-
-import AdminPage from '../views/AdminPage.vue';
-import QRPage from '../views/QRPage.vue';
-import PhotoGaleryPage from '../views/PhotoGaleryPage.vue';
-import WelcomePage from '../views/WelcomePage.vue';
-
-import MagacinPage from '../views/MagacinPage.vue';
-import MagacinUnesiPage from '../views/MagacinUnesiPage.vue';
-import MagacinStanjePage from '../views/MagacinStanjePage.vue';
-
-import ProjektiPage from '../views/ProjektiPage.vue';
-import CreateProjectPage from '../views/CreateProjectPage.vue';
-import ProjektiStanjePage from '../views/ProjektiStanjePage.vue';
-import SelektovanjeProjektaPage from '../views/04.SelectProjectPage.vue';
-
-
-// import CrtanjePage from '../views/CrtanjePage.vue';
+import AccountPage from '../views/05.Account/01.AccountPage.vue'
 
 import CrtanjePage from '../views/maketa/01.CrtanjePage.vue';
 import ProgramiranjePage from '../views/maketa/02.ProgramiranjePage.vue';
@@ -39,7 +25,12 @@ import PripremaFarbanjePage from '../views/maketa/05.PripremaFarbanjePage.vue';
 import FarbanjePage from '../views/maketa/06.FarbanjePage.vue';
 import SklapanjePage from '../views/maketa/07.SklapanjePage.vue';
 
-import ArhivaPage from '../views/04.Obrada/01.ArhivaPage.vue';
+
+
+import HomePage from '../views/HomePage.vue'
+import PhotoGaleryPage from '../views/PhotoGaleryPage.vue';
+
+
 
 
 
@@ -60,6 +51,21 @@ const routes: Array<RouteRecordRaw> = [
     component: RegisterPage 
   }, 
 
+  
+  {
+    path: '/magacinStanje',
+    name: 'MagacinStanje',
+    component: MagacinStanjePage,
+    meta: { requiresAuth: true, roles: ['magacinStanje', 'admin'] } // only admins can access
+  }, 
+  {
+    path: '/magacinUnesi',
+    name: 'MagacinUnesi',
+    component: MagacinUnesiPage,
+    meta: { requiresAuth: true, roles: ['magacinUnesi', 'admin'] } // only admins can access
+  }, 
+
+  
   { 
     path: "/home",
     name: 'Home',
@@ -71,60 +77,14 @@ const routes: Array<RouteRecordRaw> = [
     component: AccountPage,
   }, 
   {
-    path: '/magacin_2',
-    name: 'Magacin_2',
-    component: MagacinPage_2,
-  },
-  {
     path: '/select',
     name: 'Select',
     component: SelektovanjeProjektaPage,
   },  
-  {
-    path: '/:pageRoute',
-    name: 'DynamicPage',
-    component: () => import(/* webpackChunkName: "dynamicPage" */ '../views/DynamicPage.vue'),
-    props: true // Pass route params as props to the component
-  },
-  { 
-    path: '/qr',
-    name: 'QR',
-    component: QRPage 
-  }, 
   { 
     path: '/photogalery',
     name: 'PhotoGalery',
     component: PhotoGaleryPage 
-  }, 
-  { 
-    path: '/admin',
-    name: 'Admin',
-    component: AdminPage,
-    meta: { requiresAuth: true, roles: ['admin'] } // only admins can access
-  }, 
-  { 
-    path: '/welcome',
-    name: 'Welcome',
-    component: WelcomePage,
-    meta: { requiresAuth: true, roles: ['welcome', 'admin'] } // only admins can access
-  }, 
-  { 
-    path: '/magacin',
-    name: 'Magacin',
-    component: MagacinPage,
-    meta: { requiresAuth: true, roles: ['magacin', 'admin'] } // only admins can access
-  }, 
-  {
-    path: '/magacinUnesi',
-    name: 'MagacinUnesi',
-    component: MagacinUnesiPage,
-    meta: { requiresAuth: true, roles: ['magacinUnesi', 'admin'] } // only admins can access
-  }, 
-  {
-    path: '/magacinStanje',
-    name: 'MagacinStanje',
-    component: MagacinStanjePage,
-    meta: { requiresAuth: true, roles: ['magacinStanje', 'admin'] } // only admins can access
   }, 
   {
     path: '/projekti',
