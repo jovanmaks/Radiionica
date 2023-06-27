@@ -25,16 +25,19 @@ import PripremaFarbanjePage from '../views/maketa/05.PripremaFarbanjePage.vue';
 import FarbanjePage from '../views/maketa/06.FarbanjePage.vue';
 import SklapanjePage from '../views/maketa/07.SklapanjePage.vue';
 
-
-
 import HomePage from '../views/HomePage.vue'
 import PhotoGaleryPage from '../views/PhotoGaleryPage.vue';
 
 
 
-
-
 const routes: Array<RouteRecordRaw> = [
+  { 
+    path: "/home",
+    name: 'Home',
+    component: HomePage
+  } ,
+
+  ////////////AUTENTICATION AND AUTORIZATION/////////////////////
   {
     path: '/',
     name: 'Entrance',
@@ -51,7 +54,7 @@ const routes: Array<RouteRecordRaw> = [
     component: RegisterPage 
   }, 
 
-  
+ ///////////// INVENTAR ///////////////////// 
   {
     path: '/magacinStanje',
     name: 'MagacinStanje',
@@ -65,27 +68,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: true, roles: ['magacinUnesi', 'admin'] } // only admins can access
   }, 
 
-  
-  { 
-    path: "/home",
-    name: 'Home',
-    component: HomePage
-  } ,
-  {
-    path: '/account',
-    name: 'Account',
-    component: AccountPage,
-  }, 
-  {
-    path: '/select',
-    name: 'Select',
-    component: SelektovanjeProjektaPage,
-  },  
-  { 
-    path: '/photogalery',
-    name: 'PhotoGalery',
-    component: PhotoGaleryPage 
-  }, 
+ /////////////// PROJEKTI /////////////////////// 
   {
     path: '/projekti',
     name: 'Projekti',
@@ -101,6 +84,27 @@ const routes: Array<RouteRecordRaw> = [
     name: 'ProjektiStanje',
     component: ProjektiStanjePage,
   }, 
+  
+/////////////// OBRADA ///////////////////////
+  {
+    path: '/select',
+    name: 'Select',
+    component: SelektovanjeProjektaPage,
+  },  
+  {
+    path: '/arhiva',
+    name: 'Arhiva',
+    component: ArhivaPage,
+  }, 
+  
+ ///////////// ACCOUNT ///////////////////////   
+  {
+    path: '/account',
+    name: 'Account',
+    component: AccountPage,
+  }, 
+
+  ///////////// MAKETA ///////////////////////
   {
     path: '/crtanje',
     name: 'Crtanje',
@@ -136,10 +140,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Sklapanje',
     component: SklapanjePage,
   }, 
-  {
-    path: '/arhiva',
-    name: 'Arhiva',
-    component: ArhivaPage,
+
+ /////////////  PHOTO GALERY /////////////////////// 
+  { 
+    path: '/photogalery',
+    name: 'PhotoGalery',
+    component: PhotoGaleryPage 
   }, 
 ]
 
