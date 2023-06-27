@@ -2,12 +2,17 @@ import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
 
 import EntrancePage from '../views/01.AutenticationAndAutorization/00.EntrancePage.vue'
+import LoginPage from '../views/01.AutenticationAndAutorization/02.LoginPage.vue';
+import RegisterPage from '../views/01.AutenticationAndAutorization/01.RegisterPage.vue';
+
+
+
 import AccountPage from '../views/01.AccountPage.vue'
 import MagacinPage_2 from '../views/02.MagacinPage.vue'
 
 import HomePage from '../views/HomePage.vue'
-import LoginPage from '../views/Login.vue';
-import RegisterPage from '../views/Register.vue';
+
+
 
 import AdminPage from '../views/AdminPage.vue';
 import QRPage from '../views/QRPage.vue';
@@ -45,6 +50,17 @@ const routes: Array<RouteRecordRaw> = [
     component: EntrancePage,
   }, 
   { 
+    path: "/login",
+    name: 'Login',
+    component: LoginPage
+  } ,
+  { 
+    path: '/register',
+    name: 'Register',
+    component: RegisterPage 
+  }, 
+
+  { 
     path: "/home",
     name: 'Home',
     component: HomePage
@@ -70,16 +86,6 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "dynamicPage" */ '../views/DynamicPage.vue'),
     props: true // Pass route params as props to the component
   },
-  { 
-    path: "/login",
-    name: 'Login',
-    component: LoginPage
-  } ,
-  { 
-    path: '/register',
-    name: 'Register',
-    component: RegisterPage 
-  }, 
   { 
     path: '/qr',
     name: 'QR',
