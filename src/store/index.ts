@@ -1,11 +1,11 @@
 import { createStore } from 'vuex';
 import user from './modules/user';
-import tasks from './modules/tasks';
+import notes from './modules/notes';
 
 const store = createStore({
   modules: {
     user,
-    tasks,
+    notes,
   },
 });
 
