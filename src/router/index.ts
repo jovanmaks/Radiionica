@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
 
+// import HomePage from '../views/HomePage.vue'
+import HomePage from '../views/00.HomePage/00.HomePage.vue'
+
 import EntrancePage from '../views/01.AutenticationAndAutorization/00.EntrancePage.vue'
 import LoginPage from '../views/01.AutenticationAndAutorization/02.LoginPage.vue';
 import RegisterPage from '../views/01.AutenticationAndAutorization/01.RegisterPage.vue';
@@ -25,7 +28,6 @@ import PripremaFarbanjePage from '../views/maketa/05.PripremaFarbanjePage.vue';
 import FarbanjePage from '../views/maketa/06.FarbanjePage.vue';
 import SklapanjePage from '../views/maketa/07.SklapanjePage.vue';
 
-import HomePage from '../views/HomePage.vue'
 import PhotoGaleryPage from '../views/PhotoGaleryPage.vue';
 
 
