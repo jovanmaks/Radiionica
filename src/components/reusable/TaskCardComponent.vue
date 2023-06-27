@@ -9,26 +9,23 @@
       <ion-button class="archive-button" fill="clear" @click="$emit('archive-note', note.id)">
         <ion-icon :icon="archive"></ion-icon>
       </ion-button>
-      <!-- <ion-button class="alert-button" fill="clear" @click="$emit('set-open', {state: true, note: note})">
-          <ion-icon :icon="alertCircle"></ion-icon>
-        </ion-button> -->
       <ion-button class="alert-button" fill="clear" @click="$emit('alert-clicked', note)">
         <ion-icon :icon="alertCircle"></ion-icon>
       </ion-button>
-      <!-- <ion-button class="alert-button" fill="clear" @click="alertClicked">
-        <ion-icon :icon="alertCircle"></ion-icon>
-      </ion-button> -->
 
       <ion-button class="edit-button" fill="clear" @click="$emit('set-open-edit', { state: true, note: note })">
         <ion-icon :icon="documentText"></ion-icon>
       </ion-button>
+      <ion-button class="delete-button" fill="clear" @click="$emit('delete-note', note.id)">
+  <ion-icon :icon="trash"></ion-icon>
+</ion-button>
     </div>
   </ion-card>
 </template>
   
 <script lang="ts">
 import { IonIcon, IonCard, IonCardHeader, IonButton, IonCardSubtitle, IonCardContent } from '@ionic/vue';
-import { alertCircle, documentText, archive } from 'ionicons/icons';
+import { alertCircle, documentText, archive, trash } from 'ionicons/icons';
 
 export default {
   name: 'TaskCardComponent',
@@ -39,13 +36,10 @@ export default {
   setup() {
     
 
-//     const alertClicked = () => {
-//     console.log('Alert button clicked');
 // }
 
     return {
-      alertCircle, documentText, archive,
-      // alertClicked
+      alertCircle, documentText, archive,trash
     }
   }
 }

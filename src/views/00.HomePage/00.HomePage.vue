@@ -3,7 +3,7 @@
         <template v-slot:content>
 
             <TaskCardComponent v-for="note in notes" :key="note.id" :note="note" :computeCardColor="computeCardColor"
-                @archive-note="archiveNote" @alert-clicked="showPriorityControl" />
+  @archive-note="archiveNote" @delete-note="deleteNote" @alert-clicked="showPriorityControl" />
 
             <priority-control :note="selectedNote" :show="showPriority" @update-priority="updateNotePriority"
                 @didDismiss="hidePriorityControl"></priority-control>
@@ -56,8 +56,13 @@ export default {
             showPriority.value = false;
         };
 
+        const deleteNote = (noteId: string | number) => {
+    store.dispatch('notes/deleteNote', noteId);
+};
 
-        return { notes, archiveNote, computeCardColor, selectedNote, showPriority, showPriorityControl, hidePriorityControl }
+
+
+        return { notes, archiveNote, computeCardColor, deleteNote, selectedNote, showPriority, showPriorityControl, hidePriorityControl }
     }
 }
 </script>

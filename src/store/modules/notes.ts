@@ -41,7 +41,10 @@ const mutations = {
       noteToUpdate.levelTwo = payload.levelTwo;
       noteToUpdate.levelThree = payload.levelThree;
     }
-  }
+  },
+  deleteNote(state: State, noteId: number) {
+    state.notes = state.notes.filter(note => note.id !== noteId);
+},
 };
 
 const actions = {
@@ -88,7 +91,20 @@ const actions = {
     }
 
     commit('updateNotePriority', payload);
-  }
+  },
+  async deleteNote({ commit }: ActionContext<State, unknown>, noteId: number) {
+    const { data, error } = await supabase
+      .from('notes')
+      .delete()
+      .eq('id', noteId);
+
+    if (error) {
+      console.error(error);
+      throw error;
+    }
+
+    commit('deleteNote', noteId);
+},
 };
 
 export default {
