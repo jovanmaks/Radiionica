@@ -87,6 +87,7 @@ import ExploreContainer from "@/components/ExploreContainer.vue";
 
 import { store } from "@/store"; // Adjust the path according to your project structure
 import { useStore } from "vuex";
+import { computed } from 'vue';
 
 
 export default defineComponent({
@@ -123,8 +124,9 @@ export default defineComponent({
 
     const router = useRouter();
     const routeName = router.currentRoute.value.name;
-    const noteCount = ref(0);
+    // const noteCount = ref(0);
 
+    const noteCount = computed(() => store.getters['notes/notesCount']);
 
     const isOpenRef = ref(false);
     const setOpen = (state) => (isOpenRef.value = state);

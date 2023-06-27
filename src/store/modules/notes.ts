@@ -107,9 +107,14 @@ const actions = {
 },
 };
 
+const getters = {
+  notesCount: (state: State) => state.notes.length,
+};
+
 export default {
     namespaced: true,
     state,
     mutations,
     actions,
+    getters,
 };
