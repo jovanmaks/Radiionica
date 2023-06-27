@@ -57,8 +57,6 @@ export default {
         };
 
 
-
-
         return { notes, archiveNote, computeCardColor, selectedNote, showPriority, showPriorityControl, hidePriorityControl }
     }
 }

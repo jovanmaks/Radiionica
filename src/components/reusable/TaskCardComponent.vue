@@ -39,14 +39,13 @@ export default {
   setup() {
     
 
-    const alertClicked = () => {
-    console.log('Alert button clicked');
-    // Emit the alert-clicked event here
-}
+//     const alertClicked = () => {
+//     console.log('Alert button clicked');
+// }
 
     return {
       alertCircle, documentText, archive,
-      alertClicked
+      // alertClicked
     }
   }
 }
