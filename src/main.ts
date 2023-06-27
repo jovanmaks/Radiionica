@@ -1,7 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 // import Vuex from 'vuex';
-  import store from './store/store';
+  // import store from './store/store';
+  import store from './store/index';
 
 import router from './router';
 
@@ -51,7 +52,6 @@ const app = createApp(App);
 
   app.component('base-layout', BaseLayout); 
 
-  // app.use(Vuex);
   app.use(store);
 
   router.isReady().then(() => {

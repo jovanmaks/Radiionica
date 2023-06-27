@@ -85,12 +85,12 @@ export default defineComponent({
             errorMsg.value = null;
 
             try {
-                const result = await appStore.dispatch('signIn', {
+                const result = await appStore.dispatch('user/signIn', {
                     email: email.value,
                     password: password.value,
                 });
 
-                if (result.error) {
+                if (result && result.error) {
                     errorMsg.value = result.error.message;
                     throw new Error(result.error.message);
                 }

@@ -12,8 +12,6 @@
       <slot name="content"></slot>
     </ion-content>
 
-
-
     <app-footer :noteCount="noteCount" @setOpen="setOpen"></app-footer>
 
     <!-- <CustomModal v-model:isOpen="isOpenRef" :data="data" v-model:newNote="newNote" /> -->
@@ -205,7 +203,7 @@ export default defineComponent({
 
 
     const signOut = async () => {
-      store.dispatch('signOut')
+      store.dispatch('user/signOut')
         .then(() => {
           router.push({ name: "Entrance" });
         })
