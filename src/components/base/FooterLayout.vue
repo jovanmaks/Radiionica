@@ -8,7 +8,7 @@
         <center>
           <ion-button id="open-modal" @click="$emit('setOpen', true)" color="medium">
             <ion-badge slot="end">{{ noteCount }}</ion-badge>
-            <ion-icon :icon="notifications"></ion-icon>
+            <ion-icon :icon="documentAttachOutline"></ion-icon>
           </ion-button>
         </center>
   
@@ -32,7 +32,7 @@
   import {
     home,
     person,
-    notifications,
+    documentAttachOutline,
   } from "ionicons/icons";
   import { defineComponent } from "vue";
   import { useRouter } from "vue-router";
@@ -56,7 +56,7 @@
         navigateTo,
         home,
         person,
-        notifications,
+        documentAttachOutline,
       };
     },
   });

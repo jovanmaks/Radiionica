@@ -2,6 +2,23 @@
     <ion-menu content-id="main-content" menu-id="sideMenu" side="start">
         <ion-header>
             <ion-toolbar>
+                <ion-segment :scrollable="true" value="all">
+                    <ion-segment-button value="person" @click="setSortType('person')" size="small">
+                        <ion-icon :icon="person" size="small" ></ion-icon>
+                    </ion-segment-button>
+                    <ion-segment-button value="time" @click="setSortType('time')" size="small">
+                        <ion-icon :icon="time" size="small"></ion-icon>
+                    </ion-segment-button>
+                    <ion-segment-button value="levelOne" @click="setSortType('levelOne')" size="small">
+                        <ion-icon :icon="alertCircle" size="small" color="danger"></ion-icon>
+                    </ion-segment-button>
+                    <ion-segment-button value="levelTwo" @click="setSortType('levelTwo')" size="small">
+                        <ion-icon :icon="alertCircle" size="small" color="warning"></ion-icon>
+                    </ion-segment-button>
+                    <ion-segment-button value="levelThree" @click="setSortType('levelThree')" size="small">
+                        <ion-icon :icon="alertCircle" size="small" color="success"></ion-icon>
+                    </ion-segment-button>
+                </ion-segment>
                 <!-- <ion-title>Menu Content</ion-title> -->
                 <ion-buttons slot="end" fill="clear">
                     <ion-button @click="showArchivedNotes" size="large" fill="clear">
@@ -18,8 +35,9 @@
                     <ion-button>X</ion-button>
                 </ion-menu-toggle> -->
 
-                <TaskCardComponent v-for="note in displayNotes" :key="note.id" :note="note" :computeCardColor="computeCardColor"
-    @archive-note="archiveNote" @delete-note="deleteNote" @alert-clicked="showPriorityControl" @return-note="returnNote" />
+            <TaskCardComponent v-for="note in displayNotes" :key="note.id" :note="note" :computeCardColor="computeCardColor"
+                @archive-note="archiveNote" @delete-note="deleteNote" @alert-clicked="showPriorityControl"
+                @return-note="returnNote" />
 
 
             <priority-control :note="selectedNote" :show="showPriority" @update-priority="updateNotePriority"
@@ -49,13 +67,19 @@ import TaskCardComponent from '@/components/reusable/TaskCardComponent.vue';
 import PriorityControl from '@/components/reusable/PriorityControl.vue';
 
 
-import { IonButton, IonContent, IonHeader, IonMenu, IonMenuToggle, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
-import { documentText, archiveOutline, documentAttachOutline } from 'ionicons/icons';
+import {
+    IonButton, IonContent, IonHeader, IonMenu, IonMenuToggle, IonPage,
+    IonTitle, IonToolbar, IonSegment, IonSegmentButton,
+} from '@ionic/vue';
+import { documentText, archiveOutline, documentAttachOutline, person, time, alertCircle } from 'ionicons/icons';
 
 export default defineComponent({
     components: {
         TaskCardComponent,
         PriorityControl,
+        // IonLabel,
+        IonSegment,
+        IonSegmentButton,
         IonButton,
         IonContent,
         IonHeader,
@@ -72,6 +96,7 @@ export default defineComponent({
         const notes = computed(() => store.state.notes.notes);
         const archivedNotes = computed(() => store.getters['notes/archivedNotes']);
         const unarchivedNotes = computed(() => store.getters['notes/unarchivedNotes']);
+        const sortType = ref('')
 
 
         interface Note {
@@ -80,15 +105,45 @@ export default defineComponent({
             id: number;
             isHomescreenArchived: boolean;
             levelOne: boolean;
+            levelTwo: boolean;
+            levelThree: boolean;
             // Add other note properties here
         }
 
         const displayArchivedNotes = ref(false);
 
+        // const displayNotes = computed(() => {
+        //     return displayArchivedNotes.value ? archivedNotes.value : unarchivedNotes.value;
+        // });
+
         const displayNotes = computed(() => {
-            return displayArchivedNotes.value ? archivedNotes.value : unarchivedNotes.value;
+            let notesToDisplay = displayArchivedNotes.value ? archivedNotes.value : unarchivedNotes.value;
+            switch (sortType.value) {
+                case 'person':
+                notesToDisplay.sort((a: Note, b: Note) => a.kreator.localeCompare(b.kreator));
+                    break;
+                case 'time':
+                notesToDisplay.sort((a: Note, b: Note) => a.id - b.id);
+                    break;
+                case 'levelOne':
+                notesToDisplay = notesToDisplay.filter((note: Note) => note.levelOne);
+                    break;
+                case 'levelTwo':
+                notesToDisplay = notesToDisplay.filter((note: Note) => note.levelTwo);
+                    break;
+                case 'levelThree':
+                notesToDisplay = notesToDisplay.filter((note: Note) => note.levelThree);
+                    break;
+                default:
+                    break;
+            }
+            return notesToDisplay;
         });
 
+
+        const setSortType = (type: string) => {
+            sortType.value = type;
+        };
 
         onMounted(async () => {
             await store.dispatch('notes/fetchNotes');
@@ -141,7 +196,8 @@ export default defineComponent({
             selectedNote, showPriority, showPriorityControl, hidePriorityControl,
             showArchivedNotes, showUnarchivedNotes, archivedNotes,
             unarchivedNotes, displayNotes,
-            archiveOutline, documentAttachOutline, returnNote
+            archiveOutline, documentAttachOutline, returnNote, person, time, alertCircle,
+            setSortType
         }
     }
 });
