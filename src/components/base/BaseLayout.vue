@@ -68,11 +68,6 @@ import {
   IonContent,
   IonButton,
   IonButtons,
-  // IonBackButton,
-  // IonMenuButton,
-  // IonCol,
-  // IonGrid,
-  // IonRow,
 } from "@ionic/vue";
 
 import { checkmark, close } from "ionicons/icons";
@@ -95,7 +90,6 @@ export default defineComponent({
   components: {
     AppHeader,
     AppFooter,
-    // CustomModal,
 
     IonInput,
     IonPage,
@@ -106,33 +100,23 @@ export default defineComponent({
     IonContent,
     IonButton,
     IonButtons,
-
-    // IonBadge,
-    // IonTitle,
-    // IonBackButton,
-    // IonMenuButton,
-    // IonCol,
-    // IonGrid,
-    // IonRow,
   },
 
 
 
   setup() {
     const store = useStore();
-
-
+    const user = computed(() => store.state.user.user);
+    const username = computed(() => store.state.user.username);
+    const noteCount = computed(() => store.getters['notes/notesCount']);
     const router = useRouter();
     const routeName = router.currentRoute.value.name;
-    // const noteCount = ref(0);
-
-    const noteCount = computed(() => store.getters['notes/notesCount']);
-
     const isOpenRef = ref(false);
     const setOpen = (state) => (isOpenRef.value = state);
     const newNote = ref("");
-    const user = ref(supabase.auth.getUser());
     const usernew = ref(supabase.auth.getUser())
+
+
 
     const navigateTo = (route) => {
       setTimeout(() => {
@@ -140,69 +124,35 @@ export default defineComponent({
       }, 0);
     };
 
-    const addNote = async () => {
-      try {
-        console.log("newNote:", newNote.value);
-        // console.log("user:", user.value);  // Add this line
+    const addNote = () => {
+  if (newNote.value.trim() === "" || !user.value) {
+    console.log("Note value is empty or user is not logged in. Skipping insertion.");
+    return;
+  }
 
-        // user.value = supabase.auth.getUser();
+  const note = {
+    homescreen: newNote.value,
+    user_id: user.value.id,
+    kreator: username.value,
+    isHomescreenArchived: false,
+    levelOne: false,
+    levelTwo: false,
+    levelThree: false,
+  };
 
-        const usernewResolved = await usernew.value;
-        // currentUserID.value = usernewResolved.data.user.id;
-        // console.log('user je', usernewResolved.davalue);
-        console.log('user je', usernewResolved.data.user.id);
-
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('username')
-          .eq('id', usernewResolved.data.user.id)  // use user.value.id directly
-          .single();
-
-
-        // Here, you should use user.value directly:
-        if (newNote.value.trim() === "" || !user.value) {
-          console.log("Note value is empty or user is not logged in. Skipping insertion.");
-          return;
-        }
-
-        const { error } = await supabase.from("notes").insert([
-          {
-            homescreen: newNote.value,
-            user_id: usernewResolved.data.user.id,
-            kreator: profile.username,
-          },
-        ]);
-
-        if (error) throw error;
-
-        console.log("Note added successfully");
-        newNote.value = ""; // Clear the input after successful insertion
-      } catch (error) {
-        console.error("Error inserting note:", error);
-      }
-    };
+  // dispatch Vuex action to add the note
+  store.dispatch('notes/addNote', note);
+};
 
 
-    watchEffect(async () => {
-      const { data, error } = await supabase.from("notes").select("*");
-      if (error) {
-        console.error("Error fetching notes:", error);
-      } else {
-        noteCount.value = data.length;
-      }
-    });
-
-
+watchEffect(() => {
+  noteCount.value = store.state.notes.notes.length;
+});
 
     const confirmChanges = async () => {
-      // console.log('confirmChanges called, newNote:', newNote.value);
       addNote();
       setOpen(false);
     };
-
-
-
-
 
     const signOut = async () => {
       store.dispatch('user/signOut')
@@ -217,20 +167,9 @@ export default defineComponent({
 
 
     return {
-      signOut,
-      routeName,
-      isOpenRef,
-      setOpen,
-      confirmChanges,
-      newNote,
-      user,
-      usernew,
-      checkmark,
-      close,
-      noteCount,
-      navigateTo,
-      // usernewResolved,
-    };
+      signOut,  user, username, routeName, isOpenRef, 
+      setOpen,confirmChanges,  newNote, usernew,  checkmark,
+      close,  noteCount, navigateTo, addNote, };
   },
 
 
