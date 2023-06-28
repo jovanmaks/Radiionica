@@ -125,29 +125,29 @@ export default defineComponent({
     };
 
     const addNote = () => {
-  if (newNote.value.trim() === "" || !user.value) {
-    console.log("Note value is empty or user is not logged in. Skipping insertion.");
-    return;
-  }
+      if (newNote.value.trim() === "" || !user.value) {
+        console.log("Note value is empty or user is not logged in. Skipping insertion.");
+        return;
+      }
 
-  const note = {
-    homescreen: newNote.value,
-    user_id: user.value.id,
-    kreator: username.value,
-    isHomescreenArchived: false,
-    levelOne: false,
-    levelTwo: false,
-    levelThree: false,
-  };
+      const note = {
+        homescreen: newNote.value,
+        user_id: user.value.id,
+        kreator: username.value,
+        isHomescreenArchived: false,
+        levelOne: false,
+        levelTwo: false,
+        levelThree: false,
+      };
 
-  // dispatch Vuex action to add the note
-  store.dispatch('notes/addNote', note);
-};
+      // dispatch Vuex action to add the note
+      store.dispatch('notes/addNote', note);
+    };
 
 
-watchEffect(() => {
-  noteCount.value = store.state.notes.notes.length;
-});
+    watchEffect(() => {
+      noteCount.value = store.state.notes.notes.length;
+    });
 
     const confirmChanges = async () => {
       addNote();
@@ -167,9 +167,10 @@ watchEffect(() => {
 
 
     return {
-      signOut,  user, username, routeName, isOpenRef, 
-      setOpen,confirmChanges,  newNote, usernew,  checkmark,
-      close,  noteCount, navigateTo, addNote, };
+      signOut, user, username, routeName, isOpenRef,
+      setOpen, confirmChanges, newNote, usernew, checkmark,
+      close, noteCount, navigateTo, addNote,
+    };
   },
 
 

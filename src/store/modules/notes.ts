@@ -66,6 +66,8 @@
       commit('setNotes', data);
       commit('setDataLoaded', true);
     },
+
+    
     async addNote({ commit, dispatch }: ActionContext<State, unknown>, note: Note) {
       const { data, error } = await supabase
         .from('notes')
@@ -131,6 +133,8 @@
 
   const getters = {
     notesCount: (state: State) => state.notes.length,
+    archivedNotes: (state: State) => state.notes.filter(note => note.isHomescreenArchived),
+    unarchivedNotes: (state: State) => state.notes.filter(note => !note.isHomescreenArchived),
   };
 
   export default {
