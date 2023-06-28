@@ -49,6 +49,12 @@
   addNote(state: State, note: Note) {
     state.notes.push(note);
   },
+  returnNote(state: State, noteId: number) {
+    const noteToReturn = state.notes.find(note => note.id === noteId);
+    if (noteToReturn) {
+      noteToReturn.isHomescreenArchived = false;
+    }
+  },
   };
 
   const actions = {
@@ -128,6 +134,19 @@
       }
 
       commit('deleteNote', noteId);
+  },
+  async returnNote({ commit }: ActionContext<State, unknown>, noteId: number) {
+    const { data, error } = await supabase
+      .from('notes')
+      .update({ isHomescreenArchived: false })
+      .eq('id', noteId);
+
+    if (error) {
+      console.error(error);
+      throw error;
+    }
+
+    commit('returnNote', noteId);
   },
   };
 

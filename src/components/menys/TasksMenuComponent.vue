@@ -18,8 +18,9 @@
                     <ion-button>X</ion-button>
                 </ion-menu-toggle> -->
 
-            <TaskCardComponent v-for="note in displayNotes" :key="note.id" :note="note" :computeCardColor="computeCardColor"
-                @archive-note="archiveNote" @delete-note="deleteNote" @alert-clicked="showPriorityControl" />
+                <TaskCardComponent v-for="note in displayNotes" :key="note.id" :note="note" :computeCardColor="computeCardColor"
+    @archive-note="archiveNote" @delete-note="deleteNote" @alert-clicked="showPriorityControl" @return-note="returnNote" />
+
 
             <priority-control :note="selectedNote" :show="showPriority" @update-priority="updateNotePriority"
                 @didDismiss="hidePriorityControl"></priority-control>
@@ -129,7 +130,8 @@ export default defineComponent({
         };
 
         const returnNote = (noteId: string | number) => {
-            // Handle the return operation here
+            store.dispatch('notes/returnNote', noteId);
+            console.log('returnNote');
         };
 
 
