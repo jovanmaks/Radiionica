@@ -42,23 +42,99 @@
                     </ion-buttons>
                 </ion-toolbar>
             </ion-header>
-            <Modal :data="data"></Modal>
             <ion-content class="ion-padding">
                 <div class="input-button-container">
-                    <ion-item style="flex-grow: 1">
-                        <ion-input v-model="newNote" placeholder="Enter note"></ion-input>
+                    <!-- Textual Input Fields -->
+                    <ion-item>
+                        <ion-input v-model="textInput1" placeholder="Naziv"></ion-input>
                     </ion-item>
+
+
+                    <ion-grid>
+                        <ion-row>
+                            <ion-col>
+                                <!-- Textual Input Fields -->
+                                <ion-item>
+                                    <ion-input v-model="textInput2" placeholder="Ime"></ion-input>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-input v-model="textInput3" placeholder="Ime"></ion-input>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-input v-model="textInput4" placeholder="Ime"></ion-input>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-input v-model="textInput5" placeholder="Ime"></ion-input>
+                                </ion-item>
+
+                                <ion-item>
+                                    <ion-input v-model.number="numInput1" placeholder="Kolicina"></ion-input>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-input v-model="textInput6" type="number" placeholder="Overa"></ion-input>
+                                    <ion-toggle :enable-on-off-labels="true"></ion-toggle>
+                                </ion-item>
+
+
+
+                            </ion-col>
+                            <ion-col>
+                                <!-- Additional Textual Input Fields -->
+                                <ion-item>
+                                    <ion-input v-model="textInput6" placeholder="Sadrzaj"></ion-input>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-input v-model="textInput7" placeholder="Sadrzaj"></ion-input>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-input v-model.number="numInput2" type="number" placeholder="Broj"></ion-input>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-input v-model.number="numInput3" type="number" placeholder="Broj"></ion-input>
+                                </ion-item>
+
+                                <ion-item>
+                                    <ion-input v-model.number="numInput4" type="number" placeholder="Alarm na"></ion-input>
+                                    <ion-toggle :enable-on-off-labels="true"></ion-toggle>
+                                </ion-item>
+
+                                <ion-item>
+                                    <ion-input v-model="textInput8" type="number" placeholder="Overa"></ion-input>
+                                    <ion-toggle :enable-on-off-labels="true"></ion-toggle>
+                                </ion-item>
+
+                            </ion-col>
+                        </ion-row>
+
+                        <!-- Add the remaining input fields below as needed -->
+                    </ion-grid>
+
+                    <ion-item>
+                        <ion-input v-model.number="numInput5" placeholder="Cena"></ion-input>
+                    </ion-item>
+                    <!-- Datetime Ionic Input Field -->
+                    <ion-item>
+                        <ion-datetime v-model="dateInput" placeholder="Select Date"></ion-datetime>
+                   
+                    </ion-item>
+                    <ion-item>
+                      
+                        <ion-toggle :enable-on-off-labels="true">Notifikacija</ion-toggle>
+                    </ion-item>
+                    <!-- Additional Textual Input Fields -->
+
                 </div>
             </ion-content>
         </ion-modal>
-
 
     </ion-menu>
 </template>
 
 <script lang="ts">
 import { ref, defineComponent } from "vue";
+import { useStore } from 'vuex';
 import { close, checkmark } from 'ionicons/icons';
+import { IonDatetime } from '@ionic/vue';
 
 import {
     IonCard,
@@ -73,7 +149,11 @@ import {
     IonRow,
     IonCol,
     IonModal,
-    IonIcon
+    IonIcon,
+    IonItem,
+    IonInput,
+    IonToggle,
+
 } from '@ionic/vue';
 
 export default {
@@ -90,7 +170,10 @@ export default {
         IonRow,
         IonCol,
         IonModal,
-        IonIcon
+        IonIcon,
+        IonItem,
+        IonInput,
+        IonToggle,
     },
     setup() {
 
@@ -98,6 +181,27 @@ export default {
         const isOpen = ref(false);
         const newNote = ref("");
         const data = ref({}); // Some data you want to pass to the Modal component
+
+        const textInput1 = ref("");
+        const textInput2 = ref("");
+        const textInput3 = ref("");
+        const textInput4 = ref("");
+        const textInput5 = ref("");
+        const textInput6 = ref("");
+        const textInput7 = ref("");
+        const textInput8 = ref("");
+        // const textInput9 = ref("");
+        // const textInput10 = ref("");
+
+        const numInput1 = ref(0.0);
+        const numInput2 = ref(0.0);
+        const numInput3 = ref(0.0);
+        const numInput4 = ref(0.0);
+        const numInput5 = ref(0.0);
+        // const numInput6 = ref(0.0);
+
+        const dateInput = ref("");
+
 
         const setOpen = (state: boolean) => {
             isOpen.value = state;
@@ -113,8 +217,23 @@ export default {
         return {
             isOpen,
             setOpen,
-            newNote,
-            data,
+            textInput1,
+            textInput2,
+            textInput3,
+            textInput4,
+            textInput5,
+            textInput6,
+            textInput7,
+            textInput8,
+            // textInput9,
+            // textInput10,
+            numInput1,
+            numInput2,
+            numInput3,
+            numInput4,
+            numInput5,
+            // numInput6,
+            dateInput,
             confirmChanges,
             close,
             checkmark
