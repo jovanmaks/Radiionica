@@ -6,6 +6,8 @@ interface Inventar {
     id: number;
     deklaracija: string;
     kolicina: number;
+    kolicina_notifikacija: number;
+    kolicina_isNotified: boolean;
     cena: number;
     num_1_label: string;
     num_1: number;
@@ -15,12 +17,13 @@ interface Inventar {
     text_1: string;
     text_2_label: string;
     text_2: string;
-    swich_1_label: string;
+    switch_1_label: string;
     switch_1: boolean;
     switch_2_label: string;
     switch_2: boolean;
-    date: Date;
-    time: string;
+    // date: Date;
+    // time: string;
+    datetime: Date;
     qr_code: string;
   }
   
@@ -41,6 +44,9 @@ interface Inventar {
     setDataLoaded(state: State, isLoaded: boolean) {
       state.isDataLoaded = isLoaded;
     },
+    addInventar(state: State, newInventar: Inventar) {
+        state.inventar.push(newInventar);
+      },
   };
   
   const actions = {
@@ -58,6 +64,19 @@ interface Inventar {
       commit('setInventar', data);
       commit('setDataLoaded', true);
     },
+    async createInventar({ commit }: ActionContext<State, unknown>, inventar: Partial<Inventar>) {
+        const { data, error } = await supabase
+          .from('Inventar')
+          .insert([inventar]);
+    
+        if (error) {
+          console.error(error);
+          throw error;
+        }
+    
+        // Assuming that 'data' contains the inserted Inventar...
+        commit('addInventar', data);
+      },
   };
   
   const getters = {
@@ -72,12 +91,3 @@ interface Inventar {
     getters,
   };
   
-
-
-//   export default {
-//       namespaced: true,
-//       state,
-//       mutations,
-//       actions,
-//       getters,
-//   };

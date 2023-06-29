@@ -46,7 +46,7 @@
                 <div class="input-button-container">
                     <!-- Textual Input Fields -->
                     <ion-item>
-                        <ion-input v-model="textInput1" placeholder="Naziv"></ion-input>
+                        <ion-input v-model="deklaracija" placeholder="Naziv"></ion-input>
                     </ion-item>
 
 
@@ -55,24 +55,23 @@
                             <ion-col>
                                 <!-- Textual Input Fields -->
                                 <ion-item>
-                                    <ion-input v-model="textInput2" placeholder="Ime"></ion-input>
+                                    <ion-input v-model="text_1_label" placeholder="Ime"></ion-input>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-input v-model="textInput3" placeholder="Ime"></ion-input>
+                                    <ion-input v-model="text_2_label" placeholder="Ime"></ion-input>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-input v-model="textInput4" placeholder="Ime"></ion-input>
+                                    <ion-input v-model="num_1_label" placeholder="Ime"></ion-input>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-input v-model="textInput5" placeholder="Ime"></ion-input>
-                                </ion-item>
-
-                                <ion-item>
-                                    <ion-input v-model.number="numInput1" placeholder="Kolicina"></ion-input>
+                                    <ion-input v-model="num_2_label" placeholder="Ime"></ion-input>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-input v-model="textInput6" type="number" placeholder="Overa"></ion-input>
-                                    <ion-toggle :enable-on-off-labels="true"></ion-toggle>
+                                    <ion-input v-model.number="kolicina" type="number" placeholder="Kolicina"></ion-input>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-input v-model="switch_1_label" placeholder="Overa"></ion-input>
+                                    <ion-toggle :enable-on-off-labels="true" v-model="switch_1"></ion-toggle>
                                 </ion-item>
 
 
@@ -81,26 +80,29 @@
                             <ion-col>
                                 <!-- Additional Textual Input Fields -->
                                 <ion-item>
-                                    <ion-input v-model="textInput6" placeholder="Sadrzaj"></ion-input>
+                                    <ion-input v-model="text_1" placeholder="Sadrzaj"></ion-input>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-input v-model="textInput7" placeholder="Sadrzaj"></ion-input>
+                                    <ion-input v-model="text_2" placeholder="Sadrzaj"></ion-input>
+                                </ion-item>
+                                <ion-item>  
+                                    <ion-input v-model.number="num_1" type="number" placeholder="Broj"></ion-input>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-input v-model.number="numInput2" type="number" placeholder="Broj"></ion-input>
-                                </ion-item>
-                                <ion-item>
-                                    <ion-input v-model.number="numInput3" type="number" placeholder="Broj"></ion-input>
+                                    <ion-input v-model.number="num_2" type="number" placeholder="Broj"></ion-input>
                                 </ion-item>
 
                                 <ion-item>
-                                    <ion-input v-model.number="numInput4" type="number" placeholder="Alarm na"></ion-input>
+                                    <ion-input v-model.number="kolicina_notifikacija" type="number"
+                                        placeholder="Alarm na"></ion-input>
                                     <ion-toggle :enable-on-off-labels="true"></ion-toggle>
                                 </ion-item>
 
                                 <ion-item>
-                                    <ion-input v-model="textInput8" type="number" placeholder="Overa"></ion-input>
-                                    <ion-toggle :enable-on-off-labels="true"></ion-toggle>
+                                    <ion-input v-model="switch_2_label" placeholder="Overa"></ion-input>
+                                    <ion-checkbox slot="end" v-model="switch_2"></ion-checkbox>
+                                    <!-- <ion-toggle :checked="true" v-model="switch_2"></ion-toggle> -->
+                                    <!-- <ion-toggle :checked="switch_2" @ionChange="e => switch_2 = e.detail.checked"></ion-toggle> -->
                                 </ion-item>
 
                             </ion-col>
@@ -110,15 +112,17 @@
                     </ion-grid>
 
                     <ion-item>
-                        <ion-input v-model.number="numInput5" placeholder="Cena"></ion-input>
+                        <ion-input v-model.number="cena" type="number" placeholder="Cena"></ion-input>
                     </ion-item>
                     <!-- Datetime Ionic Input Field -->
                     <ion-item>
-                        <ion-datetime v-model="dateInput" placeholder="Select Date"></ion-datetime>
-                   
+                        <!-- <ion-datetime v-model="dateInput" placeholder="Select Date"></ion-datetime> -->
+                        <!-- <ion-datetime v-model="datetimeInput" placeholder="Select Date"></ion-datetime> -->
+                        <ion-datetime @v-model="datetimeInput = $event.detail.value"
+                            placeholder="Select Date"></ion-datetime>
                     </ion-item>
                     <ion-item>
-                      
+
                         <ion-toggle :enable-on-off-labels="true">Notifikacija</ion-toggle>
                     </ion-item>
                     <!-- Additional Textual Input Fields -->
@@ -134,7 +138,9 @@
 import { ref, defineComponent } from "vue";
 import { useStore } from 'vuex';
 import { close, checkmark } from 'ionicons/icons';
-import { IonDatetime } from '@ionic/vue';
+// import { IonDatetime } from '@ionic/vue';
+import { watch } from 'vue';
+
 
 import {
     IonCard,
@@ -153,6 +159,8 @@ import {
     IonItem,
     IonInput,
     IonToggle,
+    IonDatetime,
+    IonCheckbox,
 
 } from '@ionic/vue';
 
@@ -174,6 +182,8 @@ export default {
         IonItem,
         IonInput,
         IonToggle,
+        IonDatetime,
+        IonCheckbox,
     },
     setup() {
 
@@ -182,58 +192,98 @@ export default {
         const newNote = ref("");
         const data = ref({}); // Some data you want to pass to the Modal component
 
-        const textInput1 = ref("");
-        const textInput2 = ref("");
-        const textInput3 = ref("");
-        const textInput4 = ref("");
-        const textInput5 = ref("");
-        const textInput6 = ref("");
-        const textInput7 = ref("");
-        const textInput8 = ref("");
-        // const textInput9 = ref("");
-        // const textInput10 = ref("");
+        const deklaracija = ref("");
+        const text_1_label = ref("");
+        const text_2_label = ref("");
+        const num_1_label = ref("");
+        const num_2_label = ref("");
+        const switch_1_label = ref("");
+        const switch_2_label = ref("");
+        const text_1 = ref("");
+        const text_2 = ref("");
 
-        const numInput1 = ref(0.0);
-        const numInput2 = ref(0.0);
-        const numInput3 = ref(0.0);
-        const numInput4 = ref(0.0);
-        const numInput5 = ref(0.0);
-        // const numInput6 = ref(0.0);
+        const kolicina = ref(0.0);
+        const num_1 = ref(0.0);
+        const num_2 = ref(0.0);
+        const kolicina_notifikacija = ref(0.0);
+        const cena = ref(0.0);
+        const switch_1 = ref(false);
+        const switch_2 = ref(false);
 
+
+        const datetimeInput = ref(null);
         const dateInput = ref("");
 
+
+        const store = useStore();
 
         const setOpen = (state: boolean) => {
             isOpen.value = state;
         };
+        watch(dateInput, (newValue) => {
+            if (newValue) {
+                const dateTimeArray = newValue.split('T');
+                const dateValue = dateTimeArray[0]; // the date part
+                const timeValue = dateTimeArray[1] ? dateTimeArray[1].split('.')[0] : ''; // the time part
+            }
+        });
 
-        const confirmChanges = () => {
-            // Here you can define what happens when the user clicks on the confirm button
-            // e.g. sending the newNote value somewhere
-            console.log("Note:", newNote.value);
+        const confirmChanges = async () => {
+            console.log('Switch 1: ', switch_1.value);
+            console.log('Switch 2: ', switch_2.value);
+            console.log('Confirm changes called')
+
+            let datetime = null;
+            if (datetimeInput.value !== null) {
+                datetime = datetimeInput.value; // directly assign the value
+            }
+            // const currentTime = new Date().toLocaleTimeString();
+            // Create the inventar object based on the form input data
+            const inventar = {
+                deklaracija: deklaracija.value,
+                kolicina: kolicina.value,
+                kolicina_notifikacija: kolicina_notifikacija.value,
+                cena: cena.value,
+                num_1_label: num_1_label.value,
+                num_1: num_1.value,
+                num_2_label: num_2_label.value,
+                num_2: num_2.value,
+                text_1_label: text_1_label.value,
+                text_1: text_1.value,
+                text_2_label: text_2_label.value,
+                text_2: text_2.value,
+                switch_1_label: switch_1_label.value,
+                switch_2_label: switch_2_label.value,
+                switch_1: switch_1.value,
+                switch_2: switch_2.value,
+                datetime: datetime,
+            };
+
+            // Dispatch the action to insert the new inventar into the database
+            await store.dispatch('inventory/createInventar', inventar);
+
             setOpen(false);
         };
 
         return {
             isOpen,
             setOpen,
-            textInput1,
-            textInput2,
-            textInput3,
-            textInput4,
-            textInput5,
-            textInput6,
-            textInput7,
-            textInput8,
-            // textInput9,
-            // textInput10,
-            numInput1,
-            numInput2,
-            numInput3,
-            numInput4,
-            numInput5,
-            // numInput6,
+            deklaracija,
+            text_1_label,
+            text_2_label,
+            num_1_label,
+            num_2_label,
+            switch_1_label,
+            switch_2_label,
+            text_1,
+            text_2,
+            kolicina,
+            num_1,
+            num_2,
+            kolicina_notifikacija,
+            cena,
             dateInput,
+            datetimeInput,
             confirmChanges,
             close,
             checkmark
@@ -242,8 +292,6 @@ export default {
 }
 
 </script>
-
-
 
 <style scoped>
 .button-container {
