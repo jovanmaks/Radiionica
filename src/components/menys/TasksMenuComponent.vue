@@ -48,7 +48,7 @@
     <ion-page id="main-content">
         <ion-content class="ion-padding">
             <div class="button-container">
-                <ion-menu-toggle>
+                <ion-menu-toggle slot="end">
                     <ion-button size="large" fill="clear">
                         <ion-icon :icon="documentAttachOutline"></ion-icon>
                     </ion-button>
@@ -84,8 +84,8 @@ export default defineComponent({
         IonContent,
         IonHeader,
         IonMenu,
-        IonMenuToggle,
-        IonPage,
+        // IonMenuToggle,
+        // IonPage,
         // IonTitle,
         IonToolbar,
     },
@@ -202,11 +202,12 @@ export default defineComponent({
     }
 });
 </script>
-
+<!-- 
 <style scoped>
 .button-container {
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
+    align-items: flex-end;
 }
-</style>
+</style> -->
 

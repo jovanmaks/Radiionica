@@ -88,22 +88,3 @@ export default {
 
 
 
-
-  // async signIn({ commit }: ActionContext<State, unknown>, credentials: any) {
-  //   try {
-  //     const response = await supabase.auth.signInWithPassword(credentials);
-  //     if (response.error) {
-  //       return { error: response.error };
-  //     }
-  //     const user = supabase.auth.getUser();
-  //     commit('setUser', user);
-
-
-  //     return {};
-  //   } catch (error) {
-  //     if (error instanceof Error) {
-  //       console.error('Error in signIn:', error.message);
-  //     }
-  //     throw error;
-  //   }
-  // },
