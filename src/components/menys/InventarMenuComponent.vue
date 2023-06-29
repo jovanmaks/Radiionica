@@ -95,14 +95,12 @@
                                 <ion-item>
                                     <ion-input v-model.number="kolicina_notifikacija" type="number"
                                         placeholder="Alarm na"></ion-input>
-                                    <ion-toggle :enable-on-off-labels="true"></ion-toggle>
+                                    <ion-toggle :enable-on-off-labels="true" v-model="kolicina_isNotified"></ion-toggle>
                                 </ion-item>
 
                                 <ion-item>
                                     <ion-input v-model="switch_2_label" placeholder="Overa"></ion-input>
-                                    <ion-checkbox slot="end" v-model="switch_2"></ion-checkbox>
-                                    <!-- <ion-toggle :checked="true" v-model="switch_2"></ion-toggle> -->
-                                    <!-- <ion-toggle :checked="switch_2" @ionChange="e => switch_2 = e.detail.checked"></ion-toggle> -->
+                                    <ion-toggle :enable-on-off-labels="true" v-model="switch_2"></ion-toggle>
                                 </ion-item>
 
                             </ion-col>
@@ -116,16 +114,13 @@
                     </ion-item>
                     <!-- Datetime Ionic Input Field -->
                     <ion-item>
-                        <!-- <ion-datetime v-model="dateInput" placeholder="Select Date"></ion-datetime> -->
-                        <!-- <ion-datetime v-model="datetimeInput" placeholder="Select Date"></ion-datetime> -->
-                        <ion-datetime @v-model="datetimeInput = $event.detail.value"
-                            placeholder="Select Date"></ion-datetime>
+                        <ion-datetime v-model="datetimeInput" placeholder="Select Date"></ion-datetime>
                     </ion-item>
                     <ion-item>
-
-                        <ion-toggle :enable-on-off-labels="true">Notifikacija</ion-toggle>
+                        <ion-toggle :enable-on-off-labels="true" v-model="datetime_isNotified" >Notifikacija</ion-toggle>
                     </ion-item>
                     <!-- Additional Textual Input Fields -->
+                    <ion-button expand="full" >Sacuvaj templejt</ion-button>
 
                 </div>
             </ion-content>
@@ -160,7 +155,7 @@ import {
     IonInput,
     IonToggle,
     IonDatetime,
-    IonCheckbox,
+    // IonCheckbox,
 
 } from '@ionic/vue';
 
@@ -183,7 +178,7 @@ export default {
         IonInput,
         IonToggle,
         IonDatetime,
-        IonCheckbox,
+        // IonCheckbox,
     },
     setup() {
 
@@ -206,12 +201,14 @@ export default {
         const num_1 = ref(0.0);
         const num_2 = ref(0.0);
         const kolicina_notifikacija = ref(0.0);
+        const kolicina_isNotified = ref(false);
         const cena = ref(0.0);
         const switch_1 = ref(false);
         const switch_2 = ref(false);
 
 
         const datetimeInput = ref(null);
+        const datetime_isNotified = ref(false);
         const dateInput = ref("");
 
 
@@ -229,20 +226,19 @@ export default {
         });
 
         const confirmChanges = async () => {
-            console.log('Switch 1: ', switch_1.value);
-            console.log('Switch 2: ', switch_2.value);
-            console.log('Confirm changes called')
 
             let datetime = null;
             if (datetimeInput.value !== null) {
                 datetime = datetimeInput.value; // directly assign the value
             }
+            // console.log('Confirm changes called', datetimeInput.value);// directly assign the value
             // const currentTime = new Date().toLocaleTimeString();
             // Create the inventar object based on the form input data
             const inventar = {
                 deklaracija: deklaracija.value,
                 kolicina: kolicina.value,
                 kolicina_notifikacija: kolicina_notifikacija.value,
+                kolicina_isNotified: kolicina_isNotified.value,
                 cena: cena.value,
                 num_1_label: num_1_label.value,
                 num_1: num_1.value,
@@ -256,7 +252,8 @@ export default {
                 switch_2_label: switch_2_label.value,
                 switch_1: switch_1.value,
                 switch_2: switch_2.value,
-                datetime: datetime,
+                datetime: datetimeInput.value,
+                datetime_isNotified: datetime_isNotified.value,
             };
 
             // Dispatch the action to insert the new inventar into the database
@@ -275,15 +272,19 @@ export default {
             num_2_label,
             switch_1_label,
             switch_2_label,
+            switch_1,
+            switch_2,
             text_1,
             text_2,
             kolicina,
             num_1,
             num_2,
             kolicina_notifikacija,
+            kolicina_isNotified,
             cena,
             dateInput,
             datetimeInput,
+            datetime_isNotified,
             confirmChanges,
             close,
             checkmark

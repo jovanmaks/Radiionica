@@ -24,6 +24,7 @@ interface Inventar {
     // date: Date;
     // time: string;
     datetime: Date;
+    datetime_isNotified: boolean;
     qr_code: string;
   }
   
