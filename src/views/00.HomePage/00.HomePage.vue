@@ -2,51 +2,64 @@
 <template>
     <base-layout page-title="" page-default-back-link="/admin">
         <template v-slot:content>
-            <!-- <TaskMenu ref="sideMenu-task" /> -->
-            <!-- <InventarMenu ref="sideMenu-inventar" /> -->
 
-            <!-- <ProjectMenu ref="sideMenu-project"  /> -->
-            <!-- <InventarMenu ref="sideMenu-inventar"  /> -->
-
-
-            <ion-menu content-id="main-content" menu-id="sideMenu-project" side="start">
-                <!-- ... -->
-            </ion-menu>
-
-            <ion-menu content-id="main-content" menu-id="sideMenu-inventar" side="start">
-                <!-- ... -->
-            </ion-menu>
+            <TaskMenu ref="sideMenu-task" />
+            <ProjectMenu ref="sideMenu-project" />
+            <InventarMenu ref="sideMenu-inventar" />
+            <TemplejtMenu ref="sideMenu-templejt" />
 
 
-            <div class="ion-page" id="main-content">
 
-                <!-- <ion-page id="main-content"> -->
+
+            <ion-page id="main-content">
                 <ion-content class="ion-padding">
                     <div class="button-container">
 
+                        <ion-button size="large" fill="clear">
+                            <ion-icon :icon="bookmarksOutline"></ion-icon>
+                        </ion-button>
+
+                        <ion-button size="large" fill="clear">
+                            <ion-icon :icon="peopleOutline"></ion-icon>
+                        </ion-button>
 
                         <ion-menu-toggle>
-                            <ion-button @click="() => openMenu('sideMenu-project')">Click to open the project</ion-button>
+                            <ion-button @click="() => openMenu('sideMenu-task')" size="large" fill="clear">
+                                <ion-icon :icon="documentAttachOutline"></ion-icon>
+                                <ion-badge>{{ noteCount }}</ion-badge>
+                            </ion-button>
                         </ion-menu-toggle>
 
                         <ion-menu-toggle>
-                            <ion-button @click="() => openMenu('sideMenu-inventar')">Click to open the inv</ion-button>
+                            <ion-button @click="() => openMenu('sideMenu-project')" size="large" fill="clear">
+                                <ion-icon :icon="libraryOutline"></ion-icon>
+                            </ion-button>
                         </ion-menu-toggle>
 
-
-
-                        <!-- <ion-button size="large" fill="clear">
+                        <ion-menu-toggle>
+                            <ion-button @click="() => openMenu('sideMenu-inventar')" size="large" fill="clear">
                                 <ion-icon :icon="layersOutline"></ion-icon>
                             </ion-button>
+                        </ion-menu-toggle>
 
+                        <ion-button size="large" fill="clear">
+                            <ion-icon :icon="hammerOutline"></ion-icon>
+                        </ion-button>
+
+                        <ion-button size="large" fill="clear">
+                            <ion-icon :icon="cartOutline"></ion-icon>
+                        </ion-button>
+
+                        <ion-menu-toggle>
                             <ion-button size="large" fill="clear">
-                                <ion-icon :icon="libraryOutline"></ion-icon>
-                            </ion-button> -->
+                                <ion-icon :icon="addOutline"></ion-icon>
+                            </ion-button>
+                        </ion-menu-toggle>
+
+
                     </div>
                 </ion-content>
-            </div>
-            <!-- </ion-page> -->
-
+            </ion-page>
         </template>
     </base-layout>
 </template>
@@ -57,64 +70,68 @@ import { useStore } from 'vuex';
 import TaskMenu from '@/components/menys/TasksMenuComponent.vue';
 import InventarMenu from '@/components/menys/InventarMenuComponent.vue';
 import ProjectMenu from '@/components/menys/ProjectMenuComponent.vue';
+import TemplejtMenu from '@/components/menys/TemplejtMenuComponent.vue';
 
-import { documentAttachOutline, layersOutline, libraryOutline } from 'ionicons/icons';
+import { addOutline, documentAttachOutline, layersOutline, libraryOutline, peopleOutline, hammerOutline, searchOutline, cartOutline, bookmarksOutline } from 'ionicons/icons';
 import { IonMenu } from '@ionic/vue';
 import { menuController } from '@ionic/vue';
 
 
 import {
-    IonButton, IonButtons, IonContent, IonHeader, IonMenuToggle, IonPage,
-    IonTitle, IonToolbar, IonSegment, IonSegmentButton,
-    IonIcon,
+    IonButton, IonContent, IonMenuToggle, IonPage, IonIcon, IonBadge
 } from '@ionic/vue';
 export default {
     components: {
-        // TaskMenu,
-        // InventarMenu,
-        // ProjectMenu,
-        // menuController,
+        TaskMenu,
+        InventarMenu,
+        ProjectMenu,
+        TemplejtMenu,
 
-        // IonPage,
+        IonPage,
         IonContent,
         IonMenuToggle,
         IonButton,
-        // IonIcon,
+        IonIcon,
+        IonBadge  // Add IonBadge to the components
 
-        // IonButtons,
-        // IonHeader,
-        IonMenu,
-        // IonTitle,
-        // IonToolbar,
     },
     setup() {
+        const store = useStore();
+
+
+        const noteCount = computed(() => store.getters['notes/notesCount']);
+
         const openMenu = async (menuId: string) => {
-  await menuController.enable(true, menuId);
-  await menuController.open(menuId);
-};
+            await menuController.enable(true, menuId);
+            await menuController.open(menuId);
+        };
 
         return {
-
-
-            // documentAttachOutline, layersOutline, libraryOutline
+            addOutline,
             documentAttachOutline,
             layersOutline,
             libraryOutline,
+            peopleOutline,
+            hammerOutline,
+            bookmarksOutline,
+            cartOutline,
             openMenu,
+            noteCount,
         }
     }
 }
 </script>
 
 <style  scoped>
-/* .button-container {
+.button-container {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: auto auto;
     gap: 20px;
     align-items: flex-end;
     justify-items: flex-end;
-} */
+}
+
 
 /* .button-container {
     display: flex;

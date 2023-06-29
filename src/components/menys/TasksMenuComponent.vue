@@ -1,5 +1,5 @@
 <template>
-    <ion-menu content-id="main-content" menu-id="sideMenu" side="start">
+    <ion-menu content-id="main-content" menu-id="sideMenu-task" side="start">
         <ion-header>
             <ion-toolbar>
                 <ion-segment :scrollable="true" value="all">
@@ -45,7 +45,7 @@
 
         </ion-content>
     </ion-menu>
-    <ion-page id="main-content">
+    <!-- <ion-page id="main-content">
         <ion-content class="ion-padding">
             <div class="button-container">
                 <ion-menu-toggle slot="end">
@@ -55,7 +55,7 @@
                 </ion-menu-toggle>
             </div>
         </ion-content>
-    </ion-page>
+    </ion-page> -->
 </template>
     
 <script lang="ts">

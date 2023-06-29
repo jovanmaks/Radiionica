@@ -1,6 +1,7 @@
   import { ActionContext } from 'vuex';
   import { supabase } from "@/supabase";
 
+  
   interface Note {
     homescreen: string;
     user_id: string;
