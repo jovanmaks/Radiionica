@@ -3,6 +3,9 @@
 <template>
   <ion-page>
 
+          <!-- <ion-button fill="clear" @click="signOut" size="large" class="logout-button">
+            <ion-icon :icon="logOutOutline"></ion-icon>
+          </ion-button> -->
     <app-header :title="pageTitle" @back="$router.back()" @signOut="signOut">
       <slot name="actions-end" slot="actions-end"></slot>
     </app-header>
@@ -70,7 +73,7 @@ import {
   IonButtons,
 } from "@ionic/vue";
 
-import { checkmark, close } from "ionicons/icons";
+import { checkmark, close, logOutOutline } from "ionicons/icons";
 
 import { Browser } from "@capacitor/browser";
 import { isPlatform } from "@ionic/vue";
@@ -169,7 +172,7 @@ export default defineComponent({
     return {
       signOut, user, username, routeName, isOpenRef,
       setOpen, confirmChanges, newNote, usernew, checkmark,
-      close, noteCount, navigateTo, addNote,
+      close, noteCount, navigateTo, addNote,logOutOutline
     };
   },
 
@@ -178,6 +181,12 @@ export default defineComponent({
 </script>
 
 <style scoped>
+/* .logout-button {
+  position: absolute;
+  right: 10px;
+} */
+
+
 ion-col {
   /* background-color: #135d54; */
   border: solid 1px #fff;

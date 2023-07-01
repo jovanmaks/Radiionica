@@ -29,6 +29,7 @@ interface Inventar {
     datetime_isNotified: boolean;
     kreator: string;
     qr_code: string;
+    isArchived: boolean;
   }
   
   interface State {

@@ -14,8 +14,22 @@
             <ion-toolbar>
                 <ion-grid>
                     <ion-row>
-                        <ion-col>
-                            <ion-button expand="full" @click="setOpen(true)">Add</ion-button>
+                        <ion-col style="display: flex; justify-content: center; align-items: center;">
+                            <ion-fab>
+                                <ion-fab-button size="small" expand="full" >
+                                    <ion-icon :icon="add"></ion-icon>
+                                </ion-fab-button>
+                                <ion-fab-list side="end">
+                                    <ion-fab-button @click="setOpen(true)">
+                                        <ion-icon :icon="add"></ion-icon>
+                                    </ion-fab-button>
+                                </ion-fab-list>
+                                <ion-fab-list side="start">
+                                    <ion-fab-button>
+                                        <ion-icon :icon="document"></ion-icon>
+                                    </ion-fab-button>
+                                </ion-fab-list>
+                            </ion-fab>
                         </ion-col>
                     </ion-row>
                 </ion-grid>
@@ -124,7 +138,7 @@
 <script lang="ts">
 import { ref, defineComponent } from "vue";
 import { useStore } from 'vuex';
-import { close, checkmark } from 'ionicons/icons';
+import { close, checkmark, add, document } from 'ionicons/icons';
 // import { IonDatetime } from '@ionic/vue';
 import { watch, computed } from 'vue';
 
@@ -147,6 +161,8 @@ import {
     IonInput,
     IonToggle,
     IonDatetime,
+    IonFab,
+    IonFabButton,
     // IonCheckbox,
 
 } from '@ionic/vue';
@@ -170,6 +186,8 @@ export default {
         IonInput,
         IonToggle,
         IonDatetime,
+        IonFab,
+        IonFabButton,
         // IonCheckbox,
     },
     setup() {
@@ -202,6 +220,7 @@ export default {
         const kreator = ref("");
         const dateInput = ref("");
         const qrCodeDataUrl = ref(null);
+        const isArchived  = ref(false);
 
 
         const store = useStore();
@@ -245,11 +264,12 @@ export default {
                 datetime_isNotified: datetime_isNotified.value,
                 kreator: username.value,
                 qr_code: qrCodeDataUrl.value,
+                isArchived: isArchived.value,
             };
 
             // Dispatch the action to insert the new inventar into the database
             qrCodeDataUrl.value = await store.dispatch('inventory/generateQRCode', inventarData);
-            
+
             const inventar = {
                 ...inventarData,
                 qr_code: qrCodeDataUrl.value
@@ -288,7 +308,9 @@ export default {
             confirmChanges,
             close,
             checkmark,
-            qrCodeDataUrl
+            qrCodeDataUrl,
+            add,
+            document,
         }
     }
 }
