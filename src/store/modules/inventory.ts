@@ -36,12 +36,13 @@ interface Inventar {
   interface State {
     inventar: Inventar[];
     isDataLoaded: boolean;
+    templejtValues: [];
   }
   
   const state: State = {
     inventar: [],
     isDataLoaded: false,
-    // templates: any[];
+    templejtValues: [],
   };
   
   const mutations = {
@@ -54,9 +55,10 @@ interface Inventar {
     addInventar(state: State, newInventar: Inventar) {
         state.inventar.push(newInventar);
       },
-    //   addTemplate(state: State, newTemplate: any) {
-    //     // state.templates.push(newTemplate);
-    // },
+      setTemplejtValues(state: State, templejtValues: []) {
+        state.templejtValues = templejtValues;
+      },
+   
   };
   
   const actions = {
@@ -65,12 +67,21 @@ interface Inventar {
         .from('Inventar')
         .select('*')
         .order('id');
-  
+      
+      if (data) {
+        let templejtValues = data.map(item => item.templejt && item.templejt[0] ? item.templejt[0] : null);
+        // Remove nulls and duplicates
+        templejtValues = templejtValues.filter((value, index, self) => {
+          return value && self.indexOf(value) === index;
+        });
+        commit('setTemplejtValues', templejtValues);
+      }
+    
       if (error) {
         console.error(error);
         throw error;
       }
-  
+      
       commit('setInventar', data);
       commit('setDataLoaded', true);
     },
@@ -137,32 +148,21 @@ interface Inventar {
           console.error('Error sharing QR code:', error);
       }
   },
-//   async updateInventarTemplate({ commit }: ActionContext<State, unknown>, payload: { id: number, templateData: any }) {
-//     const { data, error } = await supabase
-//         .from('Inventar')
-//         .update({
-//             templejt: payload.templateData  // Assuming 'templejt' is the column to be updated
-//         })
-//         .eq('id', payload.id); // Replace 'id' with the identifier for your Inventar items
 
-//     if (error) {
-//         console.error(error);
-//         throw error;
-//     }
-
-//     // Update Vuex state
-//     if (data) {
-//         const updatedInventar = state.inventar.map(inventar => 
-//             inventar.id === payload.id ? { ...inventar, templejt: payload.templateData } : inventar
-//         );
-//         commit('setInventar', updatedInventar);
-//     }
-// }
   
   };
   
   const getters = {
     inventarCount: (state: State) => state.inventar.length,
+    getInventarById: (state: State) => (id: number) => {
+      return state.inventar.find(inventar => inventar.id === id);
+    },
+    getInventarByDeklaracija: (state: State) => (deklaracija: string) => {
+      return state.inventar.filter(inventar => inventar.deklaracija === deklaracija);
+    },
+    getAllInventar: (state: State) => {
+      return state.inventar;
+    },
   };
   
   export default {
