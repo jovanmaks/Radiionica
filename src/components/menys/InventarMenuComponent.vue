@@ -16,7 +16,7 @@
                     <ion-row>
                         <ion-col style="display: flex; justify-content: center; align-items: center;">
                             <ion-fab>
-                                <ion-fab-button size="small" expand="full" >
+                                <ion-fab-button size="small" expand="full">
                                     <ion-icon :icon="add"></ion-icon>
                                 </ion-fab-button>
                                 <ion-fab-list side="end">
@@ -26,7 +26,7 @@
                                 </ion-fab-list>
                                 <ion-fab-list side="start">
                                     <ion-fab-button>
-                                        <ion-icon :icon="document"></ion-icon>
+                                        <ion-icon :icon="documentOutline"></ion-icon>
                                     </ion-fab-button>
                                 </ion-fab-list>
                             </ion-fab>
@@ -122,7 +122,10 @@
                     <ion-item>
                         <ion-toggle :enable-on-off-labels="true" v-model="datetime_isNotified">Notifikacija</ion-toggle>
                     </ion-item>
-                    <ion-button expand="full">Sacuvaj templejt</ion-button>
+                    <!-- <ion-button expand="full" @click="saveTemplate">Sacuvaj templejt</ion-button> -->
+                    <ion-item>
+                        <ion-input v-model="templejt" placeholder="Templejt"></ion-input>
+                    </ion-item>
 
                     <!-- <div v-if="qrCodeDataUrl">
                         <img :src="qrCodeDataUrl" alt="QR Code">
@@ -138,7 +141,7 @@
 <script lang="ts">
 import { ref, defineComponent } from "vue";
 import { useStore } from 'vuex';
-import { close, checkmark, add, document } from 'ionicons/icons';
+import { close, checkmark, add, documentOutline } from 'ionicons/icons';
 // import { IonDatetime } from '@ionic/vue';
 import { watch, computed } from 'vue';
 
@@ -220,10 +223,21 @@ export default {
         const kreator = ref("");
         const dateInput = ref("");
         const qrCodeDataUrl = ref(null);
-        const isArchived  = ref(false);
-
+        const isArchived = ref(false);
+        const templejt = ref("");
 
         const store = useStore();
+
+        const arrayToFill = [
+            templejt.value,
+            text_1_label.value,
+            text_2_label.value,
+            num_1_label.value,
+            num_2_label.value,
+            switch_1_label.value,
+            switch_2_label.value
+        ];
+
 
         const setOpen = (state: boolean) => {
             isOpen.value = state;
@@ -235,6 +249,7 @@ export default {
                 const timeValue = dateTimeArray[1] ? dateTimeArray[1].split('.')[0] : ''; // the time part
             }
         });
+      
 
         const confirmChanges = async () => {
 
@@ -265,6 +280,7 @@ export default {
                 kreator: username.value,
                 qr_code: qrCodeDataUrl.value,
                 isArchived: isArchived.value,
+                templejt: arrayToFill,
             };
 
             // Dispatch the action to insert the new inventar into the database
@@ -306,11 +322,12 @@ export default {
             datetimeInput,
             datetime_isNotified,
             confirmChanges,
+            arrayToFill,
             close,
             checkmark,
             qrCodeDataUrl,
             add,
-            document,
+            documentOutline,
         }
     }
 }

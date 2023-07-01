@@ -30,6 +30,7 @@ interface Inventar {
     kreator: string;
     qr_code: string;
     isArchived: boolean;
+    templejt: string[];
   }
   
   interface State {
@@ -40,6 +41,7 @@ interface Inventar {
   const state: State = {
     inventar: [],
     isDataLoaded: false,
+    // templates: any[];
   };
   
   const mutations = {
@@ -52,6 +54,9 @@ interface Inventar {
     addInventar(state: State, newInventar: Inventar) {
         state.inventar.push(newInventar);
       },
+    //   addTemplate(state: State, newTemplate: any) {
+    //     // state.templates.push(newTemplate);
+    // },
   };
   
   const actions = {
@@ -132,6 +137,28 @@ interface Inventar {
           console.error('Error sharing QR code:', error);
       }
   },
+//   async updateInventarTemplate({ commit }: ActionContext<State, unknown>, payload: { id: number, templateData: any }) {
+//     const { data, error } = await supabase
+//         .from('Inventar')
+//         .update({
+//             templejt: payload.templateData  // Assuming 'templejt' is the column to be updated
+//         })
+//         .eq('id', payload.id); // Replace 'id' with the identifier for your Inventar items
+
+//     if (error) {
+//         console.error(error);
+//         throw error;
+//     }
+
+//     // Update Vuex state
+//     if (data) {
+//         const updatedInventar = state.inventar.map(inventar => 
+//             inventar.id === payload.id ? { ...inventar, templejt: payload.templateData } : inventar
+//         );
+//         commit('setInventar', updatedInventar);
+//     }
+// }
+  
   };
   
   const getters = {
