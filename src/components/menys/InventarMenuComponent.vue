@@ -1,15 +1,14 @@
 <template>
     <ion-menu content-id="main-content" menu-id="sideMenu-inventar" side="start">
         <ion-content>
-            <ion-card>
+            <!-- <ion-card>
                 <ion-card-header>
                     Dummy Card
                 </ion-card-header>
                 <ion-card-content>
                     This is a dummy ion card.
                 </ion-card-content>
-            </ion-card>
-            <!-- Add as many cards as you want here -->
+            </ion-card> -->
         </ion-content>
         <ion-footer>
             <ion-toolbar>
@@ -18,15 +17,11 @@
                         <ion-col>
                             <ion-button expand="full" @click="setOpen(true)">Add</ion-button>
                         </ion-col>
-                        <!-- <ion-col>
-                            <ion-button expand="full">Temp</ion-button>
-                        </ion-col> -->
                     </ion-row>
                 </ion-grid>
             </ion-toolbar>
         </ion-footer>
 
-        <!-- Modal -->
         <ion-modal :is-open="isOpen" css-class="my-custom-class" @didDismiss="setOpen(false)">
             <ion-header>
                 <ion-toolbar>
@@ -44,7 +39,6 @@
             </ion-header>
             <ion-content class="ion-padding">
                 <div class="input-button-container">
-                    <!-- Textual Input Fields -->
                     <ion-item>
                         <ion-input v-model="deklaracija" placeholder="Naziv"></ion-input>
                     </ion-item>
@@ -53,7 +47,6 @@
                     <ion-grid>
                         <ion-row>
                             <ion-col>
-                                <!-- Textual Input Fields -->
                                 <ion-item>
                                     <ion-input v-model="text_1_label" placeholder="Ime"></ion-input>
                                 </ion-item>
@@ -75,17 +68,15 @@
                                 </ion-item>
 
 
-
                             </ion-col>
                             <ion-col>
-                                <!-- Additional Textual Input Fields -->
                                 <ion-item>
                                     <ion-input v-model="text_1" placeholder="Sadrzaj"></ion-input>
                                 </ion-item>
                                 <ion-item>
                                     <ion-input v-model="text_2" placeholder="Sadrzaj"></ion-input>
                                 </ion-item>
-                                <ion-item>  
+                                <ion-item>
                                     <ion-input v-model.number="num_1" type="number" placeholder="Broj"></ion-input>
                                 </ion-item>
                                 <ion-item>
@@ -106,21 +97,22 @@
                             </ion-col>
                         </ion-row>
 
-                        <!-- Add the remaining input fields below as needed -->
                     </ion-grid>
 
                     <ion-item>
                         <ion-input v-model.number="cena" type="number" placeholder="Cena"></ion-input>
                     </ion-item>
-                    <!-- Datetime Ionic Input Field -->
                     <ion-item>
                         <ion-datetime v-model="datetimeInput" placeholder="Select Date"></ion-datetime>
                     </ion-item>
                     <ion-item>
-                        <ion-toggle :enable-on-off-labels="true" v-model="datetime_isNotified" >Notifikacija</ion-toggle>
+                        <ion-toggle :enable-on-off-labels="true" v-model="datetime_isNotified">Notifikacija</ion-toggle>
                     </ion-item>
-                    <!-- Additional Textual Input Fields -->
-                    <ion-button expand="full" >Sacuvaj templejt</ion-button>
+                    <ion-button expand="full">Sacuvaj templejt</ion-button>
+
+                    <!-- <div v-if="qrCodeDataUrl">
+                        <img :src="qrCodeDataUrl" alt="QR Code">
+                    </div> -->
 
                 </div>
             </ion-content>
@@ -134,13 +126,13 @@ import { ref, defineComponent } from "vue";
 import { useStore } from 'vuex';
 import { close, checkmark } from 'ionicons/icons';
 // import { IonDatetime } from '@ionic/vue';
-import { watch } from 'vue';
+import { watch, computed } from 'vue';
 
 
 import {
-    IonCard,
-    IonCardHeader,
-    IonCardContent,
+    // IonCard,
+    // IonCardHeader,
+    // IonCardContent,
     IonButton,
     IonContent,
     IonMenu,
@@ -163,9 +155,9 @@ export default {
     components: {
         IonMenu,
         IonContent,
-        IonCard,
-        IonCardHeader,
-        IonCardContent,
+        // IonCard,
+        // IonCardHeader,
+        // IonCardContent,
         IonButton,
         IonFooter,
         IonToolbar,
@@ -186,30 +178,30 @@ export default {
         const isOpen = ref(false);
         const newNote = ref("");
         const data = ref({}); // Some data you want to pass to the Modal component
+        const username = computed(() => store.state.user.username);
 
         const deklaracija = ref("");
-        const text_1_label = ref("");
-        const text_2_label = ref("");
-        const num_1_label = ref("");
-        const num_2_label = ref("");
-        const switch_1_label = ref("");
-        const switch_2_label = ref("");
-        const text_1 = ref("");
-        const text_2 = ref("");
-
         const kolicina = ref(0.0);
-        const num_1 = ref(0.0);
-        const num_2 = ref(0.0);
         const kolicina_notifikacija = ref(0.0);
         const kolicina_isNotified = ref(false);
         const cena = ref(0.0);
+        const num_1_label = ref("");
+        const num_1 = ref(0.0);
+        const num_2_label = ref("");
+        const num_2 = ref(0.0);
+        const text_1_label = ref("");
+        const text_1 = ref("");
+        const text_2_label = ref("");
+        const text_2 = ref("");
+        const switch_1_label = ref("");
         const switch_1 = ref(false);
+        const switch_2_label = ref("");
         const switch_2 = ref(false);
-
-
         const datetimeInput = ref(null);
         const datetime_isNotified = ref(false);
+        const kreator = ref("");
         const dateInput = ref("");
+        const qrCodeDataUrl = ref(null);
 
 
         const store = useStore();
@@ -231,10 +223,7 @@ export default {
             if (datetimeInput.value !== null) {
                 datetime = datetimeInput.value; // directly assign the value
             }
-            // console.log('Confirm changes called', datetimeInput.value);// directly assign the value
-            // const currentTime = new Date().toLocaleTimeString();
-            // Create the inventar object based on the form input data
-            const inventar = {
+            const inventarData = {
                 deklaracija: deklaracija.value,
                 kolicina: kolicina.value,
                 kolicina_notifikacija: kolicina_notifikacija.value,
@@ -254,10 +243,21 @@ export default {
                 switch_2: switch_2.value,
                 datetime: datetimeInput.value,
                 datetime_isNotified: datetime_isNotified.value,
+                kreator: username.value,
+                qr_code: qrCodeDataUrl.value,
             };
 
             // Dispatch the action to insert the new inventar into the database
+            qrCodeDataUrl.value = await store.dispatch('inventory/generateQRCode', inventarData);
+            
+            const inventar = {
+                ...inventarData,
+                qr_code: qrCodeDataUrl.value
+            };
+
             await store.dispatch('inventory/createInventar', inventar);
+
+            console.log('inventar', inventar);
 
             setOpen(false);
         };
@@ -287,7 +287,8 @@ export default {
             datetime_isNotified,
             confirmChanges,
             close,
-            checkmark
+            checkmark,
+            qrCodeDataUrl
         }
     }
 }

@@ -1,6 +1,8 @@
 
 import { ActionContext } from 'vuex';
 import { supabase } from "@/supabase";
+import QRCode from 'qrcode';
+import { FileSharer } from 'capacitor-plugin-filesharer';
 
 interface Inventar {
     id: number;
@@ -25,6 +27,7 @@ interface Inventar {
     // time: string;
     datetime: Date;
     datetime_isNotified: boolean;
+    kreator: string;
     qr_code: string;
   }
   
@@ -78,6 +81,56 @@ interface Inventar {
         // Assuming that 'data' contains the inserted Inventar...
         commit('addInventar', data);
       },
+
+      async generateQRCode(_: ActionContext<State, unknown>, dataObject: Inventar) {
+        try {
+            const dataString = 
+                "Deklaracija: " + dataObject.deklaracija + "\n" +
+                "Kolicina: " + dataObject.kolicina + "\n" +
+                "Cena: " + dataObject.cena + "\n" +
+                dataObject.num_1_label + ": " + dataObject.num_1 + "\n" +
+                dataObject.num_2_label + ": " + dataObject.num_2 + "\n" +
+                dataObject.text_1_label + ": " + dataObject.text_1 + "\n" +
+                dataObject.text_2_label + ": " + dataObject.text_2 + "\n" +
+                dataObject.switch_1_label + ": " + dataObject.switch_1 + "\n" +
+                dataObject.switch_2_label + ": " + dataObject.switch_2 + "\n" +
+                "Datetime: " + dataObject.datetime + "\n" +
+                "Kreator: " + dataObject.kreator;
+            
+            const canvas = document.createElement('canvas');
+            await QRCode.toCanvas(canvas, dataString);
+            const dataUrl = canvas.toDataURL('image/jpeg');
+    
+            return dataUrl;
+        } catch (error) {
+            console.error('Error generating QR code:', error);
+        }
+    },
+    async shareQRCode(_: ActionContext<State, unknown>, qrCodeDataUrl: string) {
+      try {
+          const response = await fetch(qrCodeDataUrl);
+          const blob = await response.blob();
+          const reader = new FileReader();
+  
+          reader.onloadend = async function() {
+              if (typeof reader.result === 'string') {
+                  const base64data = reader.result;
+                  await FileSharer.share({
+                      filename: 'qrcode.png',
+                      base64Data: base64data.split(',')[1], // remove the data url prefix
+                      contentType: 'image/png',
+                      header: 'Share QR Code' // add this line to add a header
+                  });
+              } else {
+                  console.error('Unexpected data format. Expected base64 string.');
+              }
+          };
+  
+          reader.readAsDataURL(blob);
+      } catch (error) {
+          console.error('Error sharing QR code:', error);
+      }
+  },
   };
   
   const getters = {
