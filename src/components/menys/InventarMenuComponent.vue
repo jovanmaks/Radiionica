@@ -249,9 +249,19 @@ export default {
                 const timeValue = dateTimeArray[1] ? dateTimeArray[1].split('.')[0] : ''; // the time part
             }
         });
-      
+
 
         const confirmChanges = async () => {
+
+           const  arrayToFill = [
+                templejt.value,
+                text_1_label.value,
+                text_2_label.value,
+                num_1_label.value,
+                num_2_label.value,
+                switch_1_label.value,
+                switch_2_label.value
+            ];
 
             let datetime = null;
             if (datetimeInput.value !== null) {
@@ -323,6 +333,7 @@ export default {
             datetime_isNotified,
             confirmChanges,
             arrayToFill,
+            templejt,
             close,
             checkmark,
             qrCodeDataUrl,
