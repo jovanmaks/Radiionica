@@ -3,15 +3,20 @@
 </template> -->
 <template>
     <ion-menu content-id="main-content" menu-id="sideMenu-inventar" side="start">
-        <ion-content>
-            <InventarCardComponent v-for="card in inventarItems" :key="card?.id" :card="card" @view-card="viewCard" />
+        <ion-header>
+            <ion-toolbar>
+                <ion-buttons slot="end" fill="clear">
+                    <ion-button @click="showArchivedInventar" size="large" fill="clear">
+                        <ion-icon :icon="archiveOutline"></ion-icon>
+                    </ion-button>
+                    <ion-button @click="showUnarchivedInventar" size="large" fill="clear">
+                        <ion-icon :icon="documentAttachOutline"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-header>
 
-
-
-
-        </ion-content>
         <ion-footer>
-
             <ion-footer>
                 <ion-toolbar>
                     <ion-grid>
@@ -39,17 +44,21 @@
             </ion-footer>
 
         </ion-footer>
+        <ion-content>
+            <InventarCardComponent v-for="card in displayInventar" :key="card?.id" :card="card" @view-card="viewCard" />
+
+            <!-- <InventarCardComponent v-for="card in inventarItems" :key="card?.id" :card="card" @view-card="viewCard" /> -->
+        </ion-content>
     </ion-menu>
 
     <TemplejtSelect :show="showTemplejtSelect" @didDismiss="showTemplejtSelect = false" />
     <ModalComponent :isOpen="isOpen" @update:isOpen="setOpen" @submit="submitInventar" />
-
 </template>
 
 <script lang="ts">
 import { ref, defineComponent, onMounted } from "vue";
 import { useStore } from 'vuex';
-import { close, checkmark, add, documentOutline } from 'ionicons/icons';
+import { close, checkmark, add, documentOutline, archiveOutline, documentAttachOutline } from 'ionicons/icons';
 import { watch, computed } from 'vue';
 // import { Inventar } from "@/store/inventory"; // Modify the path as needed
 
@@ -72,6 +81,9 @@ import {
     IonFabButton,
     IonFabList,
     IonIcon,
+    IonButton,
+    IonButtons,
+
 } from '@ionic/vue';
 
 export default {
@@ -93,7 +105,8 @@ export default {
         IonFabButton,
         IonFabList,
         IonIcon,
-        
+        IonButton,
+        IonButtons,
     },
 
     setup() {
@@ -102,7 +115,18 @@ export default {
         // const inventarItems = computed(() => store.state.inventory.inventar);
         const inventarItems = computed(() => store.state.inventory.inventar);
         const isOpen = ref(false);
-        const showTemplejtSelect = ref(false);  
+        const showTemplejtSelect = ref(false);
+
+
+        const archivedInventar = computed(() => store.getters['inventory/archivedInventar']);
+        const unarchivedInentar = computed(() => store.getters['inventory/unarchivedNotes']);
+        const displayArchivedInventar = ref(false);
+
+
+        const displayInventar = computed(() => {
+            const inventarToDisplay = displayArchivedInventar.value ? archivedInventar.value : unarchivedInentar.value;
+            return inventarToDisplay;
+        });
 
         onMounted(async () => {
             await store.dispatch('inventory/fetchInventar');
@@ -121,15 +145,25 @@ export default {
         };
 
         const submitInventar = async (inventar: Partial<Inventar>) => {
-  try {
-    await store.dispatch('inventory/createInventar', inventar);
-    console.log('Inventar created', inventar);
-  } catch (error) {
-    console.error('Error creating Inventar', error);
-  }
-  setOpen(false);
-};
+            try {
+                await store.dispatch('inventory/createInventar', inventar);
+                console.log('Inventar created', inventar);
+            } catch (error) {
+                console.error('Error creating Inventar', error);
+            }
+            setOpen(false);
+        };
 
+
+        const showArchivedInventar = () => {
+            displayArchivedInventar.value = true;
+            console.log('Ovo je archived', archivedInventar.value);
+        };
+
+        const showUnarchivedInventar = () => {
+            displayArchivedInventar.value = false;
+            console.log('Ovo je unarchived', unarchivedInentar.value);
+        };
 
 
         return {
@@ -140,6 +174,13 @@ export default {
             setOpen,
             showTemplejtSelect,
             submitInventar,
+            archiveOutline,
+            documentAttachOutline,
+            showArchivedInventar,
+            showUnarchivedInventar,
+            archivedInventar,
+            unarchivedInentar,
+            displayInventar,
         };
     },
 };

@@ -55,7 +55,7 @@ const mutations = {
   setTemplejtValues(state: State, templejtValues: []) {
     state.templejtValues = templejtValues;
   },
-};  
+};
 
 const actions = {
   async fetchInventar({ commit }: ActionContext<State, unknown>) {
@@ -64,6 +64,7 @@ const actions = {
       .select("*")
       .order("id");
 
+    // .select("deklaracija, kreator, id, text_1_label")
     // if (data) {
     //   let templejtValues = data.map(item => item.templejt && item.templejt[0] ? item.templejt[0] : null);
     //   // Remove nulls and duplicates
@@ -192,6 +193,10 @@ const getters = {
   getAllInventar: (state: State) => {
     return state.inventar;
   },
+  archivedInventar: (state: State) =>
+    state.inventar.filter((inventar) => inventar.isArchived),
+  unarchivedNotes: (state: State) =>
+    state.inventar.filter((inventar) => !inventar .isArchived),
 };
 
 export default {
