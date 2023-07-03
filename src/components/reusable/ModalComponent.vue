@@ -23,7 +23,7 @@
       <ion-input type="text" v-model="inputText3" @input="onInputChange3" placeholder="Enter text here">
       </ion-input>
       <ion-input type="text" v-model="inputText4" @input="onInputChange4" placeholder="Enter text here">
-      </ion-input>  
+      </ion-input>
       <slot></slot>
     </ion-content>
   </ion-modal>
@@ -47,17 +47,28 @@ export default defineComponent({
     id: {
       type: String,
       default: ""
-    }
+    },
+    selectedTemplate: {
+      type: Array,
+      default: () => [],
+    },
   },
   emits: ['update:isOpen', 'confirm', 'update-deklaracija', 'submit'],
 
   setup(props, { emit }) {
+
     const closeIcon = ref(close);
     const checkmarkIcon = ref(checkmark);
-    const inputText1 = ref("");
-    const inputText2 = ref("");
-    const inputText3 = ref("");
-    const inputText4 = ref("");
+
+    // const inputText1 = ref("");
+    // const inputText2 = ref("");
+    // const inputText3 = ref("");
+    // const inputText4 = ref("");
+
+    const inputText1 = ref(props.selectedTemplate[0] || "");
+    const inputText2 = ref(props.selectedTemplate[1] || "");
+    const inputText3 = ref(props.selectedTemplate[2] || "");
+    const inputText4 = ref(props.selectedTemplate[3] || "");
 
 
     const setOpen = (state: boolean) => {
@@ -69,8 +80,12 @@ export default defineComponent({
         deklaracija: inputText1.value,
         kreator: inputText2.value,
         text_1_label: inputText3.value,
-        templejt: [inputText4.value, inputText1.value, inputText2.value, inputText3.value] 
+        templejt: [inputText4.value, inputText1.value, inputText2.value, inputText3.value]
       });
+      inputText1.value = '';
+      inputText2.value = '';
+      inputText3.value = '';
+      inputText4.value = '';
     };
 
 

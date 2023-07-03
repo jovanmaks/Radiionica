@@ -1,9 +1,5 @@
 <template>
-    <ion-action-sheet 
-        :is-open="show" 
-        header="" 
-        :buttons="actionSheetButtonsRef" 
-        @didDismiss="didDismiss">
+    <ion-action-sheet :is-open="show" header="" :buttons="actionSheetButtonsRef" @didDismiss="didDismiss">
     </ion-action-sheet>
 </template>
 
@@ -29,18 +25,20 @@ export default {
     },
     setup(props, { emit }) {
         const actionSheetButtonsRef = computed(() => [
-            ...props.templejtValues.map(value => ({ text: value, data: { action: value } })),
+            ...props.templejtValues.map(value => ({
+                text: value, // assuming value[0] is your label
+                handler: () => { emit('selectedTemplate', value) },
+            })),
             {
-              text: 'Cancel',
-              role: 'cancel',
-              data: {
-                action: 'cancel',
-              },
+                text: 'Cancel',
+                role: 'cancel',
             },
         ]);
 
-        const didDismiss = () => {
-            emit('didDismiss');
+        const didDismiss = (event) => {
+            if (event.detail.role !== 'cancel') {
+                emit('didDismiss');
+            }
         };
 
         return {

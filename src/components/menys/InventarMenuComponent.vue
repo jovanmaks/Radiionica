@@ -25,7 +25,7 @@
                                         <ion-icon :icon="add"></ion-icon>
                                     </ion-fab-button>
                                     <ion-fab-list side="end">
-                                        <ion-fab-button @click="setOpen(true)">
+                                        <ion-fab-button @click="openEmptyModal">
                                             <ion-icon :icon="add"></ion-icon>
                                         </ion-fab-button>
                                     </ion-fab-list>
@@ -50,7 +50,10 @@
     </ion-menu>
 
     <!-- <TemplejtSelect :show="showTemplejtSelect" @didDismiss="showTemplejtSelect = false" /> -->
-    <TemplejtSelect :show="showTemplejtSelect" :templejtValues="templejtValues" @didDismiss="showTemplejtSelect = false" />
+    <!-- <TemplejtSelect :show="showTemplejtSelect" :templejtValues="templejtValues" @didDismiss="showTemplejtSelect = false" /> -->
+
+    <TemplejtSelect :show="showTemplejtSelect" :templejtValues="templejtValues" @didDismiss="showTemplejtSelect = false"
+        @selectedTemplate="selectTemplate" />
     <ModalComponent :isOpen="isOpen" @update:isOpen="setOpen" @submit="submitInventar" />
 </template>
 
@@ -123,6 +126,15 @@ export default {
         const unarchivedInentar = computed(() => store.getters['inventory/unarchivedNotes']);
         const displayArchivedInventar = ref(false);
 
+        const selectedTemplate = ref<Template | null>(null);
+
+
+        interface Template {
+            deklaracija: string;
+            kreator: string;
+            text_1_label: string;
+            templejt: string[];
+        }
 
         const displayInventar = computed(() => {
             const inventarToDisplay = displayArchivedInventar.value ? archivedInventar.value : unarchivedInentar.value;
@@ -134,6 +146,17 @@ export default {
             console.log('Ovdje gledaj', inventarItems.value);
 
         });
+
+        const selectTemplate = (template: Template) => {
+            selectedTemplate.value = template;
+            setOpen(true); // This opens the modal after template selection
+        };
+
+        const openEmptyModal = () => {
+            selectedTemplate.value = null;
+            setOpen(true);
+        };
+
 
 
         const setOpen = (state: boolean) => {
@@ -184,6 +207,9 @@ export default {
             unarchivedInentar,
             displayInventar,
             templejtValues,
+            selectedTemplate,
+            selectTemplate,
+            openEmptyModal,
         };
     },
 };
