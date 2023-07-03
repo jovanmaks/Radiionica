@@ -22,6 +22,8 @@
       </ion-input>
       <ion-input type="text" v-model="inputText3" @input="onInputChange3" placeholder="Enter text here">
       </ion-input>
+      <ion-input type="text" v-model="inputText4" @input="onInputChange4" placeholder="Enter text here">
+      </ion-input>  
       <slot></slot>
     </ion-content>
   </ion-modal>
@@ -55,6 +57,7 @@ export default defineComponent({
     const inputText1 = ref("");
     const inputText2 = ref("");
     const inputText3 = ref("");
+    const inputText4 = ref("");
 
 
     const setOpen = (state: boolean) => {
@@ -65,7 +68,8 @@ export default defineComponent({
       emit('submit', {
         deklaracija: inputText1.value,
         kreator: inputText2.value,
-        text_1_label: inputText3.value
+        text_1_label: inputText3.value,
+        templejt: [inputText1.value, inputText2.value, inputText3.value, inputText4.value] 
       });
     };
 
@@ -82,6 +86,11 @@ export default defineComponent({
       inputText3.value = (event.target as HTMLInputElement).value;
     };
 
+    const onInputChange4 = (event: Event) => { // New input change handler for the fourth input
+      inputText4.value = (event.target as HTMLInputElement).value;
+    };
+
+
     return {
       closeIcon,
       checkmarkIcon,
@@ -92,7 +101,9 @@ export default defineComponent({
       inputText2,
       onInputChange2,
       inputText3,
-      onInputChange3
+      onInputChange3,
+      inputText4,
+      onInputChange4
     };
   }
 });
