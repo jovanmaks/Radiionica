@@ -1,6 +1,4 @@
-<!-- <template v-if="loading">
-    <p>Loading...</p>
-</template> -->
+
 <template>
     <ion-menu content-id="main-content" menu-id="sideMenu-inventar" side="start">
         <ion-header>
@@ -51,7 +49,8 @@
         </ion-content>
     </ion-menu>
 
-    <TemplejtSelect :show="showTemplejtSelect" @didDismiss="showTemplejtSelect = false" />
+    <!-- <TemplejtSelect :show="showTemplejtSelect" @didDismiss="showTemplejtSelect = false" /> -->
+    <TemplejtSelect :show="showTemplejtSelect" :templejtValues="templejtValues" @didDismiss="showTemplejtSelect = false" />
     <ModalComponent :isOpen="isOpen" @update:isOpen="setOpen" @submit="submitInventar" />
 </template>
 
@@ -116,6 +115,8 @@ export default {
         const inventarItems = computed(() => store.state.inventory.inventar);
         const isOpen = ref(false);
         const showTemplejtSelect = ref(false);
+        const templejtValues = computed(() => store.state.inventory.templejtValues);
+
 
 
         const archivedInventar = computed(() => store.getters['inventory/archivedInventar']);
@@ -182,6 +183,7 @@ export default {
             archivedInventar,
             unarchivedInentar,
             displayInventar,
+            templejtValues,
         };
     },
 };

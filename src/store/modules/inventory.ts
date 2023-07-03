@@ -66,19 +66,18 @@ const actions = {
       .select("*")
       .order("id");
 
-    // .select("deklaracija, kreator, id, text_1_label")
-    // if (data) {
-    //   let templejtValues = data.map(item => item.templejt && item.templejt[0] ? item.templejt[0] : null);
-    //   // Remove nulls and duplicates
-    //   templejtValues = templejtValues.filter((value, index, self) => {
-    //     return value && self.indexOf(value) === index;
-    //   });
-    //   commit('setTemplejtValues', templejtValues);
-    // }
+  
 
     if (error) {
       console.error(error);
       throw error;
+    }
+
+    if (data) {
+      let templejtValues = data.map(item => item.templejt && item.templejt[0] ? item.templejt[0] : null);
+      // Remove nulls and duplicates
+      templejtValues = [...new Set(templejtValues)].filter(Boolean);
+      commit('setTemplejtValues', templejtValues);
     }
 
     commit("setInventar", data);

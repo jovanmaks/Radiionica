@@ -69,7 +69,7 @@ export default defineComponent({
         deklaracija: inputText1.value,
         kreator: inputText2.value,
         text_1_label: inputText3.value,
-        templejt: [inputText1.value, inputText2.value, inputText3.value, inputText4.value] 
+        templejt: [inputText4.value, inputText1.value, inputText2.value, inputText3.value] 
       });
     };
 
