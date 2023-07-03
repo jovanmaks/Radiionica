@@ -1,6 +1,6 @@
 <!-- CardComponent.vue -->
 <template>
-  <ion-card class="my-card">
+  <ion-card class="my-card" v-if="card" >
     <ion-card-header>
       <ion-card-title>{{ card.deklaracija }}</ion-card-title>
     </ion-card-header>
@@ -18,6 +18,7 @@ import { documentText } from 'ionicons/icons';
 export default {
   name: 'InventarCardComponent',
   props: ['card'],
+
   components: {
     IonIcon, IonCard, IonCardHeader, IonButton, IonCardTitle, IonCardContent
   },

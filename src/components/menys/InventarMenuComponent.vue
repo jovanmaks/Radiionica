@@ -1,7 +1,12 @@
+<!-- <template v-if="loading">
+    <p>Loading...</p>
+</template> -->
 <template>
     <ion-menu content-id="main-content" menu-id="sideMenu-inventar" side="start">
         <ion-content>
-            <InventarCardComponent v-for="card in inventarItems" :key="card.id" :card="card" @view-card="viewCard" />
+            <InventarCardComponent v-for="card in inventarItems" :key="card?.id" :card="card" @view-card="viewCard" />
+
+
 
 
         </ion-content>
@@ -37,7 +42,8 @@
     </ion-menu>
 
     <TemplejtSelect :show="showTemplejtSelect" @didDismiss="showTemplejtSelect = false" />
-    <ModalComponent :isOpen="isOpen" @update:isOpen="setOpen" />
+    <ModalComponent :isOpen="isOpen" @update:isOpen="setOpen" @submit="submitInventar" />
+
 </template>
 
 <script lang="ts">
@@ -45,10 +51,13 @@ import { ref, defineComponent, onMounted } from "vue";
 import { useStore } from 'vuex';
 import { close, checkmark, add, documentOutline } from 'ionicons/icons';
 import { watch, computed } from 'vue';
+// import { Inventar } from "@/store/inventory"; // Modify the path as needed
+
 
 import TemplejtSelect from '@/components/reusable/TemplejtSelect.vue';
 import InventarCardComponent from '@/components/reusable/InventarCardComponent.vue';
 import ModalComponent from '@/components/reusable/ModalComponent.vue';
+import { Inventar } from "@/store/modules/inventory";
 
 
 import {
@@ -90,13 +99,15 @@ export default {
     setup() {
 
         const store = useStore();
+        // const inventarItems = computed(() => store.state.inventory.inventar);
         const inventarItems = computed(() => store.state.inventory.inventar);
         const isOpen = ref(false);
         const showTemplejtSelect = ref(false);  
 
         onMounted(async () => {
             await store.dispatch('inventory/fetchInventar');
-            console.log('Inventar fetched', inventarItems.value);
+            console.log('Ovdje gledaj', inventarItems.value);
+
         });
 
 
@@ -109,6 +120,17 @@ export default {
             console.log(`Card clicked: ${cardName}`);
         };
 
+        const submitInventar = async (inventar: Partial<Inventar>) => {
+  try {
+    await store.dispatch('inventory/createInventar', inventar);
+    console.log('Inventar created', inventar);
+  } catch (error) {
+    console.error('Error creating Inventar', error);
+  }
+  setOpen(false);
+};
+
+
 
         return {
             inventarItems,
@@ -117,6 +139,7 @@ export default {
             isOpen,
             setOpen,
             showTemplejtSelect,
+            submitInventar,
         };
     },
 };
