@@ -35,7 +35,9 @@
 
         </ion-footer>
     </ion-menu>
+
     <TemplejtSelect :show="showTemplejtSelect" @didDismiss="showTemplejtSelect = false" />
+    <ModalComponent :isOpen="isOpen" @update:isOpen="setOpen" />
 </template>
 
 <script lang="ts">
@@ -43,8 +45,10 @@ import { ref, defineComponent, onMounted } from "vue";
 import { useStore } from 'vuex';
 import { close, checkmark, add, documentOutline } from 'ionicons/icons';
 import { watch, computed } from 'vue';
+
 import TemplejtSelect from '@/components/reusable/TemplejtSelect.vue';
 import InventarCardComponent from '@/components/reusable/InventarCardComponent.vue';
+import ModalComponent from '@/components/reusable/ModalComponent.vue';
 
 
 import {
@@ -66,6 +70,9 @@ export default {
     components: {
         InventarCardComponent,
         TemplejtSelect,
+        ModalComponent,
+
+
         IonContent,
         IonFooter,
         IonMenu,
@@ -77,6 +84,7 @@ export default {
         IonFabButton,
         IonFabList,
         IonIcon,
+        
     },
 
     setup() {

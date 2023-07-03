@@ -20,6 +20,7 @@
     </ion-header>
 
     <ion-content class="ion-padding">
+      <DeklaracijaComponent />
       <slot></slot>
       <!-- <ion-button @click="confirm" expand="full">
         <ion-icon slot="start" :icon="checkmarkIcon" />
@@ -32,9 +33,14 @@
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
 import { close, checkmark } from 'ionicons/icons';
+import DeklaracijaComponent from '@/components/reusable/DeklaracijaComponent.vue';
+
 
 export default defineComponent({
   name: "ModalComponent",
+  components: {
+    DeklaracijaComponent
+  },
   props: {
     isOpen: {
       type: Boolean,

@@ -2,7 +2,6 @@
 
 <template>
   <ion-page>
-
           <!-- <ion-button fill="clear" @click="signOut" size="large" class="logout-button">
             <ion-icon :icon="logOutOutline"></ion-icon>
           </ion-button> -->
