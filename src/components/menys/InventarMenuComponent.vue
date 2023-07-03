@@ -148,6 +148,7 @@ export default {
             try {
                 await store.dispatch('inventory/createInventar', inventar);
                 console.log('Inventar created', inventar);
+                await store.dispatch('inventory/fetchInventar'); // reload inventar after creation
             } catch (error) {
                 console.error('Error creating Inventar', error);
             }

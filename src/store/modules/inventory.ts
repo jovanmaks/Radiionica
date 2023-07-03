@@ -2,6 +2,7 @@ import { ActionContext } from "vuex";
 import { supabase } from "@/supabase";
 import QRCode from "qrcode";
 import { FileSharer } from "capacitor-plugin-filesharer";
+import Vue from 'vue';
 
 export interface Inventar {
   id: number;
@@ -51,7 +52,8 @@ const mutations = {
   },
   addInventar(state: State, newInventar: Inventar) {
     state.inventar.push(newInventar);
-  },
+},
+
   setTemplejtValues(state: State, templejtValues: []) {
     state.templejtValues = templejtValues;
   },
