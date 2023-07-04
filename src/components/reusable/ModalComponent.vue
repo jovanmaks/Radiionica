@@ -15,22 +15,86 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content class="ion-padding">
-      <ion-input type="text" v-model="inputText1" @input="onInputChange1" placeholder="Enter text here">
-      </ion-input>
-      <ion-input type="text" v-model="inputText2" @input="onInputChange2" placeholder="Enter text here">
-      </ion-input>
-      <ion-input type="text" v-model="inputText3" @input="onInputChange3" placeholder="Enter text here">
-      </ion-input>
-      <ion-input type="text" v-model="inputText4" @input="onInputChange4" placeholder="Enter text here">
-      </ion-input>
-      <slot></slot>
+    <ion-content class="input-button-container">
+      <ion-item>
+        <ion-input v-model="deklaracija" @input="onInputChange1" placeholder="Naziv"></ion-input>
+      </ion-item>
+
+
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-input v-model="text_1_label" @input="onInputChange2" placeholder="Ime"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input v-model="text_2_label" @input="onInputChange3" placeholder="Ime"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input v-model="num_1_label" @input="onInputChange4" placeholder="Ime"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input v-model="num_2_label" @input="onInputChange5" placeholder="Ime"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input v-model.number="kolicina" @input="onInputChange6" type="number"
+                placeholder="Kolicina"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input v-model="switch_1_label" @input="onInputChange7" placeholder="Overa"></ion-input>
+              <!-- <ion-toggle :enable-on-off-labels="true" v-model="switch_1"></ion-toggle> -->
+            </ion-item>
+
+
+          </ion-col>
+          <ion-col>
+            <ion-item>
+              <ion-input v-model="text_1" @input="onInputChange8" placeholder="Sadrzaj"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input v-model="text_2" @input="onInputChange9" placeholder="Sadrzaj"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input v-model.number="num_1" @input="onInputChange10" type="number" placeholder="Broj"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input v-model.number="num_2" @input="onInputChange11" type="number" placeholder="Broj"></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-input v-model.number="kolicina_notifikacija" @input="onInputChange12" type="number"
+                placeholder="Alarm na"></ion-input>
+              <!-- <ion-toggle :enable-on-off-labels="true" v-model="kolicina_isNotified"></ion-toggle> -->
+            </ion-item>
+
+            <ion-item>
+              <ion-input v-model="switch_2_label" @input="onInputChange13" placeholder="Overa"></ion-input>
+              <!-- <ion-toggle :enable-on-off-labels="true" v-model="switch_2"></ion-toggle> -->
+            </ion-item>
+            <!-- 
+          -->
+
+          </ion-col>
+        </ion-row>
+
+      </ion-grid>
+
+
+
+      <!-- <ion-input type="text" v-model="text_1_label" @input="onInputChange2" placeholder="Enter text here">
+      </ion-input> -->
+      <!-- <ion-input type="text" v-model="text_2_label" @input="onInputChange3" placeholder="Enter text here">
+      </ion-input> -->
+      <!-- <ion-input type="text" v-model="num_1_label" @input="onInputChange4" placeholder="Enter text here">
+      </ion-input> -->
+
     </ion-content>
+    <slot></slot>
   </ion-modal>
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue';
+import { ref, defineComponent, watch } from 'vue';
 import { close, checkmark } from 'ionicons/icons';
 
 export default defineComponent({
@@ -60,15 +124,22 @@ export default defineComponent({
     const closeIcon = ref(close);
     const checkmarkIcon = ref(checkmark);
 
-    // const inputText1 = ref("");
-    // const inputText2 = ref("");
-    // const inputText3 = ref("");
-    // const inputText4 = ref("");
 
-    const inputText1 = ref(props.selectedTemplate[0] || "");
-    const inputText2 = ref(props.selectedTemplate[1] || "");
-    const inputText3 = ref(props.selectedTemplate[2] || "");
-    const inputText4 = ref(props.selectedTemplate[3] || "");
+
+    const deklaracija = ref(props.selectedTemplate[0] || "");
+    const text_1_label = ref(props.selectedTemplate[1] || "");
+    const text_2_label = ref(props.selectedTemplate[2] || "");
+    const num_1_label = ref(props.selectedTemplate[3] || "");
+    const num_2_label = ref(props.selectedTemplate[4] || "");
+    const kolicina = ref(props.selectedTemplate[5] || 0);
+    const switch_1_label = ref(props.selectedTemplate[6] || "");
+    const text_1 = ref(props.selectedTemplate[7] || "");
+    const text_2 = ref(props.selectedTemplate[8] || "");
+    const num_1 = ref(props.selectedTemplate[9] || 0);
+    const num_2 = ref(props.selectedTemplate[10] || 0);
+    const kolicina_notifikacija = ref(props.selectedTemplate[11] || 0);
+    const switch_2_label = ref(props.selectedTemplate[12] || "");
+
 
 
     const setOpen = (state: boolean) => {
@@ -77,32 +148,81 @@ export default defineComponent({
 
     const confirm = () => {
       emit('submit', {
-        deklaracija: inputText1.value,
-        kreator: inputText2.value,
-        text_1_label: inputText3.value,
-        templejt: [inputText4.value, inputText1.value, inputText2.value, inputText3.value]
+
+        deklaracija: deklaracija.value,
+        text_1_label: text_1_label.value,
+        text_2_label: text_2_label.value,
+        num_1_label: num_1_label.value,
+        num_2_label: num_2_label.value,
+        kolicina: kolicina.value,
+        switch_1_label: switch_1_label.value,
+        text_1: text_1.value,
+        text_2: text_2.value,
+        num_1: num_1.value,
+        num_2: num_2.value,
+        kolicina_notifikacija: kolicina_notifikacija.value,
+        switch_2_label: switch_2_label.value,
+        templejt: [text_1_label.value, text_2_label.value, num_1_label.value, num_2_label.value]
       });
-      inputText1.value = '';
-      inputText2.value = '';
-      inputText3.value = '';
-      inputText4.value = '';
+      deklaracija.value = '';
+      text_1_label.value = '';
+      text_2_label.value = '';
+      num_1_label.value = '';
+      num_2_label.value = '';
+      kolicina.value = '';
+      switch_1_label.value = '';
+      text_1.value = '';
+      text_2.value = '';
+      num_1.value = '';
+      num_2.value = '';
+      kolicina_notifikacija.value = '';
+      switch_2_label.value = '';
     };
+
+
+    watch(props.selectedTemplate, (newVal) => {
+      console.log('selectedTemplate changed:', newVal);
+    });
 
 
     const onInputChange1 = (event: Event) => {
-      inputText1.value = (event.target as HTMLInputElement).value;
+      deklaracija.value = (event.target as HTMLInputElement).value;
     };
-
     const onInputChange2 = (event: Event) => {
-      inputText2.value = (event.target as HTMLInputElement).value;
+      text_1_label.value = (event.target as HTMLInputElement).value;
     };
-
     const onInputChange3 = (event: Event) => {
-      inputText3.value = (event.target as HTMLInputElement).value;
+      text_2_label.value = (event.target as HTMLInputElement).value;
     };
-
     const onInputChange4 = (event: Event) => { // New input change handler for the fourth input
-      inputText4.value = (event.target as HTMLInputElement).value;
+      num_1_label.value = (event.target as HTMLInputElement).value;
+    };
+    const onInputChange5 = (event: Event) => { // New input change handler for the fourth input
+      num_2_label.value = (event.target as HTMLInputElement).value;
+    };
+    const onInputChange6 = (event: Event) => { // New input change handler for the fourth input
+      kolicina.value = (event.target as HTMLInputElement).value;
+    };
+    const onInputChange7 = (event: Event) => { // New input change handler for the fourth input
+      switch_1_label.value = (event.target as HTMLInputElement).value;
+    };
+    const onInputChange8 = (event: Event) => { // New input change handler for the fourth input
+      text_1.value = (event.target as HTMLInputElement).value;
+    };
+    const onInputChange9 = (event: Event) => { // New input change handler for the fourth input
+      text_2.value = (event.target as HTMLInputElement).value;
+    };
+    const onInputChange10 = (event: Event) => { // New input change handler for the fourth input
+      num_1.value = (event.target as HTMLInputElement).value;
+    };
+    const onInputChange11 = (event: Event) => { // New input change handler for the fourth input
+      num_2.value = (event.target as HTMLInputElement).value;
+    };
+    const onInputChange12 = (event: Event) => { // New input change handler for the fourth input
+      kolicina_notifikacija.value = (event.target as HTMLInputElement).value;
+    };
+    const onInputChange13 = (event: Event) => { // New input change handler for the fourth input
+      switch_2_label.value = (event.target as HTMLInputElement).value;
     };
 
 
@@ -111,14 +231,32 @@ export default defineComponent({
       checkmarkIcon,
       setOpen,
       confirm,
-      inputText1,
+      deklaracija,
       onInputChange1,
-      inputText2,
+      text_1_label,
       onInputChange2,
-      inputText3,
+      text_2_label,
       onInputChange3,
-      inputText4,
-      onInputChange4
+      num_1_label,
+      onInputChange4,
+      num_2_label,
+      onInputChange5,
+      kolicina,
+      onInputChange6,
+      switch_1_label,
+      onInputChange7,
+      text_1,
+      onInputChange8,
+      text_2,
+      onInputChange9,
+      num_1,
+      onInputChange10,
+      num_2,
+      onInputChange11,
+      kolicina_notifikacija,
+      onInputChange12,
+      switch_2_label,
+      onInputChange13,
     };
   }
 });

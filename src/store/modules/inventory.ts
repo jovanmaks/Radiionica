@@ -2,7 +2,7 @@ import { ActionContext } from "vuex";
 import { supabase } from "@/supabase";
 import QRCode from "qrcode";
 import { FileSharer } from "capacitor-plugin-filesharer";
-import Vue from 'vue';
+import Vue from "vue";
 
 export interface Inventar {
   id: number;
@@ -35,12 +35,14 @@ interface State {
   inventar: Inventar[];
   isDataLoaded: boolean;
   templejtValues: [];
+  selectedTemplateArray: string[];
 }
 
 const state: State = {
   inventar: [],
   isDataLoaded: false,
   templejtValues: [],
+  selectedTemplateArray: [],
 };
 
 const mutations = {
@@ -52,11 +54,15 @@ const mutations = {
   },
   addInventar(state: State, newInventar: Inventar) {
     state.inventar.push(newInventar);
-},
+  },
 
   setTemplejtValues(state: State, templejtValues: []) {
     state.templejtValues = templejtValues;
   },
+  setSelectedTemplateArray(state: State, templateArray: string[]) {
+    state.selectedTemplateArray = templateArray;
+  },
+
 };
 
 const actions = {
@@ -66,18 +72,18 @@ const actions = {
       .select("*")
       .order("id");
 
-  
-
     if (error) {
       console.error(error);
       throw error;
     }
 
     if (data) {
-      let templejtValues = data.map(item => item.templejt && item.templejt[0] ? item.templejt[0] : null);
+      let templejtValues = data.map((item) =>
+        item.templejt && item.templejt[0] ? item.templejt[0] : null
+      );
       // Remove nulls and duplicates
       templejtValues = [...new Set(templejtValues)].filter(Boolean);
-      commit('setTemplejtValues', templejtValues);
+      commit("setTemplejtValues", templejtValues);
     }
 
     commit("setInventar", data);
@@ -179,6 +185,28 @@ const actions = {
       console.error("Error sharing QR code:", error);
     }
   },
+ async fetchTemplateArray(
+  { commit }: ActionContext<State, unknown>,
+  templateName: string
+) {
+  const { data, error } = await supabase
+    .from("Inventar")
+    .select("templejt")
+    .filter('templejt', 'cs', `{${templateName}}`);
+
+  if (error) {
+    console.error(error);
+    throw error;
+  }
+  
+  if (data) {
+    if (data.length > 0) {
+      commit("setSelectedTemplateArray", data[0].templejt);
+    } else {
+      console.error("Template not found.");
+    }
+  }
+},
 };
 
 const getters = {
@@ -197,7 +225,7 @@ const getters = {
   archivedInventar: (state: State) =>
     state.inventar.filter((inventar) => inventar.isArchived),
   unarchivedNotes: (state: State) =>
-    state.inventar.filter((inventar) => !inventar .isArchived),
+    state.inventar.filter((inventar) => !inventar.isArchived),
 };
 
 export default {

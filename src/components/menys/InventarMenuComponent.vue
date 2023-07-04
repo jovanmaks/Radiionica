@@ -49,11 +49,11 @@
         </ion-content>
     </ion-menu>
 
-    <!-- <TemplejtSelect :show="showTemplejtSelect" @didDismiss="showTemplejtSelect = false" /> -->
-    <!-- <TemplejtSelect :show="showTemplejtSelect" :templejtValues="templejtValues" @didDismiss="showTemplejtSelect = false" /> -->
 
     <TemplejtSelect :show="showTemplejtSelect" :templejtValues="templejtValues" @didDismiss="showTemplejtSelect = false"
         @selectedTemplate="selectTemplate" />
+        
+        
     <ModalComponent :isOpen="isOpen" @update:isOpen="setOpen" @submit="submitInventar" />
 </template>
 
@@ -169,6 +169,8 @@ export default {
         };
 
         const submitInventar = async (inventar: Partial<Inventar>) => {
+
+            console.log('Ovo je inventar', inventar);
             try {
                 await store.dispatch('inventory/createInventar', inventar);
                 console.log('Inventar created', inventar);
