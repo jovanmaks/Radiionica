@@ -29,6 +29,7 @@ export interface Inventar {
   qr_code: string;
   isArchived: boolean;
   templejt: string[];
+  templejt_ime: string;
 }
 
 interface State {
@@ -78,7 +79,7 @@ const actions = {
 
     if (data) {
       let templejtValues = data.map((item) =>
-        item.templejt && item.templejt[0] ? item.templejt[0] : null
+        item.templejt_ime ? item.templejt_ime : null
       );
       // Remove nulls and duplicates
       templejtValues = [...new Set(templejtValues)].filter(Boolean);
@@ -226,6 +227,8 @@ const getters = {
   unarchivedNotes: (state: State) =>
     state.inventar.filter((inventar) => !inventar.isArchived),
 };
+
+
 
 export default {
   namespaced: true,

@@ -45,7 +45,6 @@
         <ion-content>
             <InventarCardComponent v-for="card in displayInventar" :key="card?.id" :card="card" @view-card="viewCard" />
 
-            <!-- <InventarCardComponent v-for="card in inventarItems" :key="card?.id" :card="card" @view-card="viewCard" /> -->
         </ion-content>
     </ion-menu>
 
@@ -54,7 +53,6 @@
         @selectedTemplate="selectTemplate" />
 
 
-    <!-- <ModalComponent :isOpen="isOpen" @update:isOpen="setOpen" @submit="submitInventar" /> -->
     <ModalComponent :key="modalKey" :isOpen="isOpen" @update:isOpen="setOpen" @submit="submitInventar" />
 </template>
 
@@ -149,6 +147,7 @@ export default {
             num_2: number;
             kolicina_notifikacija: number;
             switch_2_label: string;
+            templejt_ime: string;  
             // templejt: string[];
 
         }
@@ -166,6 +165,9 @@ export default {
 
         const selectTemplate = (template: Template) => {
             selectedTemplate.value = template;
+            console.log('Ovo je template', template);
+            console.log('Ovo je template', template.text_1_label);
+            console.log('Ovo je template', selectedTemplate.value);
             setOpen(true); // This opens the modal after template selection
         };
 
@@ -178,16 +180,15 @@ export default {
 
 
 
-        // const setOpen = (state: boolean) => {
-        //     isOpen.value = state;
-        // };
+        
         const setOpen = (state: boolean) => {
             isOpen.value = state;
             if (!state) {
                 modalKey.value++;
-                selectedTemplate.value = null; // clear the selected template
+                // selectedTemplate.value = null; // clear the selected template
                 // Clear other state as needed here
             }
+            console.log('Ovo je state', selectedTemplate.value);
         };
 
         const viewCard = (cardName: string) => {
@@ -205,7 +206,7 @@ export default {
             } catch (error) {
                 console.error('Error creating Inventar', error);
             }
-            selectedTemplate.value = null;
+            // selectedTemplate.value = null;
             console.log('ispitivanje', inventar);
             setOpen(false);
         };

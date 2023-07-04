@@ -79,6 +79,9 @@
 
       </ion-grid>
 
+      <ion-item>
+        <ion-input v-model="templejt_ime" @input="onInputChange14" placeholder="Templejt"></ion-input>
+      </ion-item>
 
 
     </ion-content>
@@ -132,34 +135,36 @@ export default defineComponent({
     const num_2 = ref(props.selectedTemplate[10] || 0);
     const kolicina_notifikacija = ref(props.selectedTemplate[11] || 0);
     const switch_2_label = ref(props.selectedTemplate[12] || "");
+    const templejt_ime = ref(props.selectedTemplate[13] || "");
 
 
 
     const setOpen = (state: boolean) => {
       if (!state) {
-    resetForm();
-  }
+        resetForm();
+      }
       emit('update:isOpen', state);
-    
+
     };
 
     const resetForm = () => {
-  deklaracija.value = '';
-  text_1_label.value = '';
-  text_2_label.value = '';
-  num_1_label.value = '';
-  num_2_label.value = '';
-  kolicina.value = 0;
-  switch_1_label.value = '';
-  text_1.value = '';
-  text_2.value = '';
-  num_1.value = 0;
-  num_2.value = 0;
-  kolicina_notifikacija.value = 0;
-  switch_2_label.value = '';
-};
+      deklaracija.value = '';
+      text_1_label.value = '';
+      text_2_label.value = '';
+      num_1_label.value = '';
+      num_2_label.value = '';
+      kolicina.value = 0;
+      switch_1_label.value = '';
+      text_1.value = '';
+      text_2.value = '';
+      num_1.value = 0;
+      num_2.value = 0;
+      kolicina_notifikacija.value = 0;
+      switch_2_label.value = '';
+      templejt_ime.value = '';
+    };
 
-  
+
     const confirm = () => {
       emit('submit', {
 
@@ -176,6 +181,8 @@ export default defineComponent({
         num_2: num_2.value,
         kolicina_notifikacija: kolicina_notifikacija.value,
         switch_2_label: switch_2_label.value,
+        templejt_ime: templejt_ime.value,
+
         templejt: [text_1_label.value, text_2_label.value, num_1_label.value, num_2_label.value]
       });
       deklaracija.value = '';
@@ -191,18 +198,19 @@ export default defineComponent({
       num_2.value = '';
       kolicina_notifikacija.value = '';
       switch_2_label.value = '';
+      templejt_ime.value = '';
     };
 
     watch(() => props.isOpen, (newVal) => {
-    if (newVal) {
-      resetForm();
-    }
-  });
-
-
-    watch(props.selectedTemplate, (newVal) => {
-      console.log('selectedTemplate changed:', newVal);
+      if (newVal) {
+        resetForm();
+      }
     });
+
+
+    watch(() => props.selectedTemplate, (newVal) => {
+      console.log('selectedTemplate changed:', newVal);
+    }, { deep: true });
 
 
     const onInputChange1 = (event: Event) => {
@@ -244,6 +252,9 @@ export default defineComponent({
     const onInputChange13 = (event: Event) => { // New input change handler for the fourth input
       switch_2_label.value = (event.target as HTMLInputElement).value;
     };
+    const onInputChange14 = (event: Event) => { // New input change handler for the fourth input
+      templejt_ime.value = (event.target as HTMLInputElement).value;
+    };
 
 
     return {
@@ -277,6 +288,8 @@ export default defineComponent({
       onInputChange12,
       switch_2_label,
       onInputChange13,
+      templejt_ime,
+      onInputChange14,
     };
   }
 });
