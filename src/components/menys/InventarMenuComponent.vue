@@ -52,9 +52,10 @@
 
     <TemplejtSelect :show="showTemplejtSelect" :templejtValues="templejtValues" @didDismiss="showTemplejtSelect = false"
         @selectedTemplate="selectTemplate" />
-        
-        
-    <ModalComponent :isOpen="isOpen" @update:isOpen="setOpen" @submit="submitInventar" />
+
+
+    <!-- <ModalComponent :isOpen="isOpen" @update:isOpen="setOpen" @submit="submitInventar" /> -->
+    <ModalComponent :key="modalKey" :isOpen="isOpen" @update:isOpen="setOpen" @submit="submitInventar" />
 </template>
 
 <script lang="ts">
@@ -114,7 +115,6 @@ export default {
     setup() {
 
         const store = useStore();
-        // const inventarItems = computed(() => store.state.inventory.inventar);
         const inventarItems = computed(() => store.state.inventory.inventar);
         const isOpen = ref(false);
         const showTemplejtSelect = ref(false);
@@ -128,12 +128,29 @@ export default {
 
         const selectedTemplate = ref<Template | null>(null);
 
+        const modalKey = ref(0);
 
         interface Template {
+            // deklaracija: string;
+            // kreator: string;
+            // text_1_label: string;
+            // templejt: string[];
+
             deklaracija: string;
-            kreator: string;
             text_1_label: string;
-            templejt: string[];
+            text_2_label: string;
+            num_1_label: string;
+            num_2_label: string;
+            kolicina: number;
+            switch_1_label: string;
+            text_1: string;
+            text_2: string;
+            num_1: number;
+            num_2: number;
+            kolicina_notifikacija: number;
+            switch_2_label: string;
+            // templejt: string[];
+
         }
 
         const displayInventar = computed(() => {
@@ -153,14 +170,24 @@ export default {
         };
 
         const openEmptyModal = () => {
+
+            // console.log('ispitivanje', selectedTemplate.value);
             selectedTemplate.value = null;
             setOpen(true);
         };
 
 
 
+        // const setOpen = (state: boolean) => {
+        //     isOpen.value = state;
+        // };
         const setOpen = (state: boolean) => {
             isOpen.value = state;
+            if (!state) {
+                modalKey.value++;
+                selectedTemplate.value = null; // clear the selected template
+                // Clear other state as needed here
+            }
         };
 
         const viewCard = (cardName: string) => {
@@ -178,6 +205,8 @@ export default {
             } catch (error) {
                 console.error('Error creating Inventar', error);
             }
+            selectedTemplate.value = null;
+            console.log('ispitivanje', inventar);
             setOpen(false);
         };
 
@@ -212,6 +241,7 @@ export default {
             selectedTemplate,
             selectTemplate,
             openEmptyModal,
+            modalKey,
         };
     },
 };

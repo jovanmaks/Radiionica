@@ -62,7 +62,6 @@ const mutations = {
   setSelectedTemplateArray(state: State, templateArray: string[]) {
     state.selectedTemplateArray = templateArray;
   },
-
 };
 
 const actions = {
@@ -102,11 +101,11 @@ const actions = {
 
     // Assuming that 'data' contains the inserted Inventar...
     // commit('addInventar', data);
-    if (data && (data as Inventar[]).length > 0) {
-      commit("addInventar", data[0]);
-    } else {
-      console.error("Unexpected response format. Expected array of Inventar.");
-    }
+    // if (data && (data as Inventar[]).length > 0) {
+    //   commit("addInventar", data[0]);
+    // } else {
+    //   console.error("Unexpected response format. Expected array of Inventar.");
+    // }
   },
 
   async generateQRCode(_: ActionContext<State, unknown>, dataObject: Inventar) {
@@ -185,28 +184,28 @@ const actions = {
       console.error("Error sharing QR code:", error);
     }
   },
- async fetchTemplateArray(
-  { commit }: ActionContext<State, unknown>,
-  templateName: string
-) {
-  const { data, error } = await supabase
-    .from("Inventar")
-    .select("templejt")
-    .filter('templejt', 'cs', `{${templateName}}`);
+  async fetchTemplateArray(
+    { commit }: ActionContext<State, unknown>,
+    templateName: string
+  ) {
+    const { data, error } = await supabase
+      .from("Inventar")
+      .select("templejt")
+      .filter("templejt", "cs", `{${templateName}}`);
 
-  if (error) {
-    console.error(error);
-    throw error;
-  }
-  
-  if (data) {
-    if (data.length > 0) {
-      commit("setSelectedTemplateArray", data[0].templejt);
-    } else {
-      console.error("Template not found.");
+    if (error) {
+      console.error(error);
+      throw error;
     }
-  }
-},
+
+    if (data) {
+      if (data.length > 0) {
+        commit("setSelectedTemplateArray", data[0].templejt);
+      } else {
+        console.error("Template not found.");
+      }
+    }
+  },
 };
 
 const getters = {

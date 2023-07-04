@@ -81,13 +81,6 @@
 
 
 
-      <!-- <ion-input type="text" v-model="text_1_label" @input="onInputChange2" placeholder="Enter text here">
-      </ion-input> -->
-      <!-- <ion-input type="text" v-model="text_2_label" @input="onInputChange3" placeholder="Enter text here">
-      </ion-input> -->
-      <!-- <ion-input type="text" v-model="num_1_label" @input="onInputChange4" placeholder="Enter text here">
-      </ion-input> -->
-
     </ion-content>
     <slot></slot>
   </ion-modal>
@@ -143,9 +136,30 @@ export default defineComponent({
 
 
     const setOpen = (state: boolean) => {
+      if (!state) {
+    resetForm();
+  }
       emit('update:isOpen', state);
+    
     };
 
+    const resetForm = () => {
+  deklaracija.value = '';
+  text_1_label.value = '';
+  text_2_label.value = '';
+  num_1_label.value = '';
+  num_2_label.value = '';
+  kolicina.value = 0;
+  switch_1_label.value = '';
+  text_1.value = '';
+  text_2.value = '';
+  num_1.value = 0;
+  num_2.value = 0;
+  kolicina_notifikacija.value = 0;
+  switch_2_label.value = '';
+};
+
+  
     const confirm = () => {
       emit('submit', {
 
@@ -178,6 +192,12 @@ export default defineComponent({
       kolicina_notifikacija.value = '';
       switch_2_label.value = '';
     };
+
+    watch(() => props.isOpen, (newVal) => {
+    if (newVal) {
+      resetForm();
+    }
+  });
 
 
     watch(props.selectedTemplate, (newVal) => {
