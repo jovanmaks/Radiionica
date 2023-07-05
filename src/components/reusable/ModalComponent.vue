@@ -16,15 +16,16 @@
     </ion-header>
 
     <ion-content class="input-button-container">
-      <ion-item>
+      <!-- <ion-item>
         <ion-input v-model="deklaracija" @input="onInputChange1" placeholder="Naziv"></ion-input>
-      </ion-item>
+      </ion-item> -->
       <!-- <p>ime2: {{ selectedTemplate.value }}</p>
       <p>ime3: {{ selectedTemplate }}</p>
       <p>ime4: {{ selectedTemplate.deklaracija }}</p> -->
 
       <!-- <p>ime5: {{ selectedTemplate.deklaracija.value }}</p> -->
-      <ion-input :value="deklaracija" @ionChange="deklaracija = $event.target.value" placeholder="Naziv"></ion-input>
+      <!-- <ion-input :value="deklaracija" @ionChange="deklaracija = $event.target.value" placeholder="Naziv"></ion-input> -->
+      <ion-input :value="deklaracija" @input="onInputChange1" @ionChange="deklaracija = $event.target.value" placeholder="Naziv"></ion-input>
 
 
 
@@ -116,10 +117,7 @@ export default defineComponent({
       default: ""
     },
 
-    // selectedTemplate: {
-    //   type: Object,
-    //   default: () => ({}),
-    // },
+
     selectedTemplate: {
       type: Object as () => Record<string, any> | null,
       default: null
