@@ -51,10 +51,6 @@
     <TemplejtSelect :show="showTemplejtSelect" :templejtValues="filteredTemplejtValues"
         @didDismiss="showTemplejtSelect = false" @selectedTemplate="selectTemplate" />
 
-
-    <!-- <TemplejtSelect :show="showTemplejtSelect" :templejtValues="templejtValues" @didDismiss="showTemplejtSelect = false"
-        @selectedTemplate="selectTemplate" /> -->
-
     <ModalComponent :key="modalKey" :isOpen="isOpen" :selectedTemplate="selectedTemplate" @update:isOpen="setOpen"
         @submit="submitInventar" :id="modalId" />
 </template>
@@ -137,14 +133,8 @@ export default {
 
         const modalKey = ref(0);
 
-        // interface TemplejtValue {
-        //     // Define the structure of your templejtValues items here
-        //     label: string;
-        //     // ... rest of the properties
-        // }
 
         interface Template {
-
 
             deklaracija: string;
             text_1_label: string;
@@ -160,6 +150,9 @@ export default {
             kolicina_notifikacija: number;
             switch_2_label: string;
             templejt_ime: string;
+            switch_1: boolean;
+            switch_2: boolean;
+            kolicina_isNotified: boolean;
             // templejt: string[];
 
         }

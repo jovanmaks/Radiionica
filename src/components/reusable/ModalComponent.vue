@@ -45,7 +45,7 @@
             <ion-item>
               <ion-input :value="switch_1_label" @input="onInputChange7" @ionChange="switch_1_label = $event.target.value"
                 placeholder="Overa"></ion-input>
-              <!-- <ion-toggle :enable-on-off-labels="true" v-model="switch_1"></ion-toggle> -->
+              <ion-toggle :enable-on-off-labels="true" v-model="switch_1"></ion-toggle>
             </ion-item>
 
 
@@ -67,13 +67,13 @@
             <ion-item>
               <ion-input v-model.number="kolicina_notifikacija" @input="onInputChange12" type="number"
                 placeholder="Alarm na"></ion-input>
-              <!-- <ion-toggle :enable-on-off-labels="true" v-model="kolicina_isNotified"></ion-toggle> -->
+              <ion-toggle :enable-on-off-labels="true" v-model="kolicina_isNotified"></ion-toggle>
             </ion-item>
 
             <ion-item>
               <ion-input :value="switch_2_label" @input="onInputChange13"
                 @ionChange="switch_2_label = $event.target.value" placeholder="Overa"></ion-input>
-              <!-- <ion-toggle :enable-on-off-labels="true" v-model="switch_2"></ion-toggle> -->
+              <ion-toggle :enable-on-off-labels="true" v-model="switch_2"></ion-toggle>
             </ion-item>
             <!-- 
           -->
@@ -94,11 +94,38 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent, watch } from 'vue';
+import { ref, defineComponent, watch, computed } from 'vue';
 import { close, checkmark } from 'ionicons/icons';
+import {
+  IonButton,
+  IonContent,
+  IonToolbar,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonModal,
+  IonIcon,
+  IonItem,
+  IonInput,
+  IonToggle,
+
+} from '@ionic/vue';
 
 export default defineComponent({
   name: "ModalComponent",
+  components: {
+    IonContent,
+    IonButton,
+    IonToolbar,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonModal,
+    IonIcon,
+    IonItem,
+    IonInput,
+    IonToggle,
+  },
   props: {
     isOpen: {
       type: Boolean,
@@ -143,6 +170,12 @@ export default defineComponent({
     const switch_2_label = ref(props.selectedTemplate?.switch_2_label || "");
     const templejt_ime = ref(props.selectedTemplate?.templejt_ime || "");
 
+    const switch_1 = ref(props.selectedTemplate?.switch_1 || false);
+    const switch_2 = ref(props.selectedTemplate?.switch_2 || false);
+    const kolicina_isNotified = ref(props.selectedTemplate?.kolicina_isNotified || false);
+
+
+
     const setOpen = (state: boolean) => {
       if (!state) {
         resetForm();
@@ -166,6 +199,9 @@ export default defineComponent({
       kolicina_notifikacija.value = 0;
       switch_2_label.value = '';
       templejt_ime.value = '';
+      switch_1.value = false;    // added .value
+      switch_2.value = false;
+      kolicina_isNotified.value = false;
     };
 
 
@@ -191,6 +227,9 @@ export default defineComponent({
         kolicina_notifikacija: kolicina_notifikacija.value,
         switch_2_label: switch_2_label.value,
         templejt_ime: templejt_ime.value,
+        switch_1: switch_1.value,
+        switch_2: switch_2.value,
+        kolicina_isNotified: kolicina_isNotified.value,
 
         templejt: [text_1_label.value, text_2_label.value, num_1_label.value, num_2_label.value]
       });
@@ -208,12 +247,30 @@ export default defineComponent({
       kolicina_notifikacija.value = '';
       switch_2_label.value = '';
       templejt_ime.value = '';
+      switch_1.value = false;
+      switch_2.value= false;
+      kolicina_isNotified.value = false;
+
+      console.log('switcheviiiii', switch_1.value, switch_2.value, kolicina_isNotified.value);
+
     };
 
     watch(() => props.isOpen, (newVal) => {
       if (newVal) {
         // resetForm();
       }
+    });
+
+    watch(switch_1, (newVal) => {
+      console.log(`switch_1 changed to ${newVal}`);
+    });
+
+    watch(switch_2, (newVal) => {
+      console.log(`switch_2 changed to ${newVal}`);
+    });
+
+    watch(kolicina_isNotified, (newVal) => {
+      console.log(`kolicina_isNotified changed to ${newVal}`);
     });
 
 
@@ -237,6 +294,9 @@ export default defineComponent({
         kolicina_notifikacija.value = newVal.kolicina_notifikacija || 0;
         switch_2_label.value = newVal.switch_2_label || "";
         templejt_ime.value = newVal.templejt_ime || "";
+        switch_1.value = newVal.switch_1 || false;
+        switch_2.value = newVal.switch_2 || false;
+        kolicina_isNotified.value = newVal.kolicina_isNotified || false;
       }
     }, { deep: true, immediate: true });
 
@@ -321,6 +381,9 @@ export default defineComponent({
       onInputChange13,
       templejt_ime,
       onInputChange14,
+      switch_1,
+      switch_2,
+      kolicina_isNotified,
     };
   }
 });
