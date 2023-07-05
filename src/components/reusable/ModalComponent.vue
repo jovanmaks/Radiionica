@@ -16,40 +16,29 @@
     </ion-header>
 
     <ion-content class="input-button-container">
-      <!-- <ion-item>
-        <ion-input v-model="deklaracija" @input="onInputChange1" placeholder="Naziv"></ion-input>
-      </ion-item> -->
-      <!-- <p>ime2: {{ selectedTemplate.value }}</p>
-      <p>ime3: {{ selectedTemplate }}</p>
-      <p>ime4: {{ selectedTemplate.deklaracija }}</p> -->
-
-      <!-- <p>ime5: {{ selectedTemplate.deklaracija.value }}</p> -->
-      <!-- <ion-input :value="deklaracija" @ionChange="deklaracija = $event.target.value" placeholder="Naziv"></ion-input> -->
       <ion-input :value="deklaracija" @input="onInputChange1" @ionChange="deklaracija = $event.target.value" placeholder="Naziv"></ion-input>
-
-
 
       <ion-grid>
         <ion-row>
           <ion-col>
             <ion-item>
-              <ion-input v-model="text_1_label" @input="onInputChange2" placeholder="Ime"></ion-input>
+              <ion-input :value="text_1_label" @input="onInputChange2" @ionChange="text_1_label = $event.target.value" placeholder="Ime"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-input v-model="text_2_label" @input="onInputChange3" placeholder="Ime"></ion-input>
+              <ion-input :value="text_2_label" @input="onInputChange3" @ionChange="text_2_label = $event.target.value" placeholder="Ime"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-input v-model="num_1_label" @input="onInputChange4" placeholder="Ime"></ion-input>
+              <ion-input :value="num_1_label" @input="onInputChange4" @ionChange="num_1_label = $event.target.value" placeholder="Ime"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-input v-model="num_2_label" @input="onInputChange5" placeholder="Ime"></ion-input>
+              <ion-input :value="num_2_label" @input="onInputChange5" @ionChange="num_2_label = $event.target.value" placeholder="Ime"></ion-input>
             </ion-item>
             <ion-item>
               <ion-input v-model.number="kolicina" @input="onInputChange6" type="number"
                 placeholder="Kolicina"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-input v-model="switch_1_label" @input="onInputChange7" placeholder="Overa"></ion-input>
+              <ion-input :value="switch_1_label" @input="onInputChange7" @ionChange="switch_1_label = $event.target.value" placeholder="Overa"></ion-input>
               <!-- <ion-toggle :enable-on-off-labels="true" v-model="switch_1"></ion-toggle> -->
             </ion-item>
 
@@ -76,7 +65,7 @@
             </ion-item>
 
             <ion-item>
-              <ion-input v-model="switch_2_label" @input="onInputChange13" placeholder="Overa"></ion-input>
+              <ion-input :value="switch_2_label" @input="onInputChange13" @ionChange="switch_2_label = $event.target.value" placeholder="Overa"></ion-input>
               <!-- <ion-toggle :enable-on-off-labels="true" v-model="switch_2"></ion-toggle> -->
             </ion-item>
             <!-- 
