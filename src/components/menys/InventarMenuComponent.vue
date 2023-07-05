@@ -60,7 +60,6 @@ import { ref, defineComponent, onMounted } from "vue";
 import { useStore } from 'vuex';
 import { close, checkmark, add, documentOutline, archiveOutline, documentAttachOutline } from 'ionicons/icons';
 import { watch, computed } from 'vue';
-// import { Inventar } from "@/store/inventory"; // Modify the path as needed
 
 
 import TemplejtSelect from '@/components/reusable/TemplejtSelect.vue';
@@ -83,7 +82,6 @@ import {
     IonIcon,
     IonButton,
     IonButtons,
-
 } from '@ionic/vue';
 
 export default {
@@ -92,7 +90,6 @@ export default {
         InventarCardComponent,
         TemplejtSelect,
         ModalComponent,
-
 
         IonContent,
         IonFooter,
@@ -118,41 +115,38 @@ export default {
         const templejtValues = computed(() => store.state.inventory.templejtValues);
         const modalId = ref('');
 
+
+
+
         const filteredTemplejtValues = computed(() => {
             return templejtValues.value.filter((item: string) => !item.startsWith('modal'));
         });
 
-
-
-
         const archivedInventar = computed(() => store.getters['inventory/archivedInventar']);
         const unarchivedInentar = computed(() => store.getters['inventory/unarchivedNotes']);
         const displayArchivedInventar = ref(false);
-
         const selectedTemplate = ref<Template | null>(null);
-
         const modalKey = ref(0);
 
 
         interface Template {
-
             deklaracija: string;
             text_1_label: string;
             text_2_label: string;
             num_1_label: string;
             num_2_label: string;
-            kolicina: number;
+            // kolicina: number;
             switch_1_label: string;
-            text_1: string;
-            text_2: string;
-            num_1: number;
-            num_2: number;
-            kolicina_notifikacija: number;
+            // text_1: string;
+            // text_2: string;
+            // num_1: number;
+            // num_2: number;
+            // kolicina_notifikacija: number;
             switch_2_label: string;
             templejt_ime: string;
-            switch_1: boolean;
-            switch_2: boolean;
-            kolicina_isNotified: boolean;
+            // switch_1: boolean;
+            // switch_2: boolean;
+            // kolicina_isNotified: boolean;
             // templejt: string[];
 
         }
@@ -164,80 +158,52 @@ export default {
 
         onMounted(async () => {
             await store.dispatch('inventory/fetchInventar');
-            // console.log('Ovdje gledaj', inventarItems.value);
-            console.log('Ovdje gledaj', templejtValues.value);
-            console.log('Ovdje gledaj', filteredTemplejtValues.value);
-            // console.log('Ovdje gledaj', rowId.value);
-
         });
 
 
         const selectTemplate = (templejt_ime: string) => {
-
-            // if (templejt_ime.startsWith('modal')) {
-            //     console.log('Ignoring modal template');
-            //     return;
-            // }
-
             const template = inventarItems.value.find((template: Template) => template.templejt_ime === templejt_ime);
-
             if (template) {
 
                 selectedTemplate.value = template;
                 console.log('Selected template', selectedTemplate.value);
-
                 setOpen(true); // This opens the modal after template selection
-
             } else {
-
                 console.error('Template not found');
-
             }
-
         };
 
         const openEmptyModal = () => {
             modalId.value = 'modal-' + Math.floor(Math.random() * 1000000);
-            // console.log('ispitivanje', selectedTemplate.value);
             selectedTemplate.value = null;
             setOpen(true);
         };
-
-
-
 
         const setOpen = (state: boolean) => {
             isOpen.value = state;
             if (!state) {
                 modalKey.value++;
-                // selectedTemplate.value = null; // clear the selected template
-                // Clear other state as needed here
             }
-
-
-            console.log('Ovo je state', selectedTemplate.value);
         };
 
         const viewCard = (cardName: string) => {
-            // Print the card name to the console for now
             console.log(`Card clicked: ${cardName}`);
         };
 
         const submitInventar = async (inventar: Partial<Inventar>) => {
-
             console.log('Ovo je inventar', inventar);
             try {
                 await store.dispatch('inventory/createInventar', inventar);
                 console.log('Inventar created', inventar);
                 await store.dispatch('inventory/fetchInventar'); // reload inventar after creation
+                // qrCodeDataUrl.value = await store.dispatch('inventory/generateQRCode', inventar);
+                
             } catch (error) {
                 console.error('Error creating Inventar', error);
             }
-            // selectedTemplate.value = null;
             console.log('ispitivanje', inventar);
             setOpen(false);
         };
-
 
         const showArchivedInventar = () => {
             displayArchivedInventar.value = true;
@@ -248,7 +214,6 @@ export default {
             displayArchivedInventar.value = false;
             console.log('Ovo je unarchived', unarchivedInentar.value);
         };
-
 
         return {
             inventarItems,
@@ -272,7 +237,7 @@ export default {
             modalKey,
             modalId,
             filteredTemplejtValues,
-            // rowId,
+            // qrCodeDataUrl,
         };
     },
 };

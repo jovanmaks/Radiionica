@@ -86,8 +86,6 @@ const actions = {
       commit("setTemplejtValues", templejtValues);
     }
 
-
-
     commit("setInventar", data);
     commit("setDataLoaded", true);
   },
@@ -103,14 +101,7 @@ const actions = {
       console.error(error);
       throw error;
     }
-
-    // Assuming that 'data' contains the inserted Inventar...
-    // commit('addInventar', data);
-    // if (data && (data as Inventar[]).length > 0) {
-    //   commit("addInventar", data[0]);
-    // } else {
-    //   console.error("Unexpected response format. Expected array of Inventar.");
-    // }
+  
   },
 
   async generateQRCode(_: ActionContext<State, unknown>, dataObject: Inventar) {

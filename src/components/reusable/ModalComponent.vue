@@ -104,6 +104,7 @@
 </template>
 
 <script lang="ts">
+import { useStore } from 'vuex';
 import { ref, defineComponent, watch, computed } from 'vue';
 import { close, checkmark } from 'ionicons/icons';
 import {
@@ -172,22 +173,42 @@ export default defineComponent({
     const text_2_label = ref(props.selectedTemplate?.text_2_label || "");
     const num_1_label = ref(props.selectedTemplate?.num_1_label || "");
     const num_2_label = ref(props.selectedTemplate?.num_2_label || "");
-    const kolicina = ref(props.selectedTemplate?.kolicina || 0);
     const switch_1_label = ref(props.selectedTemplate?.switch_1_label || "");
+    const switch_2_label = ref(props.selectedTemplate?.switch_2_label || "");
+    const templejt_ime = ref(props.selectedTemplate?.templejt_ime || "");
+
+    const kolicina = ref(props.selectedTemplate?.kolicina || 0);
     const text_1 = ref(props.selectedTemplate?.text_1 || "");
     const text_2 = ref(props.selectedTemplate?.text_2 || "");
     const num_1 = ref(props.selectedTemplate?.num_1 || 0);
     const num_2 = ref(props.selectedTemplate?.num_2 || 0);
     const kolicina_notifikacija = ref(props.selectedTemplate?.kolicina_notifikacija || 0);
-    const switch_2_label = ref(props.selectedTemplate?.switch_2_label || "");
     const cena = ref(props.selectedTemplate?.cena || 0);
-    const templejt_ime = ref(props.selectedTemplate?.templejt_ime || "");
-
     const switch_1 = ref(props.selectedTemplate?.switch_1 || false);
     const switch_2 = ref(props.selectedTemplate?.switch_2 || false);
     const datetime_isNotified = ref(props.selectedTemplate?.datetime_isNotified || false);
     const kolicina_isNotified = ref(props.selectedTemplate?.kolicina_isNotified || false);
     const datetimeInput = ref(props.selectedTemplate?.datetimeInput || null)
+
+    // const text_1 = ref("");
+    // const text_2 = ref("");
+    // const kolicina = ref(0);
+    // const num_1 = ref(0);
+    // const num_2 = ref(0);
+    // const kolicina_notifikacija = ref(0);
+    // const cena = ref(0);
+    // const switch_1 = ref(false);
+    // const switch_2 = ref(false);
+    // const datetime_isNotified = ref(false);
+    // const kolicina_isNotified = ref(false);
+    // const datetimeInput = ref(null);
+    
+
+
+
+    const store = useStore();
+    const qrCodeDataUrl = ref(props.selectedTemplate?.qrCodeDataUrl || null)
+    const username = computed(() => store.state.user.username);
 
 
 
@@ -200,7 +221,7 @@ export default defineComponent({
     };
 
     const resetForm = () => {
-      deklaracija.value = '';
+      // deklaracija.value = '';
       text_1_label.value = '';
       text_2_label.value = '';
       num_1_label.value = '';
@@ -218,12 +239,13 @@ export default defineComponent({
       switch_1.value = false;    // added .value
       switch_2.value = false;
       datetimeInput.value = null;
+      qrCodeDataUrl.value = null;
       datetime_isNotified.value = false;
       kolicina_isNotified.value = false;
     };
 
 
-    const confirm = () => {
+    const confirm = async () => {
 
       if (!templejt_ime.value.trim()) {
         templejt_ime.value = props.id;
@@ -232,6 +254,32 @@ export default defineComponent({
       if (datetimeInput.value !== null) {
         datetime = datetimeInput.value; // directly assign the value
       }
+      const inventarData = {
+        deklaracija: deklaracija.value,
+        text_1_label: text_1_label.value,
+        text_2_label: text_2_label.value,
+        num_1_label: num_1_label.value,
+        num_2_label: num_2_label.value,
+        kolicina: kolicina.value,
+        switch_1_label: switch_1_label.value,
+        text_1: text_1.value,
+        text_2: text_2.value,
+        num_1: num_1.value,
+        num_2: num_2.value,
+        cena: cena.value,
+        kolicina_notifikacija: kolicina_notifikacija.value,
+        switch_2_label: switch_2_label.value,
+        templejt_ime: templejt_ime.value,
+        switch_1: switch_1.value,
+        switch_2: switch_2.value,
+        datetime: datetimeInput.value,
+        kreator: username.value,
+        datetime_isNotified: datetime_isNotified.value,
+        kolicina_isNotified: kolicina_isNotified.value,
+        templejt: [text_1_label.value, text_2_label.value, num_1_label.value, num_2_label.value]
+      };
+
+      qrCodeDataUrl.value = await store.dispatch('inventory/generateQRCode', inventarData);
 
       emit('submit', {
 
@@ -253,8 +301,10 @@ export default defineComponent({
         switch_1: switch_1.value,
         switch_2: switch_2.value,
         datetime: datetimeInput.value,
+        qr_code: qrCodeDataUrl.value,
         datetime_isNotified: datetime_isNotified.value,
         kolicina_isNotified: kolicina_isNotified.value,
+        kreator: username.value,
 
 
         templejt: [text_1_label.value, text_2_label.value, num_1_label.value, num_2_label.value]
@@ -277,6 +327,7 @@ export default defineComponent({
       switch_1.value = false;
       switch_2.value = false;
       datetimeInput.value = null;
+      qrCodeDataUrl.value = null;
       datetime_isNotified.value = false;
       kolicina_isNotified.value = false;
 
@@ -327,6 +378,7 @@ export default defineComponent({
         switch_1.value = newVal.switch_1 || false;
         switch_2.value = newVal.switch_2 || false;
         datetimeInput.value = newVal.datetime || null;
+        qrCodeDataUrl.value = newVal.qr_code || null;
         datetime_isNotified.value = newVal.datetime_isNotified || false;
         kolicina_isNotified.value = newVal.kolicina_isNotified || false;
       }
@@ -351,7 +403,7 @@ export default defineComponent({
       num_2_label.value = (event.target as HTMLInputElement).value;
     };
     const onInputChange6 = (event: Event) => { // New input change handler for the fourth input
-      kolicina.value = (event.target as HTMLInputElement).value;
+      kolicina.value = ((event.target as HTMLInputElement).value);
     };
     const onInputChange7 = (event: Event) => { // New input change handler for the fourth input
       switch_1_label.value = (event.target as HTMLInputElement).value;
@@ -363,13 +415,13 @@ export default defineComponent({
       text_2.value = (event.target as HTMLInputElement).value;
     };
     const onInputChange10 = (event: Event) => { // New input change handler for the fourth input
-      num_1.value = (event.target as HTMLInputElement).value;
+      num_1.value = ((event.target as HTMLInputElement).value);
     };
     const onInputChange11 = (event: Event) => { // New input change handler for the fourth input
-      num_2.value = (event.target as HTMLInputElement).value;
+      num_2.value = ((event.target as HTMLInputElement).value);
     };
     const onInputChange12 = (event: Event) => { // New input change handler for the fourth input
-      kolicina_notifikacija.value = (event.target as HTMLInputElement).value;
+      kolicina_notifikacija.value = ((event.target as HTMLInputElement).value);
     };
     const onInputChange13 = (event: Event) => { // New input change handler for the fourth input
       switch_2_label.value = (event.target as HTMLInputElement).value;
@@ -378,7 +430,7 @@ export default defineComponent({
       templejt_ime.value = (event.target as HTMLInputElement).value;
     };
     const onInputChange15 = (event: Event) => { // New input change handler for the fourth input
-      cena.value = (event.target as HTMLInputElement).value;
+      cena.value = ((event.target as HTMLInputElement).value);
     };
 
 
@@ -422,7 +474,8 @@ export default defineComponent({
       datetime_isNotified,
       kolicina_isNotified,
       onInputChange15,
-      cena
+      cena,
+      qrCodeDataUrl,
     };
   }
 });
