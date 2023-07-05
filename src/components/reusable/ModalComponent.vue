@@ -19,6 +19,13 @@
       <ion-item>
         <ion-input v-model="deklaracija" @input="onInputChange1" placeholder="Naziv"></ion-input>
       </ion-item>
+      <!-- <p>ime2: {{ selectedTemplate.value }}</p>
+      <p>ime3: {{ selectedTemplate }}</p>
+      <p>ime4: {{ selectedTemplate.deklaracija }}</p> -->
+
+      <!-- <p>ime5: {{ selectedTemplate.deklaracija.value }}</p> -->
+      <ion-input :value="deklaracija" @ionChange="deklaracija = $event.target.value" placeholder="Naziv"></ion-input>
+
 
 
       <ion-grid>
@@ -90,7 +97,7 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent, watch } from 'vue';
+import { ref, defineComponent, watch} from 'vue';
 import { close, checkmark } from 'ionicons/icons';
 
 export default defineComponent({
@@ -108,9 +115,14 @@ export default defineComponent({
       type: String,
       default: ""
     },
+
+    // selectedTemplate: {
+    //   type: Object,
+    //   default: () => ({}),
+    // },
     selectedTemplate: {
-      type: Array,
-      default: () => [],
+      type: Object as () => Record<string, any> | null,
+      default: null
     },
   },
   emits: ['update:isOpen', 'confirm', 'update-deklaracija', 'submit'],
@@ -122,22 +134,22 @@ export default defineComponent({
 
 
 
-    const deklaracija = ref(props.selectedTemplate[0] || "");
-    const text_1_label = ref(props.selectedTemplate[1] || "");
-    const text_2_label = ref(props.selectedTemplate[2] || "");
-    const num_1_label = ref(props.selectedTemplate[3] || "");
-    const num_2_label = ref(props.selectedTemplate[4] || "");
-    const kolicina = ref(props.selectedTemplate[5] || 0);
-    const switch_1_label = ref(props.selectedTemplate[6] || "");
-    const text_1 = ref(props.selectedTemplate[7] || "");
-    const text_2 = ref(props.selectedTemplate[8] || "");
-    const num_1 = ref(props.selectedTemplate[9] || 0);
-    const num_2 = ref(props.selectedTemplate[10] || 0);
-    const kolicina_notifikacija = ref(props.selectedTemplate[11] || 0);
-    const switch_2_label = ref(props.selectedTemplate[12] || "");
-    const templejt_ime = ref(props.selectedTemplate[13] || "");
 
-
+    // const selectedTemplate = props.selectedTemplate || {};
+    const deklaracija = ref(props.selectedTemplate?.deklaracija || "");
+    const text_1_label = ref(props.selectedTemplate?.text_1_label || "");
+    const text_2_label = ref(props.selectedTemplate?.text_2_label || "");
+    const num_1_label = ref(props.selectedTemplate?.num_1_label || "");
+    const num_2_label = ref(props.selectedTemplate?.num_2_label || "");
+    const kolicina = ref(props.selectedTemplate?.kolicina || 0);
+    const switch_1_label = ref(props.selectedTemplate?.switch_1_label || "");
+    const text_1 = ref(props.selectedTemplate?.text_1 || "");
+    const text_2 = ref(props.selectedTemplate?.text_2 || "");
+    const num_1 = ref(props.selectedTemplate?.num_1 || 0);
+    const num_2 = ref(props.selectedTemplate?.num_2 || 0);
+    const kolicina_notifikacija = ref(props.selectedTemplate?.kolicina_notifikacija || 0);
+    const switch_2_label = ref(props.selectedTemplate?.switch_2_label || "");
+    const templejt_ime = ref(props.selectedTemplate?.templejt_ime || "");
 
     const setOpen = (state: boolean) => {
       if (!state) {
@@ -203,14 +215,34 @@ export default defineComponent({
 
     watch(() => props.isOpen, (newVal) => {
       if (newVal) {
-        resetForm();
+        // resetForm();
       }
     });
 
 
+
     watch(() => props.selectedTemplate, (newVal) => {
-      console.log('selectedTemplate changed:', newVal);
-    }, { deep: true });
+      console.log("testtttttt", newVal);
+      if (newVal) {
+       
+        deklaracija.value = newVal.deklaracija || "";
+        text_1_label.value = newVal.text_1_label || "";
+        text_2_label.value = newVal.text_2_label || "";
+        num_1_label.value = newVal.num_1_label || "";
+        num_2_label.value = newVal.num_2_label || "";
+        kolicina.value = newVal.kolicina || 0;
+        switch_1_label.value = newVal.switch_1_label || "";
+        text_1.value = newVal.text_1 || "";
+        text_2.value = newVal.text_2 || "";
+        num_1.value = newVal.num_1 || 0;
+        num_2.value = newVal.num_2 || 0;
+        kolicina_notifikacija.value = newVal.kolicina_notifikacija || 0;
+        switch_2_label.value = newVal.switch_2_label || "";
+        templejt_ime.value = newVal.templejt_ime || "";
+      }
+    }, { deep: true, immediate: true });
+
+
 
 
     const onInputChange1 = (event: Event) => {
@@ -258,6 +290,7 @@ export default defineComponent({
 
 
     return {
+      // selectedTemplate,
       closeIcon,
       checkmarkIcon,
       setOpen,

@@ -52,8 +52,15 @@
     <TemplejtSelect :show="showTemplejtSelect" :templejtValues="templejtValues" @didDismiss="showTemplejtSelect = false"
         @selectedTemplate="selectTemplate" />
 
-
-    <ModalComponent :key="modalKey" :isOpen="isOpen" @update:isOpen="setOpen" @submit="submitInventar" />
+    <!-- <ModalComponent :key="modalKey" :isOpen="isOpen"  @update:isOpen="setOpen" @submit="submitInventar" /> -->
+    <!-- <ModalComponent :key="modalKey" :isOpen="isOpen" @update:isOpen="setOpen" @submit="submitInventar" /> -->
+    <ModalComponent 
+    :key="modalKey" 
+    :isOpen="isOpen" 
+    :selectedTemplate="selectedTemplate"  
+    @update:isOpen="setOpen" 
+    @submit="submitInventar" 
+/>
 </template>
 
 <script lang="ts">
@@ -147,7 +154,7 @@ export default {
             num_2: number;
             kolicina_notifikacija: number;
             switch_2_label: string;
-            templejt_ime: string;  
+            templejt_ime: string;
             // templejt: string[];
 
         }
@@ -163,12 +170,24 @@ export default {
 
         });
 
-        const selectTemplate = (template: Template) => {
-            selectedTemplate.value = template;
-            console.log('Ovo je template', template);
-            console.log('Ovo je template', template.text_1_label);
-            console.log('Ovo je template', selectedTemplate.value);
-            setOpen(true); // This opens the modal after template selection
+
+        const selectTemplate = (templejt_ime: string) => {
+
+            const template = inventarItems.value.find((template: Template) => template.templejt_ime === templejt_ime);
+
+            if (template) {
+
+                selectedTemplate.value = template;
+                console.log('Selected template', selectedTemplate.value);
+
+                setOpen(true); // This opens the modal after template selection
+
+            } else {
+
+                console.error('Template not found');
+
+            }
+
         };
 
         const openEmptyModal = () => {
@@ -180,7 +199,7 @@ export default {
 
 
 
-        
+
         const setOpen = (state: boolean) => {
             isOpen.value = state;
             if (!state) {
