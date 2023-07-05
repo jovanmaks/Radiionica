@@ -86,9 +86,13 @@ const actions = {
       commit("setTemplejtValues", templejtValues);
     }
 
+
+
     commit("setInventar", data);
     commit("setDataLoaded", true);
   },
+
+  
   async createInventar(
     { commit }: ActionContext<State, unknown>,
     inventar: Partial<Inventar>

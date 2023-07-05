@@ -48,19 +48,15 @@
         </ion-content>
     </ion-menu>
 
+    <TemplejtSelect :show="showTemplejtSelect" :templejtValues="filteredTemplejtValues"
+        @didDismiss="showTemplejtSelect = false" @selectedTemplate="selectTemplate" />
 
-    <TemplejtSelect :show="showTemplejtSelect" :templejtValues="templejtValues" @didDismiss="showTemplejtSelect = false"
-        @selectedTemplate="selectTemplate" />
 
-    <!-- <ModalComponent :key="modalKey" :isOpen="isOpen"  @update:isOpen="setOpen" @submit="submitInventar" /> -->
-    <!-- <ModalComponent :key="modalKey" :isOpen="isOpen" @update:isOpen="setOpen" @submit="submitInventar" /> -->
-    <ModalComponent 
-    :key="modalKey" 
-    :isOpen="isOpen" 
-    :selectedTemplate="selectedTemplate"  
-    @update:isOpen="setOpen" 
-    @submit="submitInventar" 
-/>
+    <!-- <TemplejtSelect :show="showTemplejtSelect" :templejtValues="templejtValues" @didDismiss="showTemplejtSelect = false"
+        @selectedTemplate="selectTemplate" /> -->
+
+    <ModalComponent :key="modalKey" :isOpen="isOpen" :selectedTemplate="selectedTemplate" @update:isOpen="setOpen"
+        @submit="submitInventar" :id="modalId" />
 </template>
 
 <script lang="ts">
@@ -124,6 +120,12 @@ export default {
         const isOpen = ref(false);
         const showTemplejtSelect = ref(false);
         const templejtValues = computed(() => store.state.inventory.templejtValues);
+        const modalId = ref('');
+
+        const filteredTemplejtValues = computed(() => {
+            return templejtValues.value.filter((item: string) => !item.startsWith('modal'));
+        });
+
 
 
 
@@ -135,11 +137,14 @@ export default {
 
         const modalKey = ref(0);
 
+        // interface TemplejtValue {
+        //     // Define the structure of your templejtValues items here
+        //     label: string;
+        //     // ... rest of the properties
+        // }
+
         interface Template {
-            // deklaracija: string;
-            // kreator: string;
-            // text_1_label: string;
-            // templejt: string[];
+
 
             deklaracija: string;
             text_1_label: string;
@@ -166,12 +171,20 @@ export default {
 
         onMounted(async () => {
             await store.dispatch('inventory/fetchInventar');
-            console.log('Ovdje gledaj', inventarItems.value);
+            // console.log('Ovdje gledaj', inventarItems.value);
+            console.log('Ovdje gledaj', templejtValues.value);
+            console.log('Ovdje gledaj', filteredTemplejtValues.value);
+            // console.log('Ovdje gledaj', rowId.value);
 
         });
 
 
         const selectTemplate = (templejt_ime: string) => {
+
+            // if (templejt_ime.startsWith('modal')) {
+            //     console.log('Ignoring modal template');
+            //     return;
+            // }
 
             const template = inventarItems.value.find((template: Template) => template.templejt_ime === templejt_ime);
 
@@ -191,7 +204,7 @@ export default {
         };
 
         const openEmptyModal = () => {
-
+            modalId.value = 'modal-' + Math.floor(Math.random() * 1000000);
             // console.log('ispitivanje', selectedTemplate.value);
             selectedTemplate.value = null;
             setOpen(true);
@@ -207,6 +220,8 @@ export default {
                 // selectedTemplate.value = null; // clear the selected template
                 // Clear other state as needed here
             }
+
+
             console.log('Ovo je state', selectedTemplate.value);
         };
 
@@ -262,6 +277,9 @@ export default {
             selectTemplate,
             openEmptyModal,
             modalKey,
+            modalId,
+            filteredTemplejtValues,
+            // rowId,
         };
     },
 };

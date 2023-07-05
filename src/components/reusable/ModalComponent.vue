@@ -16,29 +16,35 @@
     </ion-header>
 
     <ion-content class="input-button-container">
-      <ion-input :value="deklaracija" @input="onInputChange1" @ionChange="deklaracija = $event.target.value" placeholder="Naziv"></ion-input>
+      <ion-input :value="deklaracija" @input="onInputChange1" @ionChange="deklaracija = $event.target.value"
+        placeholder="Naziv"></ion-input>
 
       <ion-grid>
         <ion-row>
           <ion-col>
             <ion-item>
-              <ion-input :value="text_1_label" @input="onInputChange2" @ionChange="text_1_label = $event.target.value" placeholder="Ime"></ion-input>
+              <ion-input :value="text_1_label" @input="onInputChange2" @ionChange="text_1_label = $event.target.value"
+                placeholder="Ime"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-input :value="text_2_label" @input="onInputChange3" @ionChange="text_2_label = $event.target.value" placeholder="Ime"></ion-input>
+              <ion-input :value="text_2_label" @input="onInputChange3" @ionChange="text_2_label = $event.target.value"
+                placeholder="Ime"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-input :value="num_1_label" @input="onInputChange4" @ionChange="num_1_label = $event.target.value" placeholder="Ime"></ion-input>
+              <ion-input :value="num_1_label" @input="onInputChange4" @ionChange="num_1_label = $event.target.value"
+                placeholder="Ime"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-input :value="num_2_label" @input="onInputChange5" @ionChange="num_2_label = $event.target.value" placeholder="Ime"></ion-input>
+              <ion-input :value="num_2_label" @input="onInputChange5" @ionChange="num_2_label = $event.target.value"
+                placeholder="Ime"></ion-input>
             </ion-item>
             <ion-item>
               <ion-input v-model.number="kolicina" @input="onInputChange6" type="number"
                 placeholder="Kolicina"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-input :value="switch_1_label" @input="onInputChange7" @ionChange="switch_1_label = $event.target.value" placeholder="Overa"></ion-input>
+              <ion-input :value="switch_1_label" @input="onInputChange7" @ionChange="switch_1_label = $event.target.value"
+                placeholder="Overa"></ion-input>
               <!-- <ion-toggle :enable-on-off-labels="true" v-model="switch_1"></ion-toggle> -->
             </ion-item>
 
@@ -65,7 +71,8 @@
             </ion-item>
 
             <ion-item>
-              <ion-input :value="switch_2_label" @input="onInputChange13" @ionChange="switch_2_label = $event.target.value" placeholder="Overa"></ion-input>
+              <ion-input :value="switch_2_label" @input="onInputChange13"
+                @ionChange="switch_2_label = $event.target.value" placeholder="Overa"></ion-input>
               <!-- <ion-toggle :enable-on-off-labels="true" v-model="switch_2"></ion-toggle> -->
             </ion-item>
             <!-- 
@@ -87,7 +94,7 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent, watch} from 'vue';
+import { ref, defineComponent, watch } from 'vue';
 import { close, checkmark } from 'ionicons/icons';
 
 export default defineComponent({
@@ -105,8 +112,6 @@ export default defineComponent({
       type: String,
       default: ""
     },
-
-
     selectedTemplate: {
       type: Object as () => Record<string, any> | null,
       default: null
@@ -165,6 +170,11 @@ export default defineComponent({
 
 
     const confirm = () => {
+
+      if (!templejt_ime.value.trim()) {
+        templejt_ime.value = props.id;
+      }
+
       emit('submit', {
 
         deklaracija: deklaracija.value,
@@ -210,8 +220,9 @@ export default defineComponent({
 
     watch(() => props.selectedTemplate, (newVal) => {
       console.log("testtttttt", newVal);
+      console.log("testtttttt", props.id);
       if (newVal) {
-       
+
         deklaracija.value = newVal.deklaracija || "";
         text_1_label.value = newVal.text_1_label || "";
         text_2_label.value = newVal.text_2_label || "";
