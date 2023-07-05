@@ -75,13 +75,23 @@
                 @ionChange="switch_2_label = $event.target.value" placeholder="Overa"></ion-input>
               <ion-toggle :enable-on-off-labels="true" v-model="switch_2"></ion-toggle>
             </ion-item>
-            <!-- 
-          -->
-
           </ion-col>
         </ion-row>
-
       </ion-grid>
+
+
+      <ion-item>
+        <ion-input v-model.number="cena" @input="onInputChange15" placeholder="Cena"></ion-input>
+        <!-- <ion-input v-model.number="cena" type="number" placeholder="Cena"></ion-input> -->
+      </ion-item>
+      <ion-item>
+        <ion-datetime v-model="datetimeInput" placeholder="Select Date"></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-toggle :enable-on-off-labels="true" v-model="datetime_isNotified">Notifikacija</ion-toggle>
+        <!-- <ion-toggle :enable-on-off-labels="true" v-model="switch_2"></ion-toggle> -->
+      </ion-item>
+
 
       <ion-item>
         <ion-input v-model="templejt_ime" @input="onInputChange14" placeholder="Templejt"></ion-input>
@@ -108,6 +118,7 @@ import {
   IonItem,
   IonInput,
   IonToggle,
+  IonDatetime,
 
 } from '@ionic/vue';
 
@@ -125,6 +136,7 @@ export default defineComponent({
     IonItem,
     IonInput,
     IonToggle,
+    IonDatetime,
   },
   props: {
     isOpen: {
@@ -168,11 +180,14 @@ export default defineComponent({
     const num_2 = ref(props.selectedTemplate?.num_2 || 0);
     const kolicina_notifikacija = ref(props.selectedTemplate?.kolicina_notifikacija || 0);
     const switch_2_label = ref(props.selectedTemplate?.switch_2_label || "");
+    const cena = ref(props.selectedTemplate?.cena || 0);
     const templejt_ime = ref(props.selectedTemplate?.templejt_ime || "");
 
     const switch_1 = ref(props.selectedTemplate?.switch_1 || false);
     const switch_2 = ref(props.selectedTemplate?.switch_2 || false);
+    const datetime_isNotified = ref(props.selectedTemplate?.datetime_isNotified || false);
     const kolicina_isNotified = ref(props.selectedTemplate?.kolicina_isNotified || false);
+    const datetimeInput = ref(props.selectedTemplate?.datetimeInput || null)
 
 
 
@@ -196,11 +211,14 @@ export default defineComponent({
       text_2.value = '';
       num_1.value = 0;
       num_2.value = 0;
+      cena.value = 0;
       kolicina_notifikacija.value = 0;
       switch_2_label.value = '';
       templejt_ime.value = '';
       switch_1.value = false;    // added .value
       switch_2.value = false;
+      datetimeInput.value = null;
+      datetime_isNotified.value = false;
       kolicina_isNotified.value = false;
     };
 
@@ -209,6 +227,10 @@ export default defineComponent({
 
       if (!templejt_ime.value.trim()) {
         templejt_ime.value = props.id;
+      }
+      let datetime = null;
+      if (datetimeInput.value !== null) {
+        datetime = datetimeInput.value; // directly assign the value
       }
 
       emit('submit', {
@@ -224,12 +246,16 @@ export default defineComponent({
         text_2: text_2.value,
         num_1: num_1.value,
         num_2: num_2.value,
+        cena: cena.value,
         kolicina_notifikacija: kolicina_notifikacija.value,
         switch_2_label: switch_2_label.value,
         templejt_ime: templejt_ime.value,
         switch_1: switch_1.value,
         switch_2: switch_2.value,
+        datetime: datetimeInput.value,
+        datetime_isNotified: datetime_isNotified.value,
         kolicina_isNotified: kolicina_isNotified.value,
+
 
         templejt: [text_1_label.value, text_2_label.value, num_1_label.value, num_2_label.value]
       });
@@ -244,11 +270,14 @@ export default defineComponent({
       text_2.value = '';
       num_1.value = '';
       num_2.value = '';
+      cena.value = '';
       kolicina_notifikacija.value = '';
       switch_2_label.value = '';
       templejt_ime.value = '';
       switch_1.value = false;
-      switch_2.value= false;
+      switch_2.value = false;
+      datetimeInput.value = null;
+      datetime_isNotified.value = false;
       kolicina_isNotified.value = false;
 
       console.log('switcheviiiii', switch_1.value, switch_2.value, kolicina_isNotified.value);
@@ -291,11 +320,14 @@ export default defineComponent({
         text_2.value = newVal.text_2 || "";
         num_1.value = newVal.num_1 || 0;
         num_2.value = newVal.num_2 || 0;
+        cena.value = newVal.cena || 0;
         kolicina_notifikacija.value = newVal.kolicina_notifikacija || 0;
         switch_2_label.value = newVal.switch_2_label || "";
         templejt_ime.value = newVal.templejt_ime || "";
         switch_1.value = newVal.switch_1 || false;
         switch_2.value = newVal.switch_2 || false;
+        datetimeInput.value = newVal.datetime || null;
+        datetime_isNotified.value = newVal.datetime_isNotified || false;
         kolicina_isNotified.value = newVal.kolicina_isNotified || false;
       }
     }, { deep: true, immediate: true });
@@ -345,6 +377,9 @@ export default defineComponent({
     const onInputChange14 = (event: Event) => { // New input change handler for the fourth input
       templejt_ime.value = (event.target as HTMLInputElement).value;
     };
+    const onInputChange15 = (event: Event) => { // New input change handler for the fourth input
+      cena.value = (event.target as HTMLInputElement).value;
+    };
 
 
     return {
@@ -383,7 +418,11 @@ export default defineComponent({
       onInputChange14,
       switch_1,
       switch_2,
+      datetimeInput,
+      datetime_isNotified,
       kolicina_isNotified,
+      onInputChange15,
+      cena
     };
   }
 });
