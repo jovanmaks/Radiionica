@@ -8,12 +8,18 @@
     <ion-button class="view-button" fill="clear" @click="$emit('view-card', card.name)">
       <ion-icon :icon="documentText"></ion-icon>
     </ion-button>
+    <ion-button class="archive-button" fill="clear" @click="$emit('archive-inventar', card.id)" v-if="!card.isArchived">
+      <ion-icon :icon="archive"></ion-icon>
+    </ion-button>
+    <ion-button class="delete-button" fill="clear" @click="$emit('delete-inventar', card.id)" v-if="card.isArchived">
+      <ion-icon :icon="trash"></ion-icon>
+    </ion-button>
   </ion-card>
 </template>
 
 <script lang="ts">
 import { IonIcon, IonCard, IonCardHeader, IonButton, IonCardTitle, IonCardContent } from '@ionic/vue';
-import { documentText } from 'ionicons/icons';
+import { documentText, archive, trash } from 'ionicons/icons';
 
 export default {
   name: 'InventarCardComponent',
@@ -25,6 +31,8 @@ export default {
   setup() {
     return {
       documentText,
+      archive,
+      trash,
     }
   }
 }

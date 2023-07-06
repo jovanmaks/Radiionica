@@ -63,6 +63,15 @@ const mutations = {
   setSelectedTemplateArray(state: State, templateArray: string[]) {
     state.selectedTemplateArray = templateArray;
   },
+  archiveInventar(state: State, inventarId: number) {
+    const inventarToArchive = state.inventar.find((item) => item.id === inventarId);
+    if (inventarToArchive) {
+      inventarToArchive.isArchived = true;
+    }
+  },
+  deleteInventar(state: State, inventarId: number) {
+    state.inventar = state.inventar.filter((item) => item.id !== inventarId);
+  },
 };
 
 const actions = {
@@ -89,8 +98,6 @@ const actions = {
     commit("setInventar", data);
     commit("setDataLoaded", true);
   },
-
-  
   async createInventar(
     { commit }: ActionContext<State, unknown>,
     inventar: Partial<Inventar>
@@ -103,7 +110,6 @@ const actions = {
     }
   
   },
-
   async generateQRCode(_: ActionContext<State, unknown>, dataObject: Inventar) {
     try {
       const dataString =
@@ -201,6 +207,32 @@ const actions = {
         console.error("Template not found.");
       }
     }
+  },
+  async archiveInventar({ commit }: ActionContext<State, unknown>, inventarId: number) {
+    const { data, error } = await supabase
+      .from("Inventar")
+      .update({ isArchived: true })
+      .eq("id", inventarId);
+
+    if (error) {
+      console.error(error);
+      throw error;
+    }
+
+    commit("archiveInventar", inventarId);
+  },
+  async deleteInventar({ commit }: ActionContext<State, unknown>, inventarId: number) {
+    const { data, error } = await supabase
+      .from("Inventar")
+      .delete()
+      .eq("id", inventarId);
+
+    if (error) {
+      console.error(error);
+      throw error;
+    }
+
+    commit("deleteInventar", inventarId);
   },
 };
 

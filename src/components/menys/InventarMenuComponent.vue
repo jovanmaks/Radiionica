@@ -43,7 +43,8 @@
 
         </ion-footer>
         <ion-content>
-            <InventarCardComponent v-for="card in displayInventar" :key="card?.id" :card="card" @view-card="viewCard" />
+            <InventarCardComponent v-for="card in displayInventar" :key="card?.id" :card="card" @view-card="viewCard" 
+            @archive-inventar="archiveInventar" @delete-inventar="deleteInventar"/>
 
         </ion-content>
     </ion-menu>
@@ -135,26 +136,37 @@ export default {
             text_2_label: string;
             num_1_label: string;
             num_2_label: string;
-            // kolicina: number;
             switch_1_label: string;
+            switch_2_label: string;
+            templejt_ime: string;
+
+            // kolicina: number;
             // text_1: string;
             // text_2: string;
             // num_1: number;
             // num_2: number;
             // kolicina_notifikacija: number;
-            switch_2_label: string;
-            templejt_ime: string;
             // switch_1: boolean;
             // switch_2: boolean;
             // kolicina_isNotified: boolean;
             // templejt: string[];
-
         }
 
         const displayInventar = computed(() => {
             const inventarToDisplay = displayArchivedInventar.value ? archivedInventar.value : unarchivedInentar.value;
             return inventarToDisplay;
         });
+
+        const archiveInventar = (inventarId: string | number) => {
+            console.log('Archive inventar', inventarId);
+            store.dispatch('inventory/archiveInventar', inventarId);
+        };
+
+        const deleteInventar= (inventarId: string | number) => {
+            console.log('Delete inventar', inventarId);
+            store.dispatch('inventory/deleteInventar', inventarId);
+        };
+
 
         onMounted(async () => {
             await store.dispatch('inventory/fetchInventar');
@@ -197,7 +209,7 @@ export default {
                 console.log('Inventar created', inventar);
                 await store.dispatch('inventory/fetchInventar'); // reload inventar after creation
                 // qrCodeDataUrl.value = await store.dispatch('inventory/generateQRCode', inventar);
-                
+
             } catch (error) {
                 console.error('Error creating Inventar', error);
             }
@@ -237,6 +249,8 @@ export default {
             modalKey,
             modalId,
             filteredTemplejtValues,
+            archiveInventar,
+            deleteInventar,
             // qrCodeDataUrl,
         };
     },
