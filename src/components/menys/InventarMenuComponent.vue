@@ -4,16 +4,19 @@
         <ion-header>
             <ion-toolbar>
                 <ion-buttons slot="end" fill="clear">
+                    <ion-button size="large" fill="clear">
+                        <ion-icon :icon="documentAttachOutline"></ion-icon>
+                    </ion-button>
                     <ion-button @click="showArchivedInventar" size="large" fill="clear">
                         <ion-icon :icon="archiveOutline"></ion-icon>
                     </ion-button>
                     <ion-button @click="showUnarchivedInventar" size="large" fill="clear">
-                        <ion-icon :icon="documentAttachOutline"></ion-icon>
+                        <!-- <ion-icon :icon="receiptOutline"></ion-icon> -->
+                        <ion-icon :icon="receiptOutline"></ion-icon>
                     </ion-button>
                 </ion-buttons>
             </ion-toolbar>
         </ion-header>
-
 
 
         <ion-footer>
@@ -33,7 +36,7 @@
                                     </ion-fab-list>
                                     <ion-fab-list side="start">
                                         <ion-fab-button @click="showTemplejtSelect = true">
-                                            <ion-icon :icon="documentOutline"></ion-icon>
+                                            <ion-icon :icon="documentAttachOutline"></ion-icon>
                                         </ion-fab-button>
                                     </ion-fab-list>
                                 </ion-fab>
@@ -52,11 +55,9 @@
 
         </ion-content>
     </ion-menu>
-    
 
     <!-- Ovdje treba da stavis add note component -->
     <!-- <AddNoteModalComponent :isOpen="isOpenRef" @update:isOpen="setOpen" @submit="submitInventar" /> -->
-
 
 
     <TemplejtSelect :show="showTemplejtSelect" :templejtValues="filteredTemplejtValues"
@@ -69,7 +70,7 @@
 <script lang="ts">
 import { ref, defineComponent, onMounted } from "vue";
 import { useStore } from 'vuex';
-import { close, checkmark, add, documentOutline, archiveOutline, documentAttachOutline } from 'ionicons/icons';
+import { close, checkmark, add, documentAttachOutline, archiveOutline, receiptOutline } from 'ionicons/icons';
 import { watch, computed } from 'vue';
 
 
@@ -125,9 +126,6 @@ export default {
         const showTemplejtSelect = ref(false);
         const templejtValues = computed(() => store.state.inventory.templejtValues);
         const modalId = ref('');
-
-
-
 
         const filteredTemplejtValues = computed(() => {
             return templejtValues.value.filter((item: string) => !item.startsWith('modal'));
@@ -245,13 +243,13 @@ export default {
         return {
             inventarItems,
             viewCard,
-            add, documentOutline,
+            add, documentAttachOutline,
             isOpen,
             setOpen,
             showTemplejtSelect,
             submitInventar,
             archiveOutline,
-            documentAttachOutline,
+            receiptOutline,
             showArchivedInventar,
             showUnarchivedInventar,
             archivedInventar,
