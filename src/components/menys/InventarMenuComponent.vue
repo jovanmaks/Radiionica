@@ -3,20 +3,23 @@
     <ion-menu content-id="main-content" menu-id="sideMenu-inventar" side="start">
         <ion-header>
             <ion-toolbar>
-                <ion-buttons slot="end" fill="clear">
-                    <ion-button size="large" fill="clear">
-                        <ion-icon :icon="documentAttachOutline"></ion-icon>
+                <ion-buttons slot="start" fill="clear">
+                    <ion-button @click="toggleShowModalItems" size="large" fill="clear">
+                        <ion-icon :icon="documentAttachOutline"
+                            :class="{ 'clicked-icon': isDocumentAttachOutlineButtonClicked }"></ion-icon>
                     </ion-button>
+                </ion-buttons>
+                <ion-buttons slot="end" fill="clear">
                     <ion-button @click="showArchivedInventar" size="large" fill="clear">
                         <ion-icon :icon="archiveOutline"></ion-icon>
                     </ion-button>
                     <ion-button @click="showUnarchivedInventar" size="large" fill="clear">
-                        <!-- <ion-icon :icon="receiptOutline"></ion-icon> -->
                         <ion-icon :icon="receiptOutline"></ion-icon>
                     </ion-button>
                 </ion-buttons>
             </ion-toolbar>
         </ion-header>
+
 
 
         <ion-footer>
@@ -50,27 +53,23 @@
 
 
         <ion-content>
-            <InventarCardComponent v-for="card in displayInventar" :key="card?.id" :card="card" @view-card="viewCard"
+            <InventarCardComponent v-for="card in displayInventar" :key="card?.id" :card="card" @edit-card="editCard"
                 @archive-inventar="archiveInventar" @delete-inventar="deleteInventar" @return-inventar="returnInventar" />
 
         </ion-content>
     </ion-menu>
 
-    <!-- Ovdje treba da stavis add note component -->
-    <!-- <AddNoteModalComponent :isOpen="isOpenRef" @update:isOpen="setOpen" @submit="submitInventar" /> -->
-
-
     <TemplejtSelect :show="showTemplejtSelect" :templejtValues="filteredTemplejtValues"
         @didDismiss="showTemplejtSelect = false" @selectedTemplate="selectTemplate" />
 
     <ModalComponent :key="modalKey" :isOpen="isOpen" :selectedTemplate="selectedTemplate" @update:isOpen="setOpen"
-        @submit="submitInventar" :id="modalId" />
+        @submit="submitInventar" :id="modalId" :editId="editId" />
 </template>
 
 <script lang="ts">
 import { ref, defineComponent, onMounted } from "vue";
 import { useStore } from 'vuex';
-import { close, checkmark, add, documentAttachOutline, archiveOutline, receiptOutline } from 'ionicons/icons';
+import { close, checkmark, add, documentAttachOutline, archiveOutline, receiptOutline, card } from 'ionicons/icons';
 import { watch, computed } from 'vue';
 
 
@@ -137,6 +136,11 @@ export default {
         const selectedTemplate = ref<Template | null>(null);
         const modalKey = ref(0);
 
+        const isDocumentAttachOutlineButtonClicked = ref(false);
+        const editId = ref<number | ''>('');
+
+
+
 
         interface Template {
             deklaracija: string;
@@ -148,22 +152,27 @@ export default {
             switch_2_label: string;
             templejt_ime: string;
 
-            // kolicina: number;
-            // text_1: string;
-            // text_2: string;
-            // num_1: number;
-            // num_2: number;
-            // kolicina_notifikacija: number;
-            // switch_1: boolean;
-            // switch_2: boolean;
-            // kolicina_isNotified: boolean;
-            // templejt: string[];
         }
+
+
+        onMounted(async () => {
+            await store.dispatch('inventory/fetchInventar');
+        });
+
+        const toggleShowModalItems = () => {
+            isDocumentAttachOutlineButtonClicked.value = !isDocumentAttachOutlineButtonClicked.value;
+        }
+
 
         const displayInventar = computed(() => {
             const inventarToDisplay = displayArchivedInventar.value ? archivedInventar.value : unarchivedInentar.value;
-            return inventarToDisplay;
+            if (isDocumentAttachOutlineButtonClicked.value) {
+                return inventarToDisplay.filter((item: Inventar) => !item.templejt_ime.startsWith('modal'));
+            } else {
+                return inventarToDisplay.filter((item: Inventar) => item.templejt_ime.startsWith('modal'));
+            }
         });
+
 
         const archiveInventar = (inventarId: string | number) => {
             console.log('Archive inventar', inventarId);
@@ -180,16 +189,9 @@ export default {
             store.dispatch('inventory/returnInventar', inventarId);
         };
 
-
-        onMounted(async () => {
-            await store.dispatch('inventory/fetchInventar');
-        });
-
-
-        const selectTemplate = (templejt_ime: string) => {
+        const selectTemplate = (templejt_ime: string, card?: Inventar) => {
             const template = inventarItems.value.find((template: Template) => template.templejt_ime === templejt_ime);
             if (template) {
-
                 selectedTemplate.value = template;
                 console.log('Selected template', selectedTemplate.value);
                 setOpen(true); // This opens the modal after template selection
@@ -198,11 +200,35 @@ export default {
             }
         };
 
-        const openEmptyModal = () => {
+        // const selectTemplate = (templejt_ime: string) => {
+        //     const template = inventarItems.value.find((template: Template) => template.templejt_ime === templejt_ime);
+        //     if (template) {
+
+        //         selectedTemplate.value = template;
+        //         console.log('Selected template', selectedTemplate.value);
+        //         setOpen(true); // This opens the modal after template selection
+        //     } else {
+        //         console.error('Template not found');
+        //     }
+        // };
+
+        // const openEmptyModal = () => {
+        //     modalId.value = 'modal-' + Math.floor(Math.random() * 1000000);
+        //     selectedTemplate.value = null;
+        //     setOpen(true);
+        // };
+
+        const openEmptyModal = (card?: Inventar) => {
             modalId.value = 'modal-' + Math.floor(Math.random() * 1000000);
-            selectedTemplate.value = null;
+            selectedTemplate.value = card || null;
+            if (card && card.id) { // Ensure card has valid id
+                editId.value = card.id;
+            } else {
+                editId.value = '';
+            }
             setOpen(true);
         };
+
 
         const setOpen = (state: boolean) => {
             isOpen.value = state;
@@ -215,20 +241,54 @@ export default {
             console.log(`Card clicked: ${cardName}`);
         };
 
+        const editCard = (card: Inventar) => {
+            if (card.id) {
+                console.log('Editing card', card);
+                openEmptyModal(card);
+            } else {
+                console.error('No valid id found for card:', card);
+            }
+        };
         const submitInventar = async (inventar: Partial<Inventar>) => {
             console.log('Ovo je inventar', inventar);
+            console.log('Ovo je inventar', inventar.templejt_ime);
+            console.log('Ovo je inventar', editId.value);
             try {
-                await store.dispatch('inventory/createInventar', inventar);
-                console.log('Inventar created', inventar);
-                await store.dispatch('inventory/fetchInventar'); // reload inventar after creation
+                console.log('Ovo je inventar id', inventar.id);
+                if (editId.value) {
+                    const inventarToUpdate = { ...inventar, id: editId.value };
+                    console.log('Inventar updated', inventar);
+                    await store.dispatch('inventory/updateInventar', inventarToUpdate); // update existing inventar
+                    console.log('Inventar updated', inventar);
+                } else {
+                    console.log('Inventar created', inventar);
+                    await store.dispatch('inventory/createInventar', inventar); // create new inventar
+                    console.log('Inventar created', inventar);
+                }
+                await store.dispatch('inventory/fetchInventar'); // reload inventar after creation or updating
                 // qrCodeDataUrl.value = await store.dispatch('inventory/generateQRCode', inventar);
 
             } catch (error) {
-                console.error('Error creating Inventar', error);
+                console.error('Error creating or updating Inventar', error);
             }
             console.log('ispitivanje', inventar);
             setOpen(false);
         };
+
+        // const submitInventar = async (inventar: Partial<Inventar>) => {
+        //     console.log('Ovo je inventar', inventar);
+        //     try {
+        //         await store.dispatch('inventory/createInventar', inventar);
+        //         console.log('Inventar created', inventar);
+        //         await store.dispatch('inventory/fetchInventar'); // reload inventar after creation
+        //         // qrCodeDataUrl.value = await store.dispatch('inventory/generateQRCode', inventar);
+
+        //     } catch (error) {
+        //         console.error('Error creating Inventar', error);
+        //     }
+        //     console.log('ispitivanje', inventar);
+        //     setOpen(false);
+        // };
 
         const showArchivedInventar = () => {
             displayArchivedInventar.value = true;
@@ -266,10 +326,19 @@ export default {
             deleteInventar,
             returnInventar,
             // qrCodeDataUrl,
+            toggleShowModalItems,
+            isDocumentAttachOutlineButtonClicked,
+            editCard,
+            editId,
         };
     },
 };
 
 </script>
 
-<style scoped></style>
+<style scoped>
+.clicked-icon {
+    color: blue;
+    /* Choose the color you want when the icon is clicked */
+}
+</style>

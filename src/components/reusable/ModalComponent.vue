@@ -156,6 +156,10 @@ export default defineComponent({
       type: Object as () => Record<string, any> | null,
       default: null
     },
+    editId: {
+      type: Number,
+      required: true
+    },
   },
   emits: ['update:isOpen', 'confirm', 'update-deklaracija', 'submit'],
 
@@ -189,22 +193,6 @@ export default defineComponent({
     const datetime_isNotified = ref(props.selectedTemplate?.datetime_isNotified || false);
     const kolicina_isNotified = ref(props.selectedTemplate?.kolicina_isNotified || false);
     const datetimeInput = ref(props.selectedTemplate?.datetimeInput || null)
-
-    // const text_1 = ref("");
-    // const text_2 = ref("");
-    // const kolicina = ref(0);
-    // const num_1 = ref(0);
-    // const num_2 = ref(0);
-    // const kolicina_notifikacija = ref(0);
-    // const cena = ref(0);
-    // const switch_1 = ref(false);
-    // const switch_2 = ref(false);
-    // const datetime_isNotified = ref(false);
-    // const kolicina_isNotified = ref(false);
-    // const datetimeInput = ref(null);
-    
-
-
 
     const store = useStore();
     const qrCodeDataUrl = ref(props.selectedTemplate?.qrCodeDataUrl || null)
@@ -255,6 +243,7 @@ export default defineComponent({
         datetime = datetimeInput.value; // directly assign the value
       }
       const inventarData = {
+        // id: props.id,
         deklaracija: deklaracija.value,
         text_1_label: text_1_label.value,
         text_2_label: text_2_label.value,

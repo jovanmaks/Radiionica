@@ -5,7 +5,7 @@
       <ion-card-title>{{ card.deklaracija }}</ion-card-title>
     </ion-card-header>
     <ion-card-content>{{ card.description }}</ion-card-content>
-    <ion-button class="view-button" fill="clear" @click="$emit('view-card', card.name)">
+    <ion-button class="edit-button" fill="clear" @click="$emit('edit-card', card)">
       <ion-icon :icon="documentText"></ion-icon>
     </ion-button>
     <ion-button class="archive-button" fill="clear" @click="$emit('archive-inventar', card.id)" v-if="!card.isArchived">

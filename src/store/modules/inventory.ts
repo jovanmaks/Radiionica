@@ -64,7 +64,9 @@ const mutations = {
     state.selectedTemplateArray = templateArray;
   },
   archiveInventar(state: State, inventarId: number) {
-    const inventarToArchive = state.inventar.find((item) => item.id === inventarId);
+    const inventarToArchive = state.inventar.find(
+      (item) => item.id === inventarId
+    );
     if (inventarToArchive) {
       inventarToArchive.isArchived = true;
     }
@@ -73,11 +75,13 @@ const mutations = {
     state.inventar = state.inventar.filter((item) => item.id !== inventarId);
   },
   returnInventar(state: State, inventarId: number) {
-    const inventarToReturn = state.inventar.find((item) => item.id === inventarId);
+    const inventarToReturn = state.inventar.find(
+      (item) => item.id === inventarId
+    );
     if (inventarToReturn) {
       inventarToReturn.isArchived = false;
     }
-  }
+  },
 };
 
 ///////////////////////
@@ -116,7 +120,34 @@ const actions = {
       console.error(error);
       throw error;
     }
+  },
+  async updateInventar(
+    { state }: ActionContext<State, unknown>,
+    updatedInventar: Inventar
+  ) {
+    if (updatedInventar.id === undefined) {
+      throw new Error("updatedInventar.id is undefined");
+    }
   
+    const { data, error } = await supabase
+      .from("Inventar")
+      .update(updatedInventar)
+      .eq("id", updatedInventar.id);
+
+    if (error) {
+      console.error(error);
+      throw error;
+    }
+
+    if (data && Array.isArray(data as any[]) && (data as any[]).length > 0) {
+      const updatedItemIndex = state.inventar.findIndex(
+        (item) => item.id === updatedInventar.id
+      );
+
+      if (updatedItemIndex !== -1) {
+        state.inventar[updatedItemIndex] = updatedInventar;
+      }
+    }
   },
   async generateQRCode(_: ActionContext<State, unknown>, dataObject: Inventar) {
     try {
@@ -216,7 +247,10 @@ const actions = {
       }
     }
   },
-  async archiveInventar({ commit }: ActionContext<State, unknown>, inventarId: number) {
+  async archiveInventar(
+    { commit }: ActionContext<State, unknown>,
+    inventarId: number
+  ) {
     const { data, error } = await supabase
       .from("Inventar")
       .update({ isArchived: true })
@@ -229,7 +263,10 @@ const actions = {
 
     commit("archiveInventar", inventarId);
   },
-  async deleteInventar({ commit }: ActionContext<State, unknown>, inventarId: number) {
+  async deleteInventar(
+    { commit }: ActionContext<State, unknown>,
+    inventarId: number
+  ) {
     const { data, error } = await supabase
       .from("Inventar")
       .delete()
@@ -242,7 +279,10 @@ const actions = {
 
     commit("deleteInventar", inventarId);
   },
-  async returnInventar({ commit }: ActionContext<State, unknown>, inventarId: number) {
+  async returnInventar(
+    { commit }: ActionContext<State, unknown>,
+    inventarId: number
+  ) {
     const { data, error } = await supabase
       .from("Inventar")
       .update({ isArchived: false })
@@ -254,9 +294,8 @@ const actions = {
     }
 
     commit("returnInventar", inventarId);
-  }
+  },
 };
-
 
 ///////////////////////
 const getters = {
@@ -277,8 +316,6 @@ const getters = {
   unarchivedNotes: (state: State) =>
     state.inventar.filter((inventar) => !inventar.isArchived),
 };
-
-
 
 export default {
   namespaced: true,
