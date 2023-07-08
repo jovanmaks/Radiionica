@@ -13,9 +13,6 @@
         </ion-button>
       </center>
 
-      <ion-button slot="end" fill="solid" tab="account" @click="navigateTo('/account')" color="medium">
-        <ion-icon :icon="person"></ion-icon>
-      </ion-button>
       <ion-button slot="end" fill="solid" tab="account" @click="() => openMenu('sideMenu-profile')" color="medium">
         <ion-icon :icon="person"></ion-icon>
       </ion-button>
@@ -39,7 +36,6 @@ import {
   searchOutline,
 } from "ionicons/icons";
 import { defineComponent } from "vue";
-import { useRouter } from "vue-router";
 
 export default defineComponent({
   components: {
@@ -49,12 +45,7 @@ export default defineComponent({
     ProfileMenu,
   },
   setup() {
-    const router = useRouter();
-    const navigateTo = (route: string) => {
-      setTimeout(() => {
-        router.push(route);
-      }, 0);
-    };
+  
 
 
     const openMenu = async (menuId: string) => {
@@ -64,7 +55,7 @@ export default defineComponent({
 
 
     return {
-      navigateTo,
+      // navigateTo,
       openMenu,
       home,
       person,
