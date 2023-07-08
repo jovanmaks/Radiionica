@@ -14,11 +14,11 @@
       <slot name="content"></slot>
     </ion-content>
 
-    <app-footer :noteCount="noteCount" @setOpen="setOpen"></app-footer>
+    <app-footer></app-footer>
 
     <!-- <CustomModal v-model:isOpen="isOpenRef" :data="data" v-model:newNote="newNote" /> -->
 
-
+<!-- 
     <ion-modal :is-open="isOpenRef" css-class="my-custom-class" @didDismiss="setOpen(false)">
       <ion-header>
         <ion-toolbar>
@@ -43,7 +43,7 @@
 
         </div>
       </ion-content>
-    </ion-modal>
+    </ion-modal> -->
 
 
   </ion-page>
@@ -57,17 +57,17 @@ import CustomModal from "../reusable/addingTasks.vue";
 
 
 import {
+  IonModal,
+  IonHeader,
+  IonToolbar,
+  IonContent,
   IonInput,
   IonBadge,
   IonItem,
   IonPage,
-  IonModal,
   toastController,
   loadingController,
-  IonHeader,
-  IonToolbar,
   IonTitle,
-  IonContent,
   IonButton,
   IonButtons,
 } from "@ionic/vue";
@@ -93,15 +93,22 @@ export default defineComponent({
     AppHeader,
     AppFooter,
 
-    IonInput,
+    // IonInput,
     IonPage,
-    IonItem,
-    IonModal,
-    IonHeader,
-    IonToolbar,
+    // IonItem,
+    // IonModal,
+    // IonHeader,
+    // IonToolbar,
     IonContent,
-    IonButton,
-    IonButtons,
+    // IonButton,
+    // IonButtons,
+
+    // IonModal,
+        // IonHeader,
+        // IonToolbar,
+        // // IonContent,
+        // IonButton,
+        // IonButtons,
   },
 
 
@@ -110,12 +117,12 @@ export default defineComponent({
     const store = useStore();
     const user = computed(() => store.state.user.user);
     const username = computed(() => store.state.user.username);
-    const noteCount = computed(() => store.getters['notes/notesCount']);
+    // const noteCount = computed(() => store.getters['notes/notesCount']);
     const router = useRouter();
     const routeName = router.currentRoute.value.name;
     const isOpenRef = ref(false);
     const setOpen = (state) => (isOpenRef.value = state);
-    const newNote = ref("");
+    // const newNote = ref("");
     const usernew = ref(supabase.auth.getUser())
 
 
@@ -126,33 +133,32 @@ export default defineComponent({
       }, 0);
     };
 
-    const addNote = () => {
-      if (newNote.value.trim() === "" || !user.value) {
-        console.log("Note value is empty or user is not logged in. Skipping insertion.");
-        return;
-      }
+    // const addNote = () => {
+    //   if (newNote.value.trim() === "" || !user.value) {
+    //     console.log("Note value is empty or user is not logged in. Skipping insertion.");
+    //     return;
+    //   }
 
-      const note = {
-        homescreen: newNote.value,
-        user_id: user.value.id,
-        kreator: username.value,
-        isHomescreenArchived: false,
-        levelOne: false,
-        levelTwo: false,
-        levelThree: false,
-      };
+    //   const note = {
+    //     homescreen: newNote.value,
+    //     user_id: user.value.id,
+    //     kreator: username.value,
+    //     isHomescreenArchived: false,
+    //     levelOne: false,
+    //     levelTwo: false,
+    //     levelThree: false,
+    //   };
 
-      // dispatch Vuex action to add the note
-      store.dispatch('notes/addNote', note);
-    };
+    //   store.dispatch('notes/addNote', note);
+    // };
 
 
-    watchEffect(() => {
-      noteCount.value = store.state.notes.notes.length;
-    });
+    // watchEffect(() => {
+    //   noteCount.value = store.state.notes.notes.length;
+    // });
 
     const confirmChanges = async () => {
-      addNote();
+      // addNote();
       setOpen(false);
     };
 
@@ -170,9 +176,16 @@ export default defineComponent({
 
     return {
       signOut, user, username, routeName, isOpenRef,
-      setOpen, confirmChanges, newNote, usernew, checkmark,
-      close, noteCount, navigateTo, addNote,logOutOutline
+      setOpen, confirmChanges, 
+      // newNote, 
+      usernew, checkmark,
+      close, 
+      // noteCount, 
+      navigateTo, 
+      // addNote,
+      logOutOutline
     };
+
   },
 
 

@@ -11,6 +11,9 @@
     <ion-button class="archive-button" fill="clear" @click="$emit('archive-inventar', card.id)" v-if="!card.isArchived">
       <ion-icon :icon="archive"></ion-icon>
     </ion-button>
+    <ion-button class="return-button" fill="clear" @click="$emit('return-inventar', card.id)" v-else>
+      <ion-icon :icon="arrowUndo"></ion-icon>
+    </ion-button>
     <ion-button class="delete-button" fill="clear" @click="$emit('delete-inventar', card.id)" v-if="card.isArchived">
       <ion-icon :icon="trash"></ion-icon>
     </ion-button>
@@ -19,7 +22,7 @@
 
 <script lang="ts">
 import { IonIcon, IonCard, IonCardHeader, IonButton, IonCardTitle, IonCardContent } from '@ionic/vue';
-import { documentText, archive, trash } from 'ionicons/icons';
+import { documentText, archive, trash, arrowUndo } from 'ionicons/icons';
 
 export default {
   name: 'InventarCardComponent',
@@ -33,6 +36,7 @@ export default {
       documentText,
       archive,
       trash,
+      arrowUndo,
     }
   }
 }

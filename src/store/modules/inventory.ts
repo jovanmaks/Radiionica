@@ -72,7 +72,15 @@ const mutations = {
   deleteInventar(state: State, inventarId: number) {
     state.inventar = state.inventar.filter((item) => item.id !== inventarId);
   },
+  returnInventar(state: State, inventarId: number) {
+    const inventarToReturn = state.inventar.find((item) => item.id === inventarId);
+    if (inventarToReturn) {
+      inventarToReturn.isArchived = false;
+    }
+  }
 };
+
+///////////////////////
 
 const actions = {
   async fetchInventar({ commit }: ActionContext<State, unknown>) {
@@ -234,8 +242,23 @@ const actions = {
 
     commit("deleteInventar", inventarId);
   },
+  async returnInventar({ commit }: ActionContext<State, unknown>, inventarId: number) {
+    const { data, error } = await supabase
+      .from("Inventar")
+      .update({ isArchived: false })
+      .eq("id", inventarId);
+
+    if (error) {
+      console.error(error);
+      throw error;
+    }
+
+    commit("returnInventar", inventarId);
+  }
 };
 
+
+///////////////////////
 const getters = {
   inventarCount: (state: State) => state.inventar.length,
   getInventarById: (state: State) => (id: number) => {

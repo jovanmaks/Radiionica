@@ -14,6 +14,8 @@
             </ion-toolbar>
         </ion-header>
 
+
+
         <ion-footer>
             <ion-footer>
                 <ion-toolbar>
@@ -40,14 +42,22 @@
                     </ion-grid>
                 </ion-toolbar>
             </ion-footer>
-
         </ion-footer>
+
+
+
         <ion-content>
-            <InventarCardComponent v-for="card in displayInventar" :key="card?.id" :card="card" @view-card="viewCard" 
-            @archive-inventar="archiveInventar" @delete-inventar="deleteInventar"/>
+            <InventarCardComponent v-for="card in displayInventar" :key="card?.id" :card="card" @view-card="viewCard"
+                @archive-inventar="archiveInventar" @delete-inventar="deleteInventar" @return-inventar="returnInventar" />
 
         </ion-content>
     </ion-menu>
+    
+
+    <!-- Ovdje treba da stavis add note component -->
+    <!-- <AddNoteModalComponent :isOpen="isOpenRef" @update:isOpen="setOpen" @submit="submitInventar" /> -->
+
+
 
     <TemplejtSelect :show="showTemplejtSelect" :templejtValues="filteredTemplejtValues"
         @didDismiss="showTemplejtSelect = false" @selectedTemplate="selectTemplate" />
@@ -162,9 +172,14 @@ export default {
             store.dispatch('inventory/archiveInventar', inventarId);
         };
 
-        const deleteInventar= (inventarId: string | number) => {
+        const deleteInventar = (inventarId: string | number) => {
             console.log('Delete inventar', inventarId);
             store.dispatch('inventory/deleteInventar', inventarId);
+        };
+
+        const returnInventar = (inventarId: string | number) => {
+            console.log('Return inventar', inventarId);
+            store.dispatch('inventory/returnInventar', inventarId);
         };
 
 
@@ -251,6 +266,7 @@ export default {
             filteredTemplejtValues,
             archiveInventar,
             deleteInventar,
+            returnInventar,
             // qrCodeDataUrl,
         };
     },

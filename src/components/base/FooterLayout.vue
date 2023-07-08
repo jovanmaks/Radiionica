@@ -6,9 +6,10 @@
         </ion-button>
   
         <center>
-          <ion-button id="open-modal" @click="$emit('setOpen', true)" color="medium">
-            <ion-badge slot="end">{{ noteCount }}</ion-badge>
-            <ion-icon :icon="documentAttachOutline"></ion-icon>
+          <!-- <ion-button id="open-modal" @click="$emit('setOpen', true)" color="medium"> -->
+          <ion-button  color="medium">
+            <!-- <ion-badge slot="end">{{ noteCount }}</ion-badge> -->
+            <ion-icon :icon="searchOutline"></ion-icon>
           </ion-button>
         </center>
   
@@ -27,23 +28,24 @@
     IonFooter,
     IonToolbar,
     IonButton,
-    IonBadge,
+    // IonBadge,
   } from "@ionic/vue";
   import {
     home,
     person,
     documentAttachOutline,
+    searchOutline,
   } from "ionicons/icons";
   import { defineComponent } from "vue";
   import { useRouter } from "vue-router";
   
   export default defineComponent({
-    props: ["noteCount"],
+    // props: ["noteCount"],
     components: {
       IonFooter,
       IonToolbar,
       IonButton,
-      IonBadge,
+      // IonBadge,
     },
     setup() {
       const router = useRouter();
@@ -56,7 +58,8 @@
         navigateTo,
         home,
         person,
-        documentAttachOutline,
+        // documentAttachOutline,
+        searchOutline,
       };
     },
   });
