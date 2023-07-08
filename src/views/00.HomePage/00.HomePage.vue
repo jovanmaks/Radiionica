@@ -39,6 +39,7 @@
                         <ion-menu-toggle>
                             <ion-button @click="() => openMenu('sideMenu-inventar')" size="large" fill="clear">
                                 <ion-icon :icon="layersOutline"></ion-icon>
+                                <ion-badge>{{ inventariCount }}</ion-badge>
                             </ion-button>
                         </ion-menu-toggle>
 
@@ -100,6 +101,7 @@ export default {
 
 
         const noteCount = computed(() => store.getters['notes/notesCount']);
+        const inventariCount = computed(() => store.getters['inventory/inventoryCount']);
 
         const openMenu = async (menuId: string) => {
             await menuController.enable(true, menuId);
@@ -117,6 +119,7 @@ export default {
             cartOutline,
             openMenu,
             noteCount,
+            inventariCount,
         }
     }
 }

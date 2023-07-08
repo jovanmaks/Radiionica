@@ -315,6 +315,8 @@ const getters = {
     state.inventar.filter((inventar) => inventar.isArchived),
   unarchivedNotes: (state: State) =>
     state.inventar.filter((inventar) => !inventar.isArchived),
+    inventoryCount: (state: State) => 
+    state.inventar.filter(item => item.templejt_ime.startsWith('modal')).length,
 };
 
 export default {

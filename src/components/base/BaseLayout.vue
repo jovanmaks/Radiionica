@@ -2,9 +2,9 @@
 
 <template>
   <ion-page>
-    <app-header :title="pageTitle" @back="$router.back()" @signOut="signOut">
+    <!-- <app-header :title="pageTitle" @back="$router.back()" @signOut="signOut">
       <slot name="actions-end" slot="actions-end"></slot>
-    </app-header>
+    </app-header> -->
 
     <ion-content>
       <slot name="content"></slot>
@@ -53,7 +53,7 @@ import { computed } from 'vue';
 export default defineComponent({
   props: ["pageTitle", "pageDefaultBackLink"],
   components: {
-    AppHeader,
+    // AppHeader,
     AppFooter,
 
     IonPage,

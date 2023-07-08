@@ -55,10 +55,6 @@
 
                 <priority-control :note="selectedNote" :show="showPriority" @update-priority="updateNotePriority"
                     @didDismiss="hidePriorityControl"></priority-control>
-
-                <!-- <AddNoteModalComponent :isOpen.sync="isOpenRef" :newNote.sync="newNote" :user="user" /> -->
-                <!-- <AddNoteModalComponent :isOpen.sync="isOpen" :newNote.sync="newNote" :user="user" /> -->
-                <!-- <AddNoteModalComponent v-model:isOpen="isOpen" v-model:newNote="newNote" :user="user" /> -->
                 
                 
                 <AddNoteModalComponent v-model:isOpen="isOpen" />

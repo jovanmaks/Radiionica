@@ -54,7 +54,8 @@
 
         <ion-content>
             <InventarCardComponent v-for="card in displayInventar" :key="card?.id" :card="card" @edit-card="editCard"
-                @archive-inventar="archiveInventar" @delete-inventar="deleteInventar" @return-inventar="returnInventar" />
+                @archive-inventar="archiveInventar" @delete-inventar="deleteInventar" @return-inventar="returnInventar"
+                @qr-inventar="shareCode" />
 
         </ion-content>
     </ion-menu>
@@ -189,6 +190,18 @@ export default {
             store.dispatch('inventory/returnInventar', inventarId);
         };
 
+        const shareCode = (inventarId: string | number) => {
+            console.log('Share code');
+            const inventarItem = inventarItems.value.find((item: Inventar) => item.id === inventarId);
+
+
+
+            if (inventarItem && inventarItem.qr_code) {
+                store.dispatch('inventory/shareQRCode', inventarItem.qr_code);
+            }
+        };
+
+
         const selectTemplate = (templejt_ime: string, card?: Inventar) => {
             const template = inventarItems.value.find((template: Template) => template.templejt_ime === templejt_ime);
             if (template) {
@@ -200,24 +213,6 @@ export default {
             }
         };
 
-        // const selectTemplate = (templejt_ime: string) => {
-        //     const template = inventarItems.value.find((template: Template) => template.templejt_ime === templejt_ime);
-        //     if (template) {
-
-        //         selectedTemplate.value = template;
-        //         console.log('Selected template', selectedTemplate.value);
-        //         setOpen(true); // This opens the modal after template selection
-        //     } else {
-        //         console.error('Template not found');
-        //     }
-        // };
-
-        // const openEmptyModal = () => {
-        //     modalId.value = 'modal-' + Math.floor(Math.random() * 1000000);
-        //     selectedTemplate.value = null;
-        //     setOpen(true);
-        // };
-
         const openEmptyModal = (card?: Inventar) => {
             modalId.value = 'modal-' + Math.floor(Math.random() * 1000000);
             selectedTemplate.value = card || null;
@@ -228,7 +223,6 @@ export default {
             }
             setOpen(true);
         };
-
 
         const setOpen = (state: boolean) => {
             isOpen.value = state;
@@ -250,20 +244,13 @@ export default {
             }
         };
         const submitInventar = async (inventar: Partial<Inventar>) => {
-            console.log('Ovo je inventar', inventar);
-            console.log('Ovo je inventar', inventar.templejt_ime);
-            console.log('Ovo je inventar', editId.value);
             try {
                 console.log('Ovo je inventar id', inventar.id);
                 if (editId.value) {
                     const inventarToUpdate = { ...inventar, id: editId.value };
-                    console.log('Inventar updated', inventar);
                     await store.dispatch('inventory/updateInventar', inventarToUpdate); // update existing inventar
-                    console.log('Inventar updated', inventar);
                 } else {
-                    console.log('Inventar created', inventar);
                     await store.dispatch('inventory/createInventar', inventar); // create new inventar
-                    console.log('Inventar created', inventar);
                 }
                 await store.dispatch('inventory/fetchInventar'); // reload inventar after creation or updating
                 // qrCodeDataUrl.value = await store.dispatch('inventory/generateQRCode', inventar);
@@ -275,20 +262,7 @@ export default {
             setOpen(false);
         };
 
-        // const submitInventar = async (inventar: Partial<Inventar>) => {
-        //     console.log('Ovo je inventar', inventar);
-        //     try {
-        //         await store.dispatch('inventory/createInventar', inventar);
-        //         console.log('Inventar created', inventar);
-        //         await store.dispatch('inventory/fetchInventar'); // reload inventar after creation
-        //         // qrCodeDataUrl.value = await store.dispatch('inventory/generateQRCode', inventar);
 
-        //     } catch (error) {
-        //         console.error('Error creating Inventar', error);
-        //     }
-        //     console.log('ispitivanje', inventar);
-        //     setOpen(false);
-        // };
 
         const showArchivedInventar = () => {
             displayArchivedInventar.value = true;
@@ -330,6 +304,7 @@ export default {
             isDocumentAttachOutlineButtonClicked,
             editCard,
             editId,
+            shareCode,
         };
     },
 };
