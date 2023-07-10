@@ -6,7 +6,8 @@
             <TaskMenu ref="sideMenu-task" />
             <ProjectMenu ref="sideMenu-project" />
             <InventarMenu ref="sideMenu-inventar" />
-            <TemplejtMenu ref="sideMenu-templejt" />
+            <UsersMenu ref="sideMenu-users" />
+            <!-- <TemplejtMenu ref="sideMenu-templejt" /> -->
 
 
 
@@ -18,10 +19,15 @@
                         <ion-button size="large" fill="clear">
                             <ion-icon :icon="bookmarksOutline"></ion-icon>
                         </ion-button>
-
-                        <ion-button size="large" fill="clear">
+                        
+                        <ion-menu-toggle>
+                            <ion-button @click="() => openMenu('sideMenu-users')" size="large" fill="clear">
+                                <ion-icon :icon="peopleOutline"></ion-icon>
+                            </ion-button>
+                        </ion-menu-toggle>
+                        <!-- <ion-button size="large" fill="clear">
                             <ion-icon :icon="peopleOutline"></ion-icon>
-                        </ion-button>
+                        </ion-button> -->
 
                         <ion-menu-toggle>
                             <ion-button @click="() => openMenu('sideMenu-task')" size="large" fill="clear">
@@ -71,7 +77,9 @@ import { useStore } from 'vuex';
 import TaskMenu from '@/components/menys/TasksMenuComponent.vue';
 import InventarMenu from '@/components/menys/InventarMenuComponent.vue';
 import ProjectMenu from '@/components/menys/ProjectMenuComponent.vue';
-import TemplejtMenu from '@/components/menys/TemplejtMenuComponent.vue';
+import UsersMenu from '@/components/menys/UsersMenuComponent.vue';
+// import TemplejtMenu from '@/components/menys/TemplejtMenuComponent.vue';
+
 
 import { addOutline, documentAttachOutline, layersOutline, libraryOutline, peopleOutline, hammerOutline, searchOutline, cartOutline, bookmarksOutline } from 'ionicons/icons';
 import { IonMenu } from '@ionic/vue';
@@ -83,19 +91,18 @@ import {
 } from '@ionic/vue';
 export default {
     components: {
-        TaskMenu,
-        InventarMenu,
-        ProjectMenu,
-        TemplejtMenu,
-
-        IonPage,
-        IonContent,
-        IonMenuToggle,
-        IonButton,
-        IonIcon,
-        IonBadge  // Add IonBadge to the components
-
-    },
+    TaskMenu,
+    InventarMenu,
+    ProjectMenu,
+    UsersMenu,
+    // TemplejtMenu,
+    IonPage,
+    IonContent,
+    IonMenuToggle,
+    IonButton,
+    IonIcon,
+    IonBadge // Add IonBadge to the components
+},
     setup() {
         const store = useStore();
 
