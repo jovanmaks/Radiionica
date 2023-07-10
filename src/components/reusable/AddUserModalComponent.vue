@@ -17,7 +17,7 @@
         <ion-content class="ion-padding">
             <ion-list>
                 <ion-item v-for="userProfile in userProfiles" :key="userProfile.id">
-                    <ion-checkbox slot="start" v-model="userProfile.selected"
+                    <ion-checkbox slot="start" v-model="isUserSelected(userProfile.id).value"
                         @ionChange="toggleUser(userProfile.id, $event.target.checked)"></ion-checkbox>
                     <ion-label>{{ userProfile.username }}</ion-label>
                 </ion-item>
@@ -27,10 +27,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted } from 'vue';
+import { defineComponent, ref, computed, onMounted, watch } from 'vue';
 import { IonModal, IonItem, IonLabel, IonHeader, IonToolbar, IonContent, IonButton, IonButtons, IonCheckbox, IonList } from "@ionic/vue";
 import { checkmark, close } from "ionicons/icons";
 import { useStore } from "vuex";
+import { supabase } from "@/supabase";
 
 export default defineComponent({
     name: "AddUserModalComponent",
@@ -57,13 +58,49 @@ export default defineComponent({
     setup(props, { emit }) {
         const store = useStore();
         const userProfiles = computed(() => store.state.user.userProfiles);
+        const isUserSelected = (userId: string) => computed(() => {
+            return store.state.user.selectedUsers.includes(userId);
+        });
 
-        onMounted(async () => {
+        const syncUserSelections = async () => {
             if (!store.state.user.userProfiles) {
                 await store.dispatch('user/fetchUserProfiles');
             }
-            console.log('userProfiles', userProfiles.value);
+
+            const { data: profiles, error } = await supabase
+                .from("profiles")
+                .select("team")
+                .eq("id", store.state.user.user.id);
+
+            if (error) {
+                console.log("Error fetching user's team:", error);
+                throw error;
+            }
+
+            if (profiles && profiles[0].team) {
+                for (const userId of profiles[0].team) {
+                    if (!store.state.user.selectedUsers.includes(userId)) {
+                        store.dispatch('user/addSelectedUser', userId);
+                    }
+                }
+            }
+        };
+
+        onMounted(syncUserSelections);
+      
+
+        watch(() => props.isOpen, (newVal) => {
+            if (newVal) {
+                syncUserSelections();
+            }
         });
+
+        // onMounted(async () => {
+        //     if (!store.state.user.userProfiles) {
+        //         await store.dispatch('user/fetchUserProfiles');
+        //     }
+        //     console.log('userProfiles', userProfiles.value);
+        // });
 
         const toggleUser = (userId: string, checked: boolean) => {
             if (checked) {
@@ -90,11 +127,6 @@ export default defineComponent({
         };
 
 
-
-
-
-
-
         return {
             checkmark,
             close,
@@ -102,6 +134,7 @@ export default defineComponent({
             userProfiles,
             confirmChanges,
             toggleUser,
+            isUserSelected,
         };
     }
 });

@@ -154,20 +154,6 @@ const actions = {
       commit("setUserProfiles", profiles);
     }
   },
-  // async fetchUserProfiles({ commit }: ActionContext<State, unknown>) {
-  //   const { data: profiles, error } = await supabase
-  //     .from("profiles")
-  //     .select("*"); // Make sure "*" includes the `team` column or specify it explicitly
-
-  //   if (error) {
-  //     console.log("Error fetching user profiles:", error);
-  //     throw error;
-  //   }
-
-  //   if (profiles) {
-  //     commit("setUserProfiles", profiles);
-  //   }
-  // },
 
   addSelectedUser({ commit }: ActionContext<State, unknown>, userId: string) {
     // Added line

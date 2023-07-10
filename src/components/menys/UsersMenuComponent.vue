@@ -1,7 +1,6 @@
 <template>
     <ion-menu side="start" menu-id="sideMenu-users" content-id="main-content">
 
-
         <ion-content>
             <ion-list>
                 <ion-item v-for="teamId in selectedTeams" :key="teamId">
@@ -46,7 +45,6 @@ import {
     IonLabel,
     IonFooter,
     IonIcon
-
 } from '@ionic/vue';
 
 export default defineComponent({
@@ -63,11 +61,12 @@ export default defineComponent({
     setup() {
 
         const store = useStore();
-        const userProfiles = computed(() => store.state.user.userProfiles);
         const isOpen = ref(false);
+        const user = computed(() => store.state.user.user);
 
-        const selectedUsers = computed(() => store.state.user.selectedUsers);
+        const userProfiles = computed(() => store.state.user.userProfiles);
         const selectedTeams = computed(() => store.state.user.selectedTeams);
+
 
         const getUserById = (userId: string) => {
             console.log('userProfiles', userProfiles.value);
@@ -80,44 +79,30 @@ export default defineComponent({
             return userProfiles.value.filter((user: any) => teamIds.includes(user.id));
         };
 
-
-        // onMounted(async () => {
-        //     if (!store.state.user.userProfiles) {
-        //         await store.dispatch('user/fetchUserProfiles');
-        //     }
-        //     console.log('userProfiles mounted', userProfiles.value);
-        //     console.log('timovi', selectedTeams.value);
-        // });
-
-
         onMounted(async () => {
             if (!store.state.user.userProfiles) {
                 await store.dispatch('user/fetchUserProfiles');
             }
             console.log('userProfiles mounted', userProfiles.value);
 
-            // Extract team IDs from all user profiles and add to selectedTeams
-            for (const userProfile of userProfiles.value) {
-                if (userProfile.team && Array.isArray(userProfile.team)) {
-                    for (const teamId of userProfile.team) {
-                        store.commit('user/addSelectedTeam', teamId);
-                    }
+            // Filter for the current user's profile
+            const currentUserProfile = userProfiles.value.find((userProfile: any) => userProfile.id === user.value.id);
+
+            // Extract team IDs from the current user's profile and add to selectedTeams
+            if (currentUserProfile?.team && Array.isArray(currentUserProfile.team)) {
+                for (const teamId of currentUserProfile.team) {
+                    store.commit('user/addSelectedTeam', teamId);
                 }
             }
 
-            console.log('selectedTeams', selectedTeams.value);
+            console.log('Ovdje gledaj selectedTeams', selectedTeams.value);
         });
+
+
         const openAddUserModal = () => {
             isOpen.value = true;
         }
 
-        watch(() => store.state.user.selectedUsers, (newVal, oldVal) => {
-            console.log('selectedUsers changed', newVal, oldVal);
-        });
-
-        watch(() => store.state.user.userProfiles, (newVal, oldVal) => {
-            console.log('userProfiles changed', newVal, oldVal);
-        });
 
         return {
             userProfiles,
@@ -125,13 +110,10 @@ export default defineComponent({
             add,
             openAddUserModal,
             isOpen,
-            selectedUsers,
             getUserById,
             selectedTeams,
-            // getTeamById,
             getUsersByTeamId
         };
     }
-
 });
 </script>
