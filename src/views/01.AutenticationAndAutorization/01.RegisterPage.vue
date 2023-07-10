@@ -105,22 +105,7 @@ export default defineComponent({
 
                     if (signUpError) throw signUpError;
 
-                    // If signup is successful, insert the new user data into publicusers table
-                    // if (user) {
-                    //   const { data, error: insertError } = await supabase
-                    //     .from('publicusers')
-                    //     .insert([
-                    //       {
-                    //         userid: user.id,
-                    //         user_email: email.value,
-                    //       },
-                    //     ]);
-
-                    //   // Log the response from the insert query
-                    //   console.log('Insert Response:', data, insertError);
-
-                    //   if (insertError) throw insertError;
-                    // }
+     
 
                     router.push({ name: 'Login' });
                 } catch (error) {
