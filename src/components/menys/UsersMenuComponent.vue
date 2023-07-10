@@ -8,14 +8,8 @@
 
         <ion-content>
             <ion-list>
-                <ion-item>
-                    <ion-label>Users</ion-label>
-                </ion-item>
-                <ion-item>
-                    <ion-label>Tasks</ion-label>
-                </ion-item>
-                <ion-item>
-                    <ion-label>Settings</ion-label>
+                <ion-item v-for="userProfile in userProfiles" :key="userProfile.id">
+                    <ion-label>{{ userProfile.username }}</ion-label>
                 </ion-item>
             </ion-list>
         </ion-content>
@@ -33,11 +27,26 @@
 
 
 
-<script lang="ts">  
-    import { useStore } from 'vuex';
-    import { defineComponent } from 'vue';
-    import { ref, onMounted, computed } from 'vue';
-    import { 
+<script lang="ts">
+import { useStore } from 'vuex';
+import { defineComponent } from 'vue';
+import { ref, onMounted, computed } from 'vue';
+import {
+    IonMenu,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonFooter,
+
+
+} from '@ionic/vue';
+
+export default defineComponent({
+    components: {
         IonMenu,
         IonHeader,
         IonToolbar,
@@ -47,28 +56,27 @@
         IonItem,
         IonLabel,
         IonFooter,
+    },
+    setup() {
+
+        const store = useStore();
+        // const userProfiles = computed(() => store.state.userProfiles);
+        const userProfiles = computed(() => store.state.user.userProfiles);
 
 
-     } from '@ionic/vue';
-
-    export default defineComponent({
-        components: {
-            IonMenu,
-            IonHeader,
-            IonToolbar,
-            IonTitle,
-            IonContent,
-            IonList,
-            IonItem,
-            IonLabel,
-            IonFooter,
-        },
-            setup(){
-
-
-            return {
+        onMounted(async () => {
+            if (!store.state.user.userProfiles) {
+                await store.dispatch('user/fetchUserProfiles');
             }
-        }
 
-    });
+            console.log('userProfiles', userProfiles.value);
+            // await store.dispatch('notes/fetchNotes');
+        });
+
+        return {
+            userProfiles,
+        };
+    }
+
+});
 </script>

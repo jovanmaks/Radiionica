@@ -5,12 +5,14 @@ interface State {
   selectedProject: string | null;
   username: string | null;
   user: any | null;
+  userProfiles: any[] | null; // Add this line
 }
 
 const state: State = {
   selectedProject: localStorage.getItem('selectedProject') || null,
   username: null,
   user: null,
+  userProfiles: null, // And this line
 };
 
 const mutations = {
@@ -29,6 +31,9 @@ const mutations = {
     state.username = null;
     state.user = null;
     localStorage.removeItem('selectedProject');
+  },
+  setUserProfiles(state: State, userProfiles: any[]) {
+    state.userProfiles = userProfiles;
   },
 };
 
@@ -63,6 +68,7 @@ const actions = {
     }
 
     return {};
+
   },
 
 
@@ -76,7 +82,23 @@ const actions = {
     } catch (error) {
       console.log("Error signing out:", error);
     }
-  }
+  }, 
+
+
+  async fetchUserProfiles({ commit }: ActionContext<State, unknown>) {
+    const { data: profiles, error } = await supabase
+      .from('profiles')
+      .select('*');
+
+    if (error) {
+      console.log("Error fetching user profiles:", error);
+      throw error;
+    }
+
+    if (profiles) {
+      commit('setUserProfiles', profiles);
+    }
+  },
 };
 
 export default {
