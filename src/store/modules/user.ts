@@ -140,7 +140,8 @@ const actions = {
       console.log("Error signing out:", error);
     }
   },
-  async fetchUserProfiles({ commit }: ActionContext<State, unknown>) {
+
+  async fetchUserProfiles({ commit, state }: ActionContext<State, unknown>) {
     const { data: profiles, error } = await supabase
       .from("profiles")
       .select("*"); // Make sure "*" includes the `team` column or specify it explicitly
@@ -152,6 +153,18 @@ const actions = {
 
     if (profiles) {
       commit("setUserProfiles", profiles);
+
+      // Sync user selections
+      const userProfile = profiles.find(
+        (profile) => profile.id === state.user.id
+      );
+      if (userProfile && userProfile.team) {
+        for (const userId of userProfile.team) {
+          if (!state.selectedUsers.includes(userId)) {
+            commit("addSelectedUser", userId);
+          }
+        }
+      }
     }
   },
 
@@ -169,7 +182,10 @@ const actions = {
   addSelectedTeam({ commit }: ActionContext<State, unknown>, teamId: string) {
     commit("addSelectedTeam", teamId);
   },
-  removeSelectedTeam({ commit }: ActionContext<State, unknown>, teamId: string) {
+  removeSelectedTeam(
+    { commit }: ActionContext<State, unknown>,
+    teamId: string
+  ) {
     commit("removeSelectedTeam", teamId);
   },
   async updateTeam({ state }: ActionContext<State, unknown>, userId: string) {

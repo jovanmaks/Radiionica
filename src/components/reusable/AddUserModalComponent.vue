@@ -62,45 +62,13 @@ export default defineComponent({
             return store.state.user.selectedUsers.includes(userId);
         });
 
-        const syncUserSelections = async () => {
-            if (!store.state.user.userProfiles) {
-                await store.dispatch('user/fetchUserProfiles');
-            }
 
-            const { data: profiles, error } = await supabase
-                .from("profiles")
-                .select("team")
-                .eq("id", store.state.user.user.id);
-
-            if (error) {
-                console.log("Error fetching user's team:", error);
-                throw error;
-            }
-
-            if (profiles && profiles[0].team) {
-                for (const userId of profiles[0].team) {
-                    if (!store.state.user.selectedUsers.includes(userId)) {
-                        store.dispatch('user/addSelectedUser', userId);
-                    }
-                }
-            }
-        };
-
-        onMounted(syncUserSelections);
-      
-
-        watch(() => props.isOpen, (newVal) => {
+        watch(() => props.isOpen, async (newVal) => {
             if (newVal) {
-                syncUserSelections();
+                await store.dispatch('user/fetchUserProfiles');
             }
         });
 
-        // onMounted(async () => {
-        //     if (!store.state.user.userProfiles) {
-        //         await store.dispatch('user/fetchUserProfiles');
-        //     }
-        //     console.log('userProfiles', userProfiles.value);
-        // });
 
         const toggleUser = (userId: string, checked: boolean) => {
             if (checked) {
