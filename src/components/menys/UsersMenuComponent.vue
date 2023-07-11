@@ -3,8 +3,8 @@
 
         <ion-content>
             <ion-list>
-                <ion-item v-for="teamId in selectedTeams" :key="teamId">
-                    <ion-label v-for="user in getUsersByTeamId(teamId)" :key="user.id">{{ user.username }}</ion-label>
+                <ion-item v-for="(member, index) in team" :key="index">
+                    {{ member }}
                 </ion-item>
             </ion-list>
 
@@ -67,39 +67,11 @@ export default defineComponent({
         const store = useStore();
         const isOpen = ref(false);
         const user = computed(() => store.state.user.user);
+        const team = computed(() => store.state.user.team);
 
-        const userProfiles = computed(() => store.state.user.userProfiles);
-        const selectedTeams = computed(() => store.state.user.selectedTeams);
-
-
-        const getUserById = (userId: string) => {
-            console.log('userProfiles', userProfiles.value);
-            return userProfiles.value.find((user: any) => user.id === userId);
-        };
-
-        const getUsersByTeamId = (teamIds: string[]) => {
-            console.log('userProfiles team', userProfiles.value);
-            // Filter users whose ID is in the specified teamIds
-            return userProfiles.value.filter((user: any) => teamIds.includes(user.id));
-        };
 
         onMounted(async () => {
-            if (!store.state.user.userProfiles) {
-                await store.dispatch('user/fetchUserProfiles');
-            }
-            console.log('userProfiles mounted', userProfiles.value);
-
-            // Filter for the current user's profile
-            const currentUserProfile = userProfiles.value.find((userProfile: any) => userProfile.id === user.value.id);
-
-            // Extract team IDs from the current user's profile and add to selectedTeams
-            if (currentUserProfile?.team && Array.isArray(currentUserProfile.team)) {
-                for (const teamId of currentUserProfile.team) {
-                    store.commit('user/addSelectedTeam', teamId);
-                }
-            }
-
-            console.log('Ovdje gledaj selectedTeams', selectedTeams.value);
+            console.log('teammmmm', team.value);
         });
 
 
@@ -107,21 +79,29 @@ export default defineComponent({
             isOpen.value = true;
         }
 
-        const forceUpdateSelectedTeams = () => {
-            // Here you would call the Vuex action to update selectedTeams
-            store.dispatch('user/forceUpdateSelectedTeams');
+
+        watch(team, (newValue, oldValue) => {
+            console.log('Team updated:', newValue);
+        }, { immediate: true });
+
+        const forceUpdateSelectedTeams = async () => {
+            console.log('forceUpdateSelectedTeams');
+            if (user.value) {
+                await store.dispatch('user/updateTeam', user.value.id);
+                console.log('Team Updated', team.value);
+            } else {
+                console.error('No user found');
+            }
         };
 
+
         return {
-            userProfiles,
             peopleOutline,
             add,
             openAddUserModal,
             isOpen,
-            getUserById,
-            selectedTeams,
-            getUsersByTeamId,
             forceUpdateSelectedTeams,
+            team,
         };
     }
 });

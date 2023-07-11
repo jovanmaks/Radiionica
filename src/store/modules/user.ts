@@ -1,13 +1,17 @@
 import { ActionContext } from "vuex";
 import { supabase } from "@/supabase";
 
+
+
 interface State {
   selectedProject: string | null;
   username: string | null;
   user: any | null;
   userProfiles: any[] | null; // Add this line
   selectedUsers: string[];
-  selectedTeams: string[];
+  team: string[] | null; // Added line
+  // team: VueReactive<string[]>; // Added line
+
 }
 
 const state: State = {
@@ -16,7 +20,7 @@ const state: State = {
   user: null,
   userProfiles: null, // And this line
   selectedUsers: [],
-  selectedTeams: [],
+  team: null, // And this line
 };
 
 const mutations = {
@@ -47,16 +51,13 @@ const mutations = {
     // Added line
     state.selectedUsers = state.selectedUsers.filter((id) => id !== userId);
   },
-  addSelectedTeam(state: State, teamId: string) {
-    state.selectedTeams.push(teamId);
+  setTeam(state: State, team: string[]) {
+    state.team = team;
   },
-  removeSelectedTeam(state: State, teamId: string) {
-    state.selectedTeams = state.selectedTeams.filter((id) => id !== teamId);
-  },
-  forceUpdateSelectedTeams(state: State) {
-    // Create a copy of selectedTeams to trigger Vue's reactivity
-    state.selectedTeams = [...state.selectedTeams];
-  },
+  // setTeam(state: State, team: string[]) {
+  //   state.team = Vue.reactive(team);
+  // },
+  
 };
 
 const actions = {
@@ -88,6 +89,24 @@ const actions = {
     }
   },
 
+  // async signIn(
+  //   { commit, dispatch }: ActionContext<State, unknown>,
+  //   credentials: any
+  // ) {
+  //   const { data, error } = await supabase.auth.signInWithPassword(credentials);
+  //   if (error) {
+  //     console.error("Error in signIn:", error.message);
+  //     throw error;
+  //   }
+
+  //   if (data?.user) {
+  //     commit("setUser", data.user);
+  //     // After user sign in, fetch and commit the username.
+  //     dispatch("fetchUsername", data.user.id);
+  //   }
+
+  //   return {};
+  // },
   async signIn(
     { commit, dispatch }: ActionContext<State, unknown>,
     credentials: any
@@ -97,16 +116,17 @@ const actions = {
       console.error("Error in signIn:", error.message);
       throw error;
     }
-
+  
     if (data?.user) {
       commit("setUser", data.user);
       // After user sign in, fetch and commit the username.
       dispatch("fetchUsername", data.user.id);
+      // Fetch the team for the signed in user
+      dispatch("fetchTeam");
     }
-
+  
     return {};
   },
-
   async createUserProfile(
     { commit }: ActionContext<State, unknown>,
     user: any
@@ -171,6 +191,23 @@ const actions = {
       }
     }
   },
+  async fetchTeam({ commit, state }: ActionContext<State, unknown>) {
+    const { data: profiles, error } = await supabase
+      .from("profiles")
+      .select("team") // make sure your table has a column named 'team'
+      .eq("id", state.user.id)
+      .limit(1);
+
+    if (error) {
+      console.error("Error fetching user team:", error);
+      throw error;
+    }
+
+    if (profiles && profiles.length > 0) {
+      commit("setTeam", profiles[0].team || []);
+    }
+},
+
 
   addSelectedUser({ commit }: ActionContext<State, unknown>, userId: string) {
     // Added line
@@ -183,38 +220,30 @@ const actions = {
     // Added line
     commit("removeSelectedUser", userId);
   },
-  addSelectedTeam({ commit }: ActionContext<State, unknown>, teamId: string) {
-    commit("addSelectedTeam", teamId);
-  },
-  removeSelectedTeam(
-    { commit }: ActionContext<State, unknown>,
-    teamId: string
-  ) {
-    commit("removeSelectedTeam", teamId);
-  },
-  async updateTeam({ state }: ActionContext<State, unknown>, userId: string) {
-    console.log("Received userId:", userId); // This should be the id of the logged in user.
+
+  async updateTeam({ commit, state }: ActionContext<State, unknown>, userId: string) {
+    console.log("Received userId:", userId);
 
     const { data, error } = await supabase
-      .from("profiles")
-      .update({
-        team: `{${state.selectedUsers.map((id) => `"${id}"`).join(",")}}`,
-      }) // Postgres array syntax
-      .eq("id", userId); // This should be comparing with the id of the logged in user.
+        .from("profiles")
+        .update({
+            team: `{${state.selectedUsers.map((id) => `"${id}"`).join(",")}}`,
+        })
+        .eq("id", userId);
 
     console.log("IDDDDDD", userId);
 
     if (error) {
-      console.error("Error updating team:", error);
-      throw error;
+        console.error("Error updating team:", error);
+        throw error;
     }
 
-    // Log the updated row
     console.log("Updated row:", data);
-  },
-  forceUpdateSelectedTeams({ commit }: ActionContext<State, unknown>) {
-    commit('forceUpdateSelectedTeams');
+    
+    commit("setTeam", state.selectedUsers);
 },
+
+
 };
 
 export default {
