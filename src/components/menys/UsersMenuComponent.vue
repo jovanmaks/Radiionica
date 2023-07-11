@@ -19,6 +19,10 @@
                             <ion-button @click="openAddUserModal" size="small" expand="full">
                                 <ion-icon :icon="add"></ion-icon>
                             </ion-button>
+
+                            <ion-button @click="forceUpdateSelectedTeams" size="small" expand="full">
+                                Force update
+                            </ion-button>
                         </ion-col>
                     </ion-row>
                 </ion-grid>
@@ -103,6 +107,10 @@ export default defineComponent({
             isOpen.value = true;
         }
 
+        const forceUpdateSelectedTeams = () => {
+            // Here you would call the Vuex action to update selectedTeams
+            store.dispatch('user/forceUpdateSelectedTeams');
+        };
 
         return {
             userProfiles,
@@ -112,7 +120,8 @@ export default defineComponent({
             isOpen,
             getUserById,
             selectedTeams,
-            getUsersByTeamId
+            getUsersByTeamId,
+            forceUpdateSelectedTeams,
         };
     }
 });

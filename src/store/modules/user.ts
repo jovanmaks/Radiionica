@@ -53,6 +53,10 @@ const mutations = {
   removeSelectedTeam(state: State, teamId: string) {
     state.selectedTeams = state.selectedTeams.filter((id) => id !== teamId);
   },
+  forceUpdateSelectedTeams(state: State) {
+    // Create a copy of selectedTeams to trigger Vue's reactivity
+    state.selectedTeams = [...state.selectedTeams];
+  },
 };
 
 const actions = {
@@ -208,6 +212,9 @@ const actions = {
     // Log the updated row
     console.log("Updated row:", data);
   },
+  forceUpdateSelectedTeams({ commit }: ActionContext<State, unknown>) {
+    commit('forceUpdateSelectedTeams');
+},
 };
 
 export default {
