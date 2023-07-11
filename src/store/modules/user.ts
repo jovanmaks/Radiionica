@@ -111,26 +111,7 @@ const actions = {
     return {};
   },
   
-  // async signIn(
-  //   { commit, dispatch }: ActionContext<State, unknown>,
-  //   credentials: any
-  // ) {
-  //   const { data, error } = await supabase.auth.signInWithPassword(credentials);
-  //   if (error) {
-  //     console.error("Error in signIn:", error.message);
-  //     throw error;
-  //   }
-  
-  //   if (data?.user) {
-  //     commit("setUser", data.user);
-  //     // After user sign in, fetch and commit the username.
-  //     dispatch("fetchUsername", data.user.id);
-  //     // Fetch the team for the signed in user
-  //     dispatch("fetchTeam");
-  //   }
-  
-  //   return {};
-  // },
+
   async createUserProfile(
     { commit }: ActionContext<State, unknown>,
     user: any
@@ -246,8 +227,6 @@ const actions = {
     
     commit("setTeam", state.selectedUsers);
 },
-
-
 };
 
 export default {

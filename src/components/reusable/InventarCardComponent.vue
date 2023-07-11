@@ -47,4 +47,8 @@ export default {
 </script>
 
 <style scoped>
+.my-card {
+  width: 93%;
+  max-width: 400px; /* adjust as needed */
+}
 </style>

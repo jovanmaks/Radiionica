@@ -220,7 +220,7 @@
                 showArchivedNotes, showUnarchivedNotes, archivedNotes,
                 unarchivedNotes, displayNotes,
                 archiveOutline, documentAttachOutline, returnNote, person, time, alertCircle,
-                setSortType, add,   isOpen,  openAddNoteModal,
+                setSortType, add,   isOpen,  openAddNoteModal, 
             }
         }
     });
