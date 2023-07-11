@@ -20,9 +20,6 @@
                                 <ion-icon :icon="add"></ion-icon>
                             </ion-button>
 
-                            <ion-button @click="forceUpdateSelectedTeams" size="small" expand="full">
-                                Force update
-                            </ion-button>
                         </ion-col>
                     </ion-row>
                 </ion-grid>
@@ -99,15 +96,7 @@ export default defineComponent({
         }, { immediate: true });
 
 
-        const forceUpdateSelectedTeams = async () => {
-            console.log('forceUpdateSelectedTeams');
-            if (user.value) {
-                await store.dispatch('user/updateTeam', user.value.id);
-                console.log('Team Updated', team.value);
-            } else {
-                console.error('No user found');
-            }
-        };
+        
 
 
         return {
@@ -115,7 +104,6 @@ export default defineComponent({
             add,
             openAddUserModal,
             isOpen,
-            forceUpdateSelectedTeams,
             team,
             teamUsernames, // Add this line
         };
