@@ -63,6 +63,12 @@ const mutations = {
       noteToReturn.isHomescreenArchived = false;
     }
   },
+  updateNote(state: State, payload: Note) {
+    const noteToUpdate = state.notes.find((note) => note.id === payload.id);
+    if (noteToUpdate) {
+      Object.assign(noteToUpdate, payload);
+    }
+  },
 };
 
 const actions = {
@@ -169,6 +175,33 @@ const actions = {
     }
 
     commit("returnNote", noteId);
+  },
+  async updateNote(
+    { commit }: ActionContext<State, unknown>,
+    updatedNote: Note
+  ) {
+    if (
+      !updatedNote ||
+      !updatedNote.id ||
+      !updatedNote.homescreen ||
+      !updatedNote.user_id
+    ) {
+      console.error(
+        "Note value is empty, user is not logged in or note is not selected. Skipping update."
+      );
+      return;
+    }
+    const { data, error } = await supabase
+      .from("notes")
+      .update(updatedNote)
+      .eq("id", updatedNote.id);
+
+    if (error) {
+      console.error(error);
+      throw error;
+    }
+
+    commit("updateNote", updatedNote);
   },
 };
 
