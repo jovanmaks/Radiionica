@@ -3,7 +3,7 @@
 
         <ion-content>
             <ion-list>
-                <ion-item v-for="(member, index) in team" :key="index">
+                <ion-item v-for="(member, index) in teamUsernames" :key="index">
                     {{ member }}
                 </ion-item>
             </ion-list>
@@ -68,10 +68,24 @@ export default defineComponent({
         const isOpen = ref(false);
         const user = computed(() => store.state.user.user);
         const team = computed(() => store.state.user.team);
+        const userProfiles = computed(() => store.state.user.userProfiles); // Add this line
+
+
+
+        const teamUsernames = computed(() => {
+            if (!team.value || !userProfiles.value) {
+                return [];
+            }
+
+            return team.value.map((userId: string) => {
+                const userProfile = userProfiles.value.find((profile: { id: string, username: string }) => profile.id === userId);
+                return userProfile ? userProfile.username : userId;
+            });
+        });
 
 
         onMounted(async () => {
-            console.log('teammmmm', team.value);
+            console.log('teamUsernames', teamUsernames.value);
         });
 
 
@@ -83,6 +97,7 @@ export default defineComponent({
         watch(team, (newValue, oldValue) => {
             console.log('Team updated:', newValue);
         }, { immediate: true });
+
 
         const forceUpdateSelectedTeams = async () => {
             console.log('forceUpdateSelectedTeams');
@@ -102,6 +117,7 @@ export default defineComponent({
             isOpen,
             forceUpdateSelectedTeams,
             team,
+            teamUsernames, // Add this line
         };
     }
 });

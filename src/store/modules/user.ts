@@ -10,7 +10,6 @@ interface State {
   userProfiles: any[] | null; // Add this line
   selectedUsers: string[];
   team: string[] | null; // Added line
-  // team: VueReactive<string[]>; // Added line
 
 }
 
@@ -89,24 +88,6 @@ const actions = {
     }
   },
 
-  // async signIn(
-  //   { commit, dispatch }: ActionContext<State, unknown>,
-  //   credentials: any
-  // ) {
-  //   const { data, error } = await supabase.auth.signInWithPassword(credentials);
-  //   if (error) {
-  //     console.error("Error in signIn:", error.message);
-  //     throw error;
-  //   }
-
-  //   if (data?.user) {
-  //     commit("setUser", data.user);
-  //     // After user sign in, fetch and commit the username.
-  //     dispatch("fetchUsername", data.user.id);
-  //   }
-
-  //   return {};
-  // },
   async signIn(
     { commit, dispatch }: ActionContext<State, unknown>,
     credentials: any
@@ -120,13 +101,37 @@ const actions = {
     if (data?.user) {
       commit("setUser", data.user);
       // After user sign in, fetch and commit the username.
-      dispatch("fetchUsername", data.user.id);
+      await dispatch("fetchUsername", data.user.id);
       // Fetch the team for the signed in user
-      dispatch("fetchTeam");
+      await dispatch("fetchTeam");
+      // Fetch all user profiles
+      await dispatch("fetchUserProfiles");
     }
   
     return {};
   },
+
+  
+  // async signIn(
+  //   { commit, dispatch }: ActionContext<State, unknown>,
+  //   credentials: any
+  // ) {
+  //   const { data, error } = await supabase.auth.signInWithPassword(credentials);
+  //   if (error) {
+  //     console.error("Error in signIn:", error.message);
+  //     throw error;
+  //   }
+  
+  //   if (data?.user) {
+  //     commit("setUser", data.user);
+  //     // After user sign in, fetch and commit the username.
+  //     dispatch("fetchUsername", data.user.id);
+  //     // Fetch the team for the signed in user
+  //     dispatch("fetchTeam");
+  //   }
+  
+  //   return {};
+  // },
   async createUserProfile(
     { commit }: ActionContext<State, unknown>,
     user: any
